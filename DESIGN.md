@@ -125,16 +125,27 @@ confirming against the CDIF data-structure implementation guide.
 
 ## Decisions made
 
-- **NeXus concept identifiers = full NeXus-manual URLs**, e.g.
-  `https://manual.nexusformat.org/classes/applications/NXxas.html`.
-  **Do not define a `nxs:` prefix over bare class names.** The obvious
-  form (`nxs: https://manual.nexusformat.org/classes/` + `NXentry`)
-  yields `.../classes/NXentry` → **404**. Only the two-segment forms
-  `.../classes/base_classes/NXentry.html` and
-  `.../classes/applications/NXxas.html` resolve (verified 2026-07-27).
-  Both prior-art codebases got this wrong in different ways.
-  Rationale for rejecting the NeXusOntology PURLs is in the ecosystem
-  survey below.
+- **`nxs:` = `https://manual.nexusformat.org/classes/`** — provisional,
+  pending a real NeXus concept namespace.
+  **Known caveat:** naive concatenation does not resolve.
+  `nxs:NXentry` → `.../classes/NXentry` → **404**; only the
+  two-segment forms `.../classes/base_classes/NXentry.html` and
+  `.../classes/applications/NXxas.html` resolve (verified
+  2026-07-27). So when emitting a *dereferenceable* link (e.g.
+  `schema:url` on a DefinedTerm), build the full two-segment URL;
+  reserve the bare `nxs:NXfoo` compact form for identifier-only
+  positions. Revisit when either the NeXusOntology PURLs are
+  registered or a w3id namespace appears — neither exists today.
+  Rationale for rejecting the NeXusOntology PURLs outright is in the
+  ecosystem survey below.
+- **HDF5 internal paths are locators, not indices.** Physical mapping
+  uses `cdif:LocatorMapping` with `cdif:locator` =
+  `/entry/instrument/detector/data`. (`cdif:TextMapping` +
+  `cdif:index` is the tabular-text analog and does not apply here.)
+- **A multi-`NXentry` file is modelled as an archive of parts.**
+  See "Multi-entry files" below.
+- **Units are normalized to QUDT/UCUM** where a confident mapping
+  exists. See "Units" below.
 - **Detect conformance, don't assert it.** Follows
   `CDIF/validation/detect_conformance.py`, which derives profile conformance
   from content via SPARQL ASK + per-class SHACL.
@@ -146,35 +157,142 @@ confirming against the CDIF data-structure implementation guide.
 - **Non-fatal problems accumulate in `warnings: list[str]`** on the result
   rather than raising. Same.
 
-## Open questions
+## Multi-entry files
 
-- **Multi-`NXentry` files: one CDIF Dataset or many?** No longer
-  hypothetical — our primary test file `FeXAS.nxs` contains **26**
-  `NXentry` groups (a scan series: `FeFoil.001`, `FeFoil.002`, …).
-  This is the highest-priority design question because it determines
-  the shape of the core mapping. `docs/kotahiWorkflow-design.md`
-  §4.2–4.5 in the ADA repo covers CDIF's single-file vs collection vs
-  archive-bundle distribution shapes — read before deciding.
-  Candidate answers: (a) one Dataset, one distribution, a
-  DataStructure per entry; (b) one Dataset whose `schema:hasPart`
-  lists per-entry `schema:MediaObject`s; (c) N Datasets sharing one
-  distribution. (b) looks closest to CDIF's archive-bundle pattern.
-- Unit strings: NeXus `units` values are free text (`"eV"`, `"counts"`,
-  `"Angstroms"`). Emit as `schema:unitText` only, or normalize to
-  QUDT/UCUM? No prior art parses units — everything copies the raw
-  string. Note the NXDL definitions carry a *unit category*
-  (`NX_ENERGY`, `NX_LENGTH`, …) per field, which is coarser than a
-  unit but is machine-readable and free.
-- `NXsubentry` with a different `definition` than its parent
-  `NXentry` — a single file claiming two application definitions.
-  Real in multi-modal data.
+A NeXus file with N `NXentry` groups is **modelled as an archive of
+parts**, by analogy with a zip bundle. Not hypothetical: `FeXAS.nxs`
+holds 26 (`FeFoil.001` … a scan series). CDIF's
+`cdifArchiveDistribution` pattern — a `schema:DataDownload` whose
+`schema:hasPart` lists components — is the closest existing shape,
+and this is a genuinely new case not covered by
+`docs/kotahiWorkflow-design.md` §4.2–4.5, which assumes the parts are
+separate byte streams rather than groups inside one container.
+
+Shape:
+
+- One `schema:Dataset` for the file, one `schema:distribution`
+  (the HDF5 file itself).
+- One part per `NXentry`, each carrying its own dataset-level
+  metadata — title, times, sample, its own DataStructure.
+- **Most part metadata is by reference, not repeated.** A scan series
+  shares its instrument, source, sample, and *data structure*; only
+  what actually varies per entry (title, start/end time, scan
+  parameters) is stated on the part.
+- The shared `cdi:DataStructure` is emitted once with a stable `@id`
+  and referenced by every part whose layout matches it. Structural
+  identity is decided by comparing the (signal, axes, shapes, dtypes)
+  signature across entries; entries with matching signatures share
+  one DataStructure object.
+
+Open sub-questions to settle during implementation:
+
+- Which entry supplies the file-level `schema:name`/`description` —
+  the first, the one named by the root `@default` attribute, or a
+  synthesized summary? Root `@default` is the NeXus-blessed pointer
+  and should win when present. (`FeXAS.nxs` has `default='fefoil'`.)
+- Whether a part is `schema:hasPart` on the Dataset or on the
+  distribution. CDIF's archive pattern puts `hasPart` on the
+  DataDownload, with parts as `schema:MediaObject` explicitly *not*
+  also typed `DataDownload`. An `NXentry` is not separately
+  retrievable, so MediaObject-without-DataDownload fits.
+- Whether entries that differ structurally should split the file into
+  multiple Datasets instead. Defer — needs a real heterogeneous
+  example.
+
+## Units
+
+NeXus `units` attributes are free text (`"eV"`, `"counts"`,
+`"Angstroms"`, `"mm"`). **Attempt QUDT/UCUM normalization**, and:
+
+- Always keep the source string verbatim in `schema:unitText` — never
+  lose what the file actually said.
+- Add `schema:unitCode` (UCUM) and/or a QUDT unit IRI **only on a
+  confident match**. No guessing; an unmatched unit is not an error.
+- Record unmatched unit strings in `warnings` so the gap report shows
+  which vocabulary entries are missing.
+- The NXDL definitions additionally give a per-field *unit category*
+  (`NX_ENERGY`, `NX_LENGTH`, `NX_TIME`, …; ~47 of them). That is
+  coarser than a unit but machine-readable and free — use it to
+  constrain/validate the normalization (a field declared `NX_ENERGY`
+  whose units parse to a length is a red flag worth warning about).
+
+## Tabled
+
+- **`NXsubentry` with a different `definition` than its parent** —
+  a single file claiming two application definitions. Real in
+  multi-modal data, but we have no concrete example to reason from.
+  Revisit when one turns up.
 
 ## NeXus ecosystem survey (2026-07-27)
 
 Survey of the `nexusformat` GitHub organization for things to consume
 rather than reinvent.
 
-### `nexusformat/definitions` — **use it**
+### Which definitions repo — **`XraySpectroscopy/nexus_definitions`**
+
+For XAS work, use the XAS community's fork
+<https://github.com/XraySpectroscopy/nexus_definitions> (branch
+`main`) in preference to upstream. As of 2026-07-27 it is **44 commits
+ahead / 1 behind** upstream and actively worked (last push
+2026-07-08). The NeXusOntology generation scripts are intended to run
+against these NXDL files.
+
+**NXxas has been restructured there, not just edited.** The fork
+deletes `applications/NXxas.nxdl.xml` (the old 127-line definition)
+and adds, under `contributed_definitions/`:
+
+| New definition | Lines | What it is |
+|---|---:|---|
+| `NXxas.nxdl.xml` | 145 | leaner base; delegates to new classes |
+| `NXxas_trans.nxdl.xml` | 219 | transmission |
+| `NXxas_tey.nxdl.xml` | 102 | total electron yield |
+| `NXxas_tfy.nxdl.xml` | 100 | total fluorescence yield |
+| `NXxas_pey.nxdl.xml` | 109 | partial electron yield |
+| `NXxas_pfy.nxdl.xml` | 627 | partial fluorescence yield |
+| `NXxas_herfd.nxdl.xml` | 636 | high-energy-resolution fluorescence detected |
+| `NXelement.nxdl.xml` | 158 | supporting base class |
+| `NXabsorption_edge.nxdl.xml` | 167 | supporting base class |
+| `NXemission_line.nxdl.xml` | 632 | supporting base class |
+| `NXauger_line.nxdl.xml` | 976 | supporting base class |
+
+Two consequences for us:
+
+1. **Detection mode is becoming the application definition.** Where
+   the old NXxas had a `mode` field with an enumeration, the new
+   scheme makes transmission / TEY / TFY / PFY / HERFD / PEY separate
+   definitions. That maps *directly* onto
+   `schema:measurementTechnique` — read `NXentry/definition` and you
+   have the technique, no enumeration lookup needed.
+2. **Definitions can live in `contributed_definitions/`, not just
+   `applications/`.** The resolver must search both.
+
+### Resilience requirements (these definitions are in flux)
+
+The XAS definitions are actively being revised and may move or change
+shape. The code must therefore:
+
+- **Search all three directories** — `applications/`,
+  `contributed_definitions/`, `base_classes/` — and never hardcode
+  which one a definition lives in. NXxas has already moved once.
+- **Never hardcode the list of application definitions.** Discover
+  them by listing the directories at load time.
+- **Pin a commit SHA by default, allow override.** Config takes a
+  repo + ref; default to a known-good SHA so a mid-flight upstream
+  change cannot silently alter our output. Make the pin trivially
+  bumpable and record the resolved SHA in the output provenance.
+- **Treat a missing or unparseable definition as a degraded tier, not
+  a failure.** If `NXentry/definition` names something we cannot
+  resolve, fall through to heuristics and record it in `warnings` —
+  emit core+discovery rather than nothing.
+- **Tolerate unknown NXDL constructs.** Parse defensively: unknown
+  elements/attributes are ignored, not fatal. The NXDL grammar itself
+  is stable but the definition content is not.
+- **No structural assumptions beyond the NXDL grammar.** Read the
+  tree the definition declares; do not assume, e.g., that XAS energy
+  is always under `NXmonochromator` — the new NXxas does not put it
+  there.
+
+### `nexusformat/definitions` — **the upstream baseline**
 
 The authoritative machine-readable standard. 142 base classes, 45
 application definitions, 93 contributed definitions, as NXDL XML
@@ -228,6 +346,15 @@ identifier source on four grounds:**
 Still useful as *reference*: it carries 2119 `rdfs:seeAlso` values
 pointing at resolvable manual anchors, which is corroboration for the
 "use manual URLs as identifiers" decision above.
+
+**Expected to improve.** The XAS community's plan is to regenerate the
+ontology with the scripts at
+<https://github.com/nexusformat/NeXusOntology/tree/main/script> from
+the NXDL in `XraySpectroscopy/nexus_definitions`. If that lands *and*
+the PURLs get registered (or a w3id namespace appears) *and* a licence
+is added, the ontology becomes the right identifier source and the
+`nxs:`-manual-URL decision above should be revisited. Track it —
+don't design around it yet.
 
 ### `pynxtools` (PyPI, FAIRmat) — **evaluate as an optional extra**
 
