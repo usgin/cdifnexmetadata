@@ -1,0 +1,360 @@
+# STATUS — consolidated state of play
+
+**Last updated:** 2026-07-27
+
+This file exists so that *any* surface — another Claude Code session, a
+claude.ai chat, a human — can pick up cold without re-deriving what has
+already been established. It is the canonical entry point.
+
+Stable URL:
+<https://github.com/usgin/hdf5metadata/blob/main/STATUS.md>
+Raw:
+<https://raw.githubusercontent.com/usgin/hdf5metadata/main/STATUS.md>
+
+> **If you are an agent reading this:** the section
+> [Established — do not re-derive](#established--do-not-re-derive) is the
+> important one. Every item there was verified empirically and several
+> contradict the obvious assumption.
+
+---
+
+## Architecture: concept-keyed, with XDI and NeXus as two bindings
+
+The organising decision, and the reason the efforts below converge.
+
+A **concept hub** — the CDIF XAS SKOS glossary at
+`https://w3id.org/cdif/xas/` — is the semantic centre. XDI tokens and
+NeXus/NXDL paths are two *bindings* onto it. CDIF JSON-LD is the
+serialization of it. This collapses the "should the crosswalk be
+XDI-keyed or NeXus-keyed" question: it is neither, it is concept-keyed.
+
+Four layers:
+
+| Layer | Artifact |
+|---|---|
+| 1. Concept register | CDIF XAS glossary + minted `xdi:` terms for genuine gaps |
+| 2. Alignment | **SSSOM** TSV — `xdi:token → skos:exactMatch → xas:concept`, `xas:concept → nxs:path`. Carries `mapping_justification`, `confidence`, predicate precision (exact/close/broad), and makes gaps explicit |
+| 3. Serialization | concept → CDIF JSON-LD path / pattern / cardinality |
+| 4. Converters | parse a source into the concept-keyed intermediate, then one source-agnostic transform emits CDIF |
+
+SSSOM maps term-to-term only — it cannot express nested JSON-LD
+placement, cardinality, or transformation logic. So it is the
+*correspondence* layer, not the whole crosswalk; layer 3 holds the rest.
+
+**Consequence: adding a format is adding a parser, not a pipeline.**
+`smrgeoinfo/cdif-xas` already runs this shape — a concept intermediate
+(`resources/cdif_skos.json`) consumed by an RML transform
+(`resources/mapping_dds.ttl`, ~40 TriplesMaps), then framed and
+validated. Adding NeXus means writing a second parser that emits the
+same intermediate; the RML, framing and validation stack downstream is
+untouched.
+
+**Known refactor:** that intermediate's keys are currently XDI-flavoured
+(`cdi:Facility_name`, `cdi:Mono_d_spacing`) — concept and binding are
+fused. For two clean bindings the keys should be canonical concept URIs,
+with each parser doing source-field → concept-URI itself. That per-parser
+lookup table *is* the SSSOM alignment.
+
+---
+
+## Efforts and how they relate
+
+| | Effort A | Effort B | Effort C |
+|---|---|---|---|
+| **Goal** | NeXus HDF5 → CDIF | Align CDIF XAS vocabulary with NeXus | XDI → CDIF (Dataverse workflow) |
+| **Repo** | `usgin/hdf5metadata` (`main`) | `smrgeoinfo/XAS-CDIF` (**`cdifxasRelease`**) | `smrgeoinfo/cdif-xas` (`main`) |
+| **State** | Design phase, no code | Analysis + enumeration import done | **Working — 37/37 valid** |
+| **Head** | `0c02ebe` | `2fe64e1` | `b915c51` |
+| **Layer** | 4 (NeXus binding) | 1–2 (concepts + alignment) | 3–4 (serialization + XDI binding) |
+
+**A and C are the two bindings of the same architecture.** A is the
+general-purpose NeXus extractor (any technique); C is XAS-specific with a
+Dataverse round-trip. A should emit the concept-keyed intermediate so it
+can feed C's existing transform rather than duplicating it — see
+[`DESIGN.md`](./DESIGN.md).
+
+B supplies the hub both depend on.
+
+---
+
+## Established — do not re-derive
+
+Each verified against live sources on 2026-07-27. Several contradict the
+obvious assumption, which is why they are listed rather than left
+implicit.
+
+### 1. Use the XAS fork of the NeXus definitions
+
+`XraySpectroscopy/nexus_definitions@main`, **not**
+`nexusformat/definitions`. The fork is 44 commits ahead / 1 behind,
+actively worked (last push 2026-07-08), and the NeXusOntology generation
+scripts are meant to run against it.
+
+**NXxas there is restructured, not edited.**
+`applications/NXxas.nxdl.xml` is **deleted**; eleven files are added
+under `contributed_definitions/`: a thin abstract `NXxas` (145 lines),
+per-detection-mode subclasses `NXxas_trans` / `_tey` / `_tfy` / `_pey` /
+`_pfy` / `_herfd`, and four supporting base classes `NXelement`,
+`NXabsorption_edge`, `NXemission_line`, `NXauger_line`. Three competing
+designs were tried on branches; **inheritance won**.
+
+Two consequences: **detection mode is now the application definition
+itself** (read `NXentry/definition` and you have the technique — no
+enumeration lookup), and **definitions can live in
+`contributed_definitions/`**, so any resolver must search there too.
+
+### 2. NeXusOntology is not usable as an identifier source
+
+Tempting — an OWL rendering with ready-made concept IRIs. Rejected on
+four independent grounds:
+
+- **The PURLs are dead.** Every `http://purl.org/nexusformat/definitions/…`
+  term IRI 404s; the domain was never registered. Open issue #6
+  (2025-06-19), unanswered.
+- **The IRIs are about to change.** Open PR #8 (mergeable) renames every
+  IRI to a flat hash namespace.
+- **No licence.** `license: null`, no LICENSE file — all rights reserved
+  by default.
+- **Two years stale** relative to the definitions it describes.
+
+Still useful as corroboration: its 2119 `rdfs:seeAlso` values point at
+the NeXus manual URLs we settled on instead.
+
+### 3. `nxs:` prefix concatenation does not resolve
+
+`nxs: https://manual.nexusformat.org/classes/` + `NXentry` →
+`.../classes/NXentry` → **404**. Only the two-segment forms resolve:
+`.../classes/base_classes/NXentry.html`,
+`.../classes/applications/NXxas.html`.
+
+The prefix is retained provisionally, but any *dereferenceable* position
+(e.g. `schema:url`) must build the full two-segment URL. Both prior-art
+codebases got this wrong, in different ways.
+
+### 4. Crosswalk to NeXus base classes, not application definitions
+
+An application definition says what a file of that technique *must*
+contain; a base class defines what a thing of that kind *can* have. A
+concept absent from `NXxas` is usually present on `NXsource`,
+`NXcollimator`, `NXmirror`, `NXbeam`, `NXslit` or `NXsample`.
+
+**This session got it wrong once** — a first pass compared the glossary
+against `NXxas` alone and wrongly reported ~15 beamline/facility
+concepts as having no NeXus home. Checking base classes reduced the
+genuine gaps to eight. The correction is recorded in the analysis doc so
+it is not repeated.
+
+### 5. In-file `signal` / `axes` attributes cannot be relied on
+
+Our primary test file `FeXAS.nxs` is valid NeXus by every other measure —
+`NX_class` on every group, `definition = NXxas`, written by
+`xraylarch xdi2nexus` — yet its `NXdata` group has **no `signal` and no
+`axes` attribute**. The canonical convention is simply absent.
+
+Resolution is therefore three-tier: in-file attributes when present →
+the NXDL application definition's nested tree as a path map → shape and
+name heuristics, with a `warning` recorded so output is honest about how
+it was derived. Tier 2 is the reason to consume the definitions repo
+rather than hardcode NeXus knowledge.
+
+### 6. Multi-`NXentry` is normal, not an edge case
+
+`FeXAS.nxs` holds **26** `NXentry` groups (a scan series). Any design
+that assumes one entry per file is wrong.
+
+### 7. The XAS uplift is finished, not in progress
+
+`UPLIFT-INSTRUCTIONS.md` in `smrgeoinfo/cdif-xas` reads as a plan
+addressed to a future session. It has been **executed** — tasks 1–16
+applied, 37/37 of the test corpus fully valid against
+`xasDocument/1.0` (JSON Schema + SHACL). Do not treat it as pending
+work or assume a parallel session is mid-flight on it.
+
+### 8. Corrections a from-first-principles reading tends to get wrong
+
+Recorded because a parallel session independently made the first of
+these, as did an earlier pass in this one:
+
+- **"Beamline focusing, harmonic rejection, and sample physico-chemical
+  conditions have no NXxas concept."** False, and it matters — acting on
+  it means minting `xdi:` gap terms that duplicate existing NeXus
+  vocabulary. These live on *base classes*: `focusing` →
+  `NXmirror/bend_angle_x|y` (also `NXslit`, `NXaperture`);
+  `harmonicrejection` → `NXmirror` (`type`, `coating_material`,
+  `incident_angle`); sample conditions → `NXsample`. See
+  [Established §4](#4-crosswalk-to-nexus-base-classes-not-application-definitions).
+  Only **eight** concepts are genuinely unhomed (listed under Effort B).
+- **"We must wait for official NeXus concept IRIs before finalising
+  SSSOM subjects/objects."** Do not wait. The NeXusOntology PURLs are
+  dead, an open PR renames every IRI, and the repo has no licence — see
+  [Established §2](#2-nexusontology-is-not-usable-as-an-identifier-source).
+  Use manual URLs now ([§3](#3-nxs-prefix-concatenation-does-not-resolve))
+  and treat any future ontology IRI as a later `skos:exactMatch` row,
+  which is exactly what SSSOM is for.
+- **`XAS_Glossary_SKOS_v2_draft.json` changed on 2026-07-27** — 89 → 90
+  concepts (added `emissionline`), and `edgeanalyzed` /
+  `xasmeasurementmode` gained `dc:references` to three new value-list
+  schemes. Anchor SSSOM on the current file, and use the imported
+  enumerations (39 edges, 432 emission lines, 7 detection modes) as
+  object IRIs rather than free text.
+
+---
+
+## Decisions
+
+| Decision | Note |
+|---|---|
+| `cdif:LocatorMapping` + `cdif:locator` for HDF5 internal paths | A path is a locator, not a column index; `cdif:TextMapping` + `cdif:index` is the tabular analog and does not apply |
+| Multi-entry file = **archive of parts**, one part per `NXentry` | Shared metadata by reference, not repeated; one `cdi:DataStructure` per distinct (signal, axes, shapes, dtypes) signature, referenced by every matching entry |
+| Units → **QUDT/UCUM normalization attempted** | Source string always kept verbatim in `schema:unitText`; codes added only on confident match; unmatched recorded in warnings |
+| **Detect** conformance, don't assert it | Emit a `dcterms:conformsTo` entry only when content satisfies that profile |
+| Per-profile validation, never one monolithic schema | Convention inherited from the ADA project after their monolithic schema was deprecated |
+| `NXsubentry` with a definition differing from its parent | **Tabled** — needs a concrete example first |
+| EXAFS analysis products out of scope for the crosswalk | 17 CDIF concepts (k, χ, χ(R), Fourier-filtered, normalized) have zero NeXus counterpart; `NXxasproc` is byte-identical to upstream and untouched since 2008. Processed data belongs in a separate profile |
+
+### Sentinel conventions (shared across all three repos)
+
+- `"Missing"` — required text/name field the source did not supply
+- `"unknown"` — required numeric/enumerated field needing domain input
+- `<http://www.opengis.net/def/nil/OGC/0/missing>` — required URI-shape value
+
+Prefer *omitting* an optional field over filling it with a sentinel.
+
+### JSON-LD hygiene (learned the hard way in `cdif-xas`)
+
+- Blank-node `@id`s (`_:b1`) are valid RDF but **fail plain-JSON
+  validators** like Oxygen — materialize as real IRIs
+- URI-shape values must be `{"@id": …}` objects, not bare strings — CDIF
+  SHACL enforces this on `schema:propertyID`, `schema:additionalType`,
+  `dcterms:conformsTo`, `cdif:isDefinedBy_RepresentedVariable`,
+  `cdif:uses`
+- `schema:` must expand to `http://schema.org/`, **not** `https://` —
+  the `https` variant is a different IRI and silently breaks framing
+- CDIF SHACL requires an InstanceVariable ↔ RepresentedVariable round
+  trip: every RV referenced by a DataStructureComponent needs an IV
+  pointing back via `cdif:uses`
+
+---
+
+## Effort A — `usgin/hdf5metadata`
+
+Public, CC-BY-4.0, Python ≥3.11. **Design phase — no extraction code
+yet, deliberately.**
+
+Present: `DESIGN.md`, `AGENTS.md`, `README.md`, `pyproject.toml`,
+licence files, `.gitignore`.
+
+Planned pipeline, with a hard boundary between structure and semantics
+so that CDIF vocabulary changes touch only one layer:
+
+```
+inspect/   walk the file -> plain structural dicts, NO CDIF vocabulary
+map/       dicts -> CDIF JSON-LD fragments, ALL semantics here
+emit +     assemble, detect satisfied profiles, write conformsTo,
+validate   validate per profile (JSON Schema + SHACL)
+```
+
+**Next step:** `inspect/hdf5.py` (generic h5py walker) and
+`inspect/nexus.py` (`NX_class`-aware overlay).
+
+Resilience requirements — the XAS definitions are in flux, so the code
+must: search all three definition directories and never hardcode which
+holds what; discover the appdef list at load time; pin a commit SHA by
+default with an override and record the resolved SHA in provenance;
+treat an unresolvable definition as a degraded tier that still emits
+core+discovery rather than failing; parse NXDL defensively; and make no
+structural assumptions beyond the NXDL grammar (the new `NXxas` does
+*not* put energy under `NXmonochromator`).
+
+Full detail: [`DESIGN.md`](./DESIGN.md) · conventions and gotchas:
+[`AGENTS.md`](./AGENTS.md)
+
+---
+
+## Effort B — CDIF XAS vocabulary
+
+In `smrgeoinfo/XAS-CDIF`, branch **`cdifxasRelease`** (not `main`).
+
+### Done
+
+`XAS_Glossary_vs_NeXus_analysis.md` — full gap analysis: ~22 concepts
+with clean NeXus counterparts, 10 beamline/facility concepts corrected
+to base-class paths, 8 genuinely unhomed, candidate new concepts,
+enumerations worth importing, and the reverse contribution CDIF could
+make to NeXus.
+
+Enumeration import (recommendation item 1), via the re-runnable
+`tools/import_nexus_enumerations.py`:
+
+| File | Concepts | Source |
+|---|---:|---|
+| `XAS_edges_SKOS.json` | 39 | `NXabsorption_edge/name` |
+| `XAS_emissionlines_SKOS.json` | 432 | `NXemission_line/name` |
+| `XAS_detectionmodes_SKOS.json` | 7 | union of upstream + fork |
+| `XAS_Glossary_SKOS_v2_draft.json` | 90 | +1 (`emissionline`) |
+
+Kept as **separate schemes** rather than folded into the glossary: 478
+concepts against 89 would be a 6× inflation, and the publishing pipeline
+emits one file per concept. Linked via `dc:references` out, `skos:broader`
+back.
+
+Detection modes **must** be the union — upstream has Auger Electron Yield
+and one undivided Fluorescence Yield; the fork drops Auger, splits
+fluorescence into total/partial, and adds HERFD. Either source alone
+loses terms.
+
+### Not done — remaining recommendations
+
+2. Hand-write ~10 concepts for PFY/HERFD/PEY vocabulary CDIF lacks:
+   `emissionenergy`, `emissionenergywindow`, `retardingvoltage`,
+   `analyzercrystal`, `rowlandradius`, `bendingradius`, `deadtime`,
+   `counttime`, `intensityuncertainty`
+3. Add `skos:exactMatch` / `closeMatch` to the ~22 overlapping concepts,
+   pointing at **base-class** paths. Flag `calculated` ↔
+   `is_experimental` as `skos:related`, **not** `exactMatch` — the
+   boolean polarity is inverted
+4. Move the 8 genuinely unhomed XDI-derived concepts to an `xdi:`
+   namespace: `installedoptions`, `scanmode`, `calibrationmethod`,
+   `fluxmeasuremethod`, `website`, `monochromatorangle`, `monitormode`,
+   `monitorpreset`
+5. Adopt the NXxas subclass hierarchy as `skos:broader` — the glossary is
+   currently entirely flat (all concepts `hasTopConcept`, no
+   `broader`/`narrower`)
+
+### Next artifact (proposed, not started)
+
+An SSSOM alignment set for the **transmission slice** end-to-end —
+element, edge, energy, i0/itrans, facility, mono/d-spacing — anchored on
+the current `XAS_Glossary_SKOS_v2_draft.json`, with XDI tokens as one
+binding and `NXxas_trans` concept paths as the other. Validate the XDI
+side against the concept keys `mapping_dds.ttl` actually references, and
+diff the emitted output against the existing reference JSON-LD.
+
+Anchor on the **local** glossary file, not the published
+`w3id.org/cdif/xas/` concepts — the local copy is ahead of what is
+published (see Established §8).
+
+### Worth proposing upstream
+
+CDIF's 17 EXAFS analysis concepts and its operational beamline concepts
+fill real holes in the XAS fork. Better raised **while their definitions
+are still in flux** than after they stabilise.
+
+---
+
+## Canonical links
+
+| What | Where |
+|---|---|
+| This file | `usgin/hdf5metadata` → `STATUS.md` (`main`) |
+| Extractor design | `usgin/hdf5metadata` → `DESIGN.md` (`main`) |
+| Extractor conventions | `usgin/hdf5metadata` → `AGENTS.md` (`main`) |
+| XAS gap analysis | `smrgeoinfo/XAS-CDIF` → `XAS_Glossary_vs_NeXus_analysis.md` (**`cdifxasRelease`**) |
+| Enumeration importer | `smrgeoinfo/XAS-CDIF` → `tools/import_nexus_enumerations.py` (**`cdifxasRelease`**) |
+| XDI→CDIF pipeline | `smrgeoinfo/cdif-xas` (`main`) |
+| CDIF profile schemas + SHACL | `Cross-Domain-Interoperability-Framework/metadataBuildingBlocks` → `_sources/profiles/` |
+| NeXus definitions (use this) | `XraySpectroscopy/nexus_definitions` (`main`) |
+| Test file | `FeXAS.nxs`, 2.7 MB, 26 `NXentry`, `definition = NXxas` |
+| Golden reference | `Cross-Domain-Interoperability-Framework/profile-datastructure` → `examples/FeXAS/NEXUS-withDataStructureComponent.json` |
+
+Note the XAS-CDIF items are on `cdifxasRelease`, **not** `main`.
