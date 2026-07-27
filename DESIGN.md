@@ -125,10 +125,16 @@ confirming against the CDIF data-structure implementation guide.
 
 ## Decisions made
 
-- **`nxs:` namespace** = `https://manual.nexusformat.org/classes/`.
-  Prior art disagrees — `adaMetadata-frame-v1.jsonld` uses this one,
-  `yaml_to_jsonld.py` uses `http://purl.org/nexusformat/definitions/`.
-  Picking the one that actually dereferences to documentation.
+- **NeXus concept identifiers = full NeXus-manual URLs**, e.g.
+  `https://manual.nexusformat.org/classes/applications/NXxas.html`.
+  **Do not define a `nxs:` prefix over bare class names.** The obvious
+  form (`nxs: https://manual.nexusformat.org/classes/` + `NXentry`)
+  yields `.../classes/NXentry` → **404**. Only the two-segment forms
+  `.../classes/base_classes/NXentry.html` and
+  `.../classes/applications/NXxas.html` resolve (verified 2026-07-27).
+  Both prior-art codebases got this wrong in different ways.
+  Rationale for rejecting the NeXusOntology PURLs is in the ecosystem
+  survey below.
 - **Detect conformance, don't assert it.** Follows
   `CDIF/validation/detect_conformance.py`, which derives profile conformance
   from content via SPARQL ASK + per-class SHACL.
@@ -142,16 +148,137 @@ confirming against the CDIF data-structure implementation guide.
 
 ## Open questions
 
-- Does a NeXus file with multiple `NXentry` groups become one CDIF Dataset with
-  multiple distributions, or multiple Datasets? (Affects the core mapping.)
-  `docs/kotahiWorkflow-design.md` §4.2–4.5 in the ADA repo discusses CDIF's
-  single-file vs collection vs archive-bundle distribution shapes — read before
-  deciding.
+- **Multi-`NXentry` files: one CDIF Dataset or many?** No longer
+  hypothetical — our primary test file `FeXAS.nxs` contains **26**
+  `NXentry` groups (a scan series: `FeFoil.001`, `FeFoil.002`, …).
+  This is the highest-priority design question because it determines
+  the shape of the core mapping. `docs/kotahiWorkflow-design.md`
+  §4.2–4.5 in the ADA repo covers CDIF's single-file vs collection vs
+  archive-bundle distribution shapes — read before deciding.
+  Candidate answers: (a) one Dataset, one distribution, a
+  DataStructure per entry; (b) one Dataset whose `schema:hasPart`
+  lists per-entry `schema:MediaObject`s; (c) N Datasets sharing one
+  distribution. (b) looks closest to CDIF's archive-bundle pattern.
 - Unit strings: NeXus `units` values are free text (`"eV"`, `"counts"`,
-  `"mm"`). Emit as `schema:unitText` only, or attempt QUDT/UCUM normalization?
-  No prior art parses units — everything copies the raw string.
-- `NXsubentry` with a different `definition` than its parent `NXentry` — a
-  single file claiming two application definitions. Real in multi-modal data.
+  `"Angstroms"`). Emit as `schema:unitText` only, or normalize to
+  QUDT/UCUM? No prior art parses units — everything copies the raw
+  string. Note the NXDL definitions carry a *unit category*
+  (`NX_ENERGY`, `NX_LENGTH`, …) per field, which is coarser than a
+  unit but is machine-readable and free.
+- `NXsubentry` with a different `definition` than its parent
+  `NXentry` — a single file claiming two application definitions.
+  Real in multi-modal data.
+
+## NeXus ecosystem survey (2026-07-27)
+
+Survey of the `nexusformat` GitHub organization for things to consume
+rather than reinvent.
+
+### `nexusformat/definitions` — **use it**
+
+The authoritative machine-readable standard. 142 base classes, 45
+application definitions, 93 contributed definitions, as NXDL XML
+(namespace `http://definition.nexusformat.org/nxdl/3.1`). Current
+release `v2026.01`.
+
+Why it matters to us:
+
+- **Application definitions nest the full expected tree** —
+  `NXentry → NXinstrument → NXmonochromator/energy` etc. That is a
+  ready-made path map for HDF5 traversal, which we need precisely
+  because real files often omit the in-file `signal`/`axes` hints
+  (see the three-tier strategy below).
+- `<enumeration>` elements give **controlled vocabularies for free**
+  (e.g. XAS detection mode `Transmission` / `Fluorescence`) —
+  directly usable as `schema:DefinedTerm` values.
+- `<field>` carries `type` (`NX_FLOAT`, `NX_DATE_TIME`, …) and a
+  `units` *category* (`NX_ENERGY`, …) → feeds
+  `cdif:physicalDataType` and unit handling.
+- `dev_tools/utils/nxdl_utils.py` has **h5py-aware** helpers
+  (`get_hdf_root`, `get_best_child`, `get_nx_namefit`,
+  `get_node_at_nxdl_path`, `get_inherited_nodes`) that resolve an
+  h5py node against NXDL inheritance. Crib from this rather than
+  writing name-matching from scratch.
+
+Caveats: **no JSON / JSON Schema / RDF form exists** — parse the XML
+(it's flat and stable; `lxml` is enough). The repo is **not
+pip-installable**; consume by pinning a tag and vendoring the ~280
+`*.nxdl.xml` files. **Licence is LGPL-3.0-or-later** — ship the
+licence text if we vendor the XML. Deriving JSON-LD *output* from
+them is not a derivative-work concern in practice.
+
+### `nexusformat/NeXusOntology` — **reference, don't depend**
+
+An OWL (RDF/XML) rendering of the definitions: 57 BaseClass, 34
+Application, 1261 Field, 284 Attribute, 33 Units terms. Attractive in
+principle — it would give us ready-made concept IRIs. **Rejected as an
+identifier source on four grounds:**
+
+1. **The PURLs are dead.** Base IRI is
+   `http://purl.org/nexusformat/definitions/`; every term IRI 404s.
+   The purl domain was never registered. Open issue #6 (2025-06-19),
+   unanswered.
+2. **The IRIs are about to change.** Open PR #8 (mergeable) rebuilds
+   against definitions v2025.11 and **renames every IRI** to a flat
+   hash namespace (`…/definitions#nxdata-signal-attribute`).
+3. **No licence.** `license: null`, no LICENSE file — all rights
+   reserved by default.
+4. **Stale.** Pinned to definitions v2024.02; current is v2026.01.
+
+Still useful as *reference*: it carries 2119 `rdfs:seeAlso` values
+pointing at resolvable manual anchors, which is corroboration for the
+"use manual URLs as identifiers" decision above.
+
+### `pynxtools` (PyPI, FAIRmat) — **evaluate as an optional extra**
+
+Apache-2.0, actively maintained (v0.15.0). Bundles the definitions as
+a submodule and does **real HDF5-against-application-definition
+validation** — i.e. it answers "does this file actually conform to
+NXxas?", which is exactly our `measurementTechnique` conformance
+question. Strongest off-the-shelf option. Heavy (NOMAD ecosystem), so
+it belongs behind an optional extra, not in core dependencies.
+
+### `nexusformat` (PyPI, NeXpy) — **considered, probably not**
+
+Modified BSD, v2.0.2. High-level tree API (`nxload()`) that resolves
+NXdata signal/axes for you. Tempting, but pulls in scipy, pygments,
+colored, hdf5plugin for what amounts to tree navigation we can do in
+~200 lines of h5py. Revisit if the traversal code gets unwieldy.
+
+### Others — **not useful**
+
+- `nexusformat/features` — NIAC "recipes": per-technique Python files
+  keyed by opaque hex IDs, essentially hardcoded path→validator maps.
+  Useful only as reference for which paths matter per technique.
+- `nexusformat/cnxvalidate` — C validator; needs compilation
+  (libxml2 + HDF5). `pynxtools` covers the same ground in Python.
+- `nexusformat/python-nxs` — NAPI bindings, last touched 2020. h5py
+  is strictly better.
+- `nexusformat/w3id.org` — just a fork of `perma-id/w3id.org` with no
+  NeXus-specific content. `w3id.org/nexusformat/*` does **not**
+  resolve; NeXus has no w3id namespace.
+- `nexusformat/code`, `communications`, `NIAC`, `wiki`,
+  `hdf5xmp`, `HDF5-External-Filter-Plugins` — out of scope.
+
+### Consequence: three-tier signal/axes resolution
+
+Reality check on `FeXAS.nxs` (well-formed NeXus, written by
+`xraylarch xdi2nexus`, `NX_class` on every group, `definition` =
+`NXxas`): its `NXdata` group has **no `signal` and no `axes`
+attribute** — only `NX_class`. The canonical convention is simply not
+present.
+
+So the extractor cannot rely on in-file hints alone:
+
+1. **In-file attributes** — `NXdata@signal`, `@axes`, `@default`,
+   and the older `@axis`/`@primary` field attributes. Use when present.
+2. **NXDL application definition** — read `NXentry/definition`, load
+   the matching `applications/<name>.nxdl.xml`, and use its nested
+   tree as the path map for which field is the measurement and which
+   are coordinates. This is why we consume the definitions repo.
+3. **Heuristics** — shape agreement (all 1-D arrays of equal length in
+   one `NXdata`), name conventions, `units` presence. Last resort;
+   record in `warnings` when used so output is honest about it.
 
 ## Prior art surveyed (2026-07-27)
 
