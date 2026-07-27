@@ -399,13 +399,43 @@ So the extractor cannot rely on in-file hints alone:
 
 1. **In-file attributes** — `NXdata@signal`, `@axes`, `@default`,
    and the older `@axis`/`@primary` field attributes. Use when present.
-2. **NXDL application definition** — read `NXentry/definition`, load
-   the matching `applications/<name>.nxdl.xml`, and use its nested
-   tree as the path map for which field is the measurement and which
-   are coordinates. This is why we consume the definitions repo.
-3. **Heuristics** — shape agreement (all 1-D arrays of equal length in
+2. **NXdata link targets** — see below. Cheap, in-file, and present in
+   real data where tier 1 is not.
+3. **NXDL application definition** — read `NXentry/definition`, load
+   the matching definition, and use its nested tree as the path map for
+   which field is the measurement and which are coordinates. This is why
+   we consume the definitions repo.
+4. **Heuristics** — shape agreement (all 1-D arrays of equal length in
    one `NXdata`), name conventions, `units` presence. Last resort;
    record in `warnings` when used so output is honest about it.
+
+### Tier 2 in detail: link targets carry the structure
+
+Found while testing `inspect/hdf5.py` against `FeXAS.nxs`. Its `NXdata`
+group has no `signal` and no `axes` — but it reaches the real arrays by
+**soft link**, and the link targets say exactly what each one is:
+
+```
+/FeFoil.001/data/energy  ->  /FeFoil.001/instrument/monochromator/energy
+/FeFoil.001/data/i0      ->  /FeFoil.001/instrument/i0/data
+/FeFoil.001/data/itrans  ->  /FeFoil.001/instrument/itrans/data
+```
+
+A dataset linked in from `NXmonochromator/energy` is an axis; one linked
+from an `NXdetector` is a measured channel. That is recoverable
+structure, in the file, without consulting NXDL — so it belongs above the
+definition lookup in the tier order.
+
+**This is why `inspect/hdf5.py` records links per group.** `visititems`
+does not follow soft links and visits each underlying object once, so a
+naive walk loses these child names entirely: `/FeFoil.001/data/energy`
+never appears as a dataset. Without the `links` map the whole `NXdata`
+group would look empty apart from the two arrays physically stored in
+it. Covered by `test_soft_links_are_recorded`.
+
+NeXus also uses *hard* links with a `target` attribute naming the
+canonical location; the inspector records those too, distinguishing an
+alias from an original.
 
 ## Prior art surveyed (2026-07-27)
 
