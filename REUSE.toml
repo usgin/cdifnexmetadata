@@ -1,0 +1,28 @@
+version = 1
+
+[[annotations]]
+path = [
+    "README.md",
+    "AGENTS.md",
+    "DESIGN.md",
+]
+SPDX-FileCopyrightText = "2026 USGIN"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+[[annotations]]
+path = [
+    ".gitignore",
+    "pyproject.toml",
+]
+SPDX-FileCopyrightText = "NONE"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "src/**"
+SPDX-FileCopyrightText = "2026 USGIN"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+[[annotations]]
+path = "tests/**"
+SPDX-FileCopyrightText = "2026 USGIN"
+SPDX-License-Identifier = "CC-BY-4.0"

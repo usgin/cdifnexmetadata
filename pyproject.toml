@@ -1,0 +1,42 @@
+[project]
+name = "hdf5metadata"
+version = "0.1.0.dev0"
+description = "Extract CDIF metadata from NeXus-formatted HDF5 files"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "CC-BY-4.0"
+authors = [
+    { name = "USGIN" },
+]
+keywords = ["nexus", "hdf5", "metadata", "cdif", "schema.org", "json-ld"]
+
+dependencies = [
+    "h5py>=3.10",
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+# JSON Schema + SHACL validation of emitted documents.
+validate = [
+    "jsonschema[format]>=4.23",
+    "pyshacl>=0.26",
+    "rdflib>=7.0",
+    "pyld>=2.0",
+]
+dev = [
+    "pytest>=8.0",
+]
+
+[project.scripts]
+hdf5metadata = "hdf5metadata.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/usgin/hdf5metadata"
+Issues = "https://github.com/usgin/hdf5metadata/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hdf5metadata"]

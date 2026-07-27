@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+
+# Test corpus downloaded from nexusformat/exampledata — large, not vendored
+tests/data/exampledata/
+
+# Generated output
+*.out.jsonld
