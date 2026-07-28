@@ -777,6 +777,19 @@ def emit_document(
         conforms.insert(0, {"@id": format_specification})
     if conforms:
         distribution["dcterms:conformsTo"] = conforms
+    # Every distinct structure, inline with its components, on the
+    # distribution. That is the one place the profile allows it -- the
+    # JSON Schema admits cdi:isStructuredBy only on a distribution item,
+    # and the SHACL rule reaches it as schema:distribution/isStructuredBy
+    # -- and it is also the only place from which one structure can be
+    # shared by several parts. Each part then references the one it uses
+    # by @id, which says which layout that part has without repeating it.
+    #
+    # An @id reference is not a "bare" reference in RDF: it denotes the
+    # same node the distribution defines inline, so the SHACL check that
+    # the target carries cdi:has_DataStructureComponent is satisfied.
+    if structures:
+        distribution["cdi:isStructuredBy"] = structures
     if parts:
         distribution["schema:hasPart"] = parts
 
@@ -935,9 +948,6 @@ def emit_document(
 
     if variables:
         doc["schema:variableMeasured"] = variables
-    if structures:
-        doc["cdi:isStructuredBy"] = structures
-
     # -- detected conformance ----------------------------------------------
     #
     # Claimed per profile only where the content for it is actually

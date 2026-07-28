@@ -214,12 +214,14 @@ def test_the_same_emitter_serves_both_bindings(tmp_path):
     true."""
     doc = _emit(tmp_path).document
     for key in ("@context", "schema:name", "schema:distribution",
-                "schema:variableMeasured", "cdi:isStructuredBy",
-                "schema:subjectOf", "prov:wasGeneratedBy"):
+                "schema:variableMeasured", "schema:subjectOf",
+                "prov:wasGeneratedBy"):
         assert key in doc, f"{key} missing from the XDI document"
-    part = doc["schema:distribution"][0]["schema:hasPart"][0]
+    dist = doc["schema:distribution"][0]
+    assert "cdi:isStructuredBy" in dist
+    part = dist["schema:hasPart"][0]
     assert part["cdi:isStructuredBy"]["@id"] == (
-        doc["cdi:isStructuredBy"][0]["@id"])
+        dist["cdi:isStructuredBy"][0]["@id"])
 
 
 @pytest.mark.parametrize("text", [SPACED, CLOSED_UP])

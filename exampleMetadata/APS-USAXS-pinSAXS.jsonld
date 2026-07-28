@@ -42,6 +42,138 @@
           "@id": "nxs:applications/NXsas.html"
         }
       ],
+      "cdi:isStructuredBy": [
+        {
+          "@id": "ex:DV/APS-USAXS-pinSAXS/structure/1",
+          "@type": [
+            "cdi:DimensionalDataStructure"
+          ],
+          "schema:name": "APS-USAXS-pinSAXS structure 1",
+          "schema:description": "shared by 1 of 1 entries",
+          "cdi:has_DataStructureComponent": [
+            {
+              "@id": "ex:DV/APS-USAXS-pinSAXS/1/dsc/backgroundintensity",
+              "@type": [
+                "cdi:MeasureComponent"
+              ],
+              "cdif:isDefinedBy_RepresentedVariable": {
+                "@id": "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS/rv/backgroundintensity",
+                "@type": [
+                  "cdi:RepresentedVariable"
+                ],
+                "schema:name": "background intensity",
+                "cdif:name": {
+                  "@type": [
+                    "cdi:ObjectName"
+                  ],
+                  "cdif:name": "background intensity"
+                }
+              },
+              "cdif:hasPhysicalMapping": {
+                "@id": "ex:DV/APS-USAXS-pinSAXS/1/pm/backgroundintensity",
+                "@type": [
+                  "cdif:LocatorMapping"
+                ],
+                "cdif:locator": "/entry/data/blank",
+                "cdif:physicalDataType": "xsd:integer",
+                "cdif:formats_InstanceVariable": {
+                  "@id": "ex:DV/APS-USAXS-pinSAXS/1/iv/backgroundintensity"
+                }
+              }
+            },
+            {
+              "@id": "ex:DV/APS-USAXS-pinSAXS/1/dsc/detectorhorizontal",
+              "@type": [
+                "cdi:MeasureComponent"
+              ],
+              "cdif:isDefinedBy_RepresentedVariable": {
+                "@id": "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS/rv/detectorhorizontal",
+                "@type": [
+                  "cdi:RepresentedVariable"
+                ],
+                "schema:name": "detectorhorizontal",
+                "cdif:name": {
+                  "@type": [
+                    "cdi:ObjectName"
+                  ],
+                  "cdif:name": "detectorhorizontal"
+                }
+              },
+              "cdif:hasPhysicalMapping": {
+                "@id": "ex:DV/APS-USAXS-pinSAXS/1/pm/detectorhorizontal",
+                "@type": [
+                  "cdif:LocatorMapping"
+                ],
+                "cdif:locator": "/entry/data/horizontal",
+                "cdif:physicalDataType": "xsd:integer",
+                "cdif:formats_InstanceVariable": {
+                  "@id": "ex:DV/APS-USAXS-pinSAXS/1/iv/detectorhorizontal"
+                }
+              }
+            },
+            {
+              "@id": "ex:DV/APS-USAXS-pinSAXS/1/dsc/detectorvertical",
+              "@type": [
+                "cdi:MeasureComponent"
+              ],
+              "cdif:isDefinedBy_RepresentedVariable": {
+                "@id": "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS/rv/detectorvertical",
+                "@type": [
+                  "cdi:RepresentedVariable"
+                ],
+                "schema:name": "detectorvertical",
+                "cdif:name": {
+                  "@type": [
+                    "cdi:ObjectName"
+                  ],
+                  "cdif:name": "detectorvertical"
+                }
+              },
+              "cdif:hasPhysicalMapping": {
+                "@id": "ex:DV/APS-USAXS-pinSAXS/1/pm/detectorvertical",
+                "@type": [
+                  "cdif:LocatorMapping"
+                ],
+                "cdif:locator": "/entry/data/vertical",
+                "cdif:physicalDataType": "xsd:integer",
+                "cdif:formats_InstanceVariable": {
+                  "@id": "ex:DV/APS-USAXS-pinSAXS/1/iv/detectorvertical"
+                }
+              }
+            },
+            {
+              "@id": "ex:DV/APS-USAXS-pinSAXS/1/dsc/scatteringintensity",
+              "@type": [
+                "cdi:MeasureComponent"
+              ],
+              "cdif:isDefinedBy_RepresentedVariable": {
+                "@id": "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS/rv/scatteringintensity",
+                "@type": [
+                  "cdi:RepresentedVariable"
+                ],
+                "schema:name": "scattering intensity",
+                "cdif:name": {
+                  "@type": [
+                    "cdi:ObjectName"
+                  ],
+                  "cdif:name": "scattering intensity"
+                }
+              },
+              "cdif:hasPhysicalMapping": {
+                "@id": "ex:DV/APS-USAXS-pinSAXS/1/pm/scatteringintensity",
+                "@type": [
+                  "cdif:LocatorMapping"
+                ],
+                "cdif:locator": "/entry/data/frames",
+                "cdif:physicalDataType": "xsd:integer",
+                "cdif:formats_InstanceVariable": {
+                  "@id": "ex:DV/APS-USAXS-pinSAXS/1/iv/scatteringintensity"
+                }
+              }
+            }
+          ]
+        }
+      ],
       "schema:hasPart": [
         {
           "@id": "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS/entry",
@@ -440,138 +572,6 @@
       "cdif:physicalDataType": "xsd:integer",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS/rv/scatteringintensity"
-      ]
-    }
-  ],
-  "cdi:isStructuredBy": [
-    {
-      "@id": "ex:DV/APS-USAXS-pinSAXS/structure/1",
-      "@type": [
-        "cdi:DimensionalDataStructure"
-      ],
-      "schema:name": "APS-USAXS-pinSAXS structure 1",
-      "schema:description": "shared by 1 of 1 entries",
-      "cdi:has_DataStructureComponent": [
-        {
-          "@id": "ex:DV/APS-USAXS-pinSAXS/1/dsc/backgroundintensity",
-          "@type": [
-            "cdi:MeasureComponent"
-          ],
-          "cdif:isDefinedBy_RepresentedVariable": {
-            "@id": "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS/rv/backgroundintensity",
-            "@type": [
-              "cdi:RepresentedVariable"
-            ],
-            "schema:name": "background intensity",
-            "cdif:name": {
-              "@type": [
-                "cdi:ObjectName"
-              ],
-              "cdif:name": "background intensity"
-            }
-          },
-          "cdif:hasPhysicalMapping": {
-            "@id": "ex:DV/APS-USAXS-pinSAXS/1/pm/backgroundintensity",
-            "@type": [
-              "cdif:LocatorMapping"
-            ],
-            "cdif:locator": "/entry/data/blank",
-            "cdif:physicalDataType": "xsd:integer",
-            "cdif:formats_InstanceVariable": {
-              "@id": "ex:DV/APS-USAXS-pinSAXS/1/iv/backgroundintensity"
-            }
-          }
-        },
-        {
-          "@id": "ex:DV/APS-USAXS-pinSAXS/1/dsc/detectorhorizontal",
-          "@type": [
-            "cdi:MeasureComponent"
-          ],
-          "cdif:isDefinedBy_RepresentedVariable": {
-            "@id": "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS/rv/detectorhorizontal",
-            "@type": [
-              "cdi:RepresentedVariable"
-            ],
-            "schema:name": "detectorhorizontal",
-            "cdif:name": {
-              "@type": [
-                "cdi:ObjectName"
-              ],
-              "cdif:name": "detectorhorizontal"
-            }
-          },
-          "cdif:hasPhysicalMapping": {
-            "@id": "ex:DV/APS-USAXS-pinSAXS/1/pm/detectorhorizontal",
-            "@type": [
-              "cdif:LocatorMapping"
-            ],
-            "cdif:locator": "/entry/data/horizontal",
-            "cdif:physicalDataType": "xsd:integer",
-            "cdif:formats_InstanceVariable": {
-              "@id": "ex:DV/APS-USAXS-pinSAXS/1/iv/detectorhorizontal"
-            }
-          }
-        },
-        {
-          "@id": "ex:DV/APS-USAXS-pinSAXS/1/dsc/detectorvertical",
-          "@type": [
-            "cdi:MeasureComponent"
-          ],
-          "cdif:isDefinedBy_RepresentedVariable": {
-            "@id": "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS/rv/detectorvertical",
-            "@type": [
-              "cdi:RepresentedVariable"
-            ],
-            "schema:name": "detectorvertical",
-            "cdif:name": {
-              "@type": [
-                "cdi:ObjectName"
-              ],
-              "cdif:name": "detectorvertical"
-            }
-          },
-          "cdif:hasPhysicalMapping": {
-            "@id": "ex:DV/APS-USAXS-pinSAXS/1/pm/detectorvertical",
-            "@type": [
-              "cdif:LocatorMapping"
-            ],
-            "cdif:locator": "/entry/data/vertical",
-            "cdif:physicalDataType": "xsd:integer",
-            "cdif:formats_InstanceVariable": {
-              "@id": "ex:DV/APS-USAXS-pinSAXS/1/iv/detectorvertical"
-            }
-          }
-        },
-        {
-          "@id": "ex:DV/APS-USAXS-pinSAXS/1/dsc/scatteringintensity",
-          "@type": [
-            "cdi:MeasureComponent"
-          ],
-          "cdif:isDefinedBy_RepresentedVariable": {
-            "@id": "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS/rv/scatteringintensity",
-            "@type": [
-              "cdi:RepresentedVariable"
-            ],
-            "schema:name": "scattering intensity",
-            "cdif:name": {
-              "@type": [
-                "cdi:ObjectName"
-              ],
-              "cdif:name": "scattering intensity"
-            }
-          },
-          "cdif:hasPhysicalMapping": {
-            "@id": "ex:DV/APS-USAXS-pinSAXS/1/pm/scatteringintensity",
-            "@type": [
-              "cdif:LocatorMapping"
-            ],
-            "cdif:locator": "/entry/data/frames",
-            "cdif:physicalDataType": "xsd:integer",
-            "cdif:formats_InstanceVariable": {
-              "@id": "ex:DV/APS-USAXS-pinSAXS/1/iv/scatteringintensity"
-            }
-          }
-        }
       ]
     }
   ],
