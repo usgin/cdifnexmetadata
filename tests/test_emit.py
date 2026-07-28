@@ -485,8 +485,11 @@ def test_property_values_are_strings_even_when_the_file_says_otherwise(
         _row("cdifxas:reflectionplane", "skos:exactMatch",
              "nxdl:NXcrystal/reflection"),
     )
-    mono = _emit(p, cw).document["prov:wasGeneratedBy"][0][
-        "prov:used"][0]["schema:instrument"]
+    mono = next(
+        u["schema:instrument"]
+        for u in _emit(p, cw).document["prov:wasGeneratedBy"][0]["prov:used"]
+        if u["schema:instrument"]["schema:additionalType"][0]["@id"]
+        == "xas:xraymonochromator")
     by_id = {pv["schema:propertyID"][0]["@id"]: pv
              for pv in mono["schema:additionalProperty"]}
     assert by_id["xas:dspacing"]["schema:value"].startswith("1.6375")
@@ -538,3 +541,60 @@ def test_a_non_xas_file_does_not_claim_the_xas_profile(tmp_path):
     names = {t.get("schema:termCode") for t
              in result.document.get("schema:measurementTechnique", [])}
     assert "XAS" not in names
+
+
+def test_a_missing_source_type_depends_on_the_declared_technique(tmp_path):
+    """An XAS measurement is made at a synchrotron -- that is what the
+    technique requires -- so naming one reads the technique rather than
+    guessing about the instrument. An NXtomo file may well have been
+    measured at a synchrotron too, but nothing in it says so."""
+    from hdf5metadata.emit import OGC_NIL_MISSING, SYNCHROTRON_SOURCE
+
+    def source_type(definition):
+        f = tmp_path / f"{definition}.nxs"
+        with h5py.File(f, "w") as h:
+            e = _entry(h, definition=definition)
+            inst = _group(e, "instrument", "NXinstrument")
+            inst["name"] = "BL-1"
+            _group(inst, "source", "NXsource")["name"] = "Facility X"
+        doc = _emit(f, _xas_crosswalk(tmp_path)).document
+        peers = doc["prov:wasGeneratedBy"][0].get("prov:used", [])
+        for u in peers:
+            i = u["schema:instrument"]
+            if i["schema:additionalType"][0]["@id"] != "xas:source":
+                continue
+            for pv in i.get("schema:additionalProperty", []):
+                if pv["schema:propertyID"][0]["@id"] == "xas:xraysourcetype":
+                    return pv["schema:value"]
+        return None
+
+    assert source_type("NXxas") == SYNCHROTRON_SOURCE
+    assert source_type("NXxas_trans") == SYNCHROTRON_SOURCE
+    # Not XAS: no source peer is invented at all, so nothing is asserted.
+    assert source_type("NXtomo") is None
+
+
+def test_a_non_xas_source_type_that_is_required_uses_the_nil_uri(tmp_path):
+    """Where a source peer does exist for a non-XAS file -- because the
+    file said something about the source -- a missing type is the OGC nil
+    URI, not a supposition about someone else's instrument."""
+    from hdf5metadata.emit import OGC_NIL_MISSING
+
+    f = tmp_path / "tomo.nxs"
+    with h5py.File(f, "w") as h:
+        e = _entry(h, definition="NXtomo")
+        inst = _group(e, "instrument", "NXinstrument")
+        _group(inst, "source", "NXsource")["probe"] = "x-ray"
+
+    cw = _crosswalk(tmp_path,
+                    _row("cdifxas:probe", "skos:exactMatch",
+                         "nxdl:NXsource/probe"))
+    doc = _emit(f, cw).document
+    source = next(
+        u["schema:instrument"]
+        for u in doc["prov:wasGeneratedBy"][0]["prov:used"]
+        if u["schema:instrument"]["schema:additionalType"][0]["@id"]
+        == "xas:source")
+    by_id = {p["schema:propertyID"][0]["@id"]: p["schema:value"]
+             for p in source["schema:additionalProperty"]}
+    assert by_id["xas:xraysourcetype"] == OGC_NIL_MISSING

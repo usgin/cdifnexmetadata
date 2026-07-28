@@ -96,6 +96,19 @@ XDI_MEDIA_TYPE = "application/x-xdi"
 #: recorded fact.
 UNKNOWN = "unknown"
 
+#: What to report for a source type no file recorded.
+#:
+#: An XAS measurement is made at a synchrotron -- that is what the
+#: technique requires -- so naming one is reading the technique, not
+#: guessing about the instrument. XDI says it is XAS by being XDI; a
+#: NeXus file says it by declaring an NXxas definition.
+#:
+#: Any other technique gets the OGC nil URI instead. An NXmx or NXtomo
+#: file may well have been measured at a synchrotron, but nothing in the
+#: file says so, and "we did not record this" is the honest answer where
+#: "synchrotron" would be a supposition about someone else's instrument.
+SYNCHROTRON_SOURCE = "Synchrotron X-ray Source"
+
 REQUIRED_INSTRUMENT_PROPERTIES = {
     "xas:source": (("probe", None), ("xraysourcetype", None)),
     "xas:xraymonochromator": (
@@ -544,7 +557,7 @@ def _keywords(pairs: list[tuple[str, str]]) -> list[dict[str, Any]]:
     return out
 
 
-def _with_sentinels(kind: str, props: list) -> list:
+def _with_sentinels(kind: str, props: list, is_xas: bool = False) -> list:
     """Fill out an instrument the profile has requirements for.
 
     Only properties the profile names for this instrument are added, and
@@ -563,16 +576,28 @@ def _with_sentinels(kind: str, props: list) -> list:
     for prop, unit in required:
         if f"xas:{prop}" in present:
             continue
+        if prop == "xraysourcetype":
+            value = SYNCHROTRON_SOURCE if is_xas else OGC_NIL_MISSING
+            why = (
+                "not recorded in the source file; an XAS measurement is "
+                "made at a synchrotron, so the technique supplies this "
+                "where the file does not"
+                if is_xas else
+                "not recorded in the source file, and the technique does "
+                "not imply one"
+            )
+        else:
+            value, why = UNKNOWN, (
+                "not recorded in the source file; the profile requires "
+                "this property, so it is reported as unknown rather than "
+                "omitted or guessed"
+            )
         sentinel: dict[str, Any] = {
             "@type": ["schema:PropertyValue"],
             "schema:propertyID": [{"@id": f"xas:{prop}"}],
             "schema:name": _readable(prop),
-            "schema:value": UNKNOWN,
-            "schema:description": (
-                "not recorded in the source file; the profile requires "
-                "this property, so it is reported as unknown rather than "
-                "omitted or guessed"
-            ),
+            "schema:value": value,
+            "schema:description": why,
         }
         if unit:
             sentinel["schema:unitText"] = unit
@@ -590,13 +615,15 @@ def _sample_name(records) -> str | None:
     return None
 
 
-def _instruments(buckets: dict[str, Any], base: str) -> list[dict[str, Any]]:
+def _instruments(
+    buckets: dict[str, Any], base: str, is_xas: bool = False
+) -> list[dict[str, Any]]:
     """Source and monochromator as peer instruments of the acquisition,
     each carrying its own settings. Mirrors the shape the XDI converter
     settled on, so the two bindings produce comparable graphs."""
     def used(name: str, kind: str, props: list) -> dict[str, Any]:
         slug = kind.split(":", 1)[-1]
-        props = _with_sentinels(kind, props)
+        props = _with_sentinels(kind, props, is_xas)
         # The entity wraps the instrument rather than being it. That
         # nesting is what the profile frame declares, and a frame drops
         # what it does not declare -- so a flat prov:used passes
@@ -623,9 +650,14 @@ def _instruments(buckets: dict[str, Any], base: str) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
     if buckets["instrument"]:
         out.append(used(buckets["instrument"], BEAMLINE_TYPE, []))
-    if buckets["source"]:
+    # An XAS document must describe a source and a monochromator whether
+    # or not the file said anything about them -- the profile requires
+    # both peers. Emitting them with sentinels states what is unknown;
+    # omitting them states nothing at all and fails validation. For any
+    # other technique only what the file actually carries is described.
+    if buckets["source"] or is_xas:
         out.append(used("X-ray source", SOURCE_TYPE, buckets["source"]))
-    if buckets["monochromator"]:
+    if buckets["monochromator"] or is_xas:
         out.append(used("monochromator", MONOCHROMATOR_TYPE,
                         buckets["monochromator"]))
     return out
@@ -836,7 +868,7 @@ def emit_document(
             "schema:additionalType": [{"@id": "xas:facility"}],
             "schema:name": buckets["facility"],
         }
-    instruments = _instruments(buckets, base)
+    instruments = _instruments(buckets, base, is_xas)
     if instruments:
         event["prov:used"] = instruments
     if buckets["sample"]:
