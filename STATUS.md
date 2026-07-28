@@ -239,7 +239,8 @@ Prefer *omitting* an optional field over filling it with a sentinel.
 ## Effort A — `usgin/hdf5metadata`
 
 Public, CC-BY-4.0, Python ≥3.11. **Stages 1, 1b and 2 implemented and
-tested (146 tests). **The pipeline runs end to end**: `hdf5metadata
+tested (189 tests), and it now reads **two input formats**. **The
+pipeline runs end to end**: `hdf5metadata
 FeXAS.nxs --validate --profile-dir ../XAS-CDIF/release` emits a CDIF
 document, validates it against the strict xasDocument composite, and
 reports `validation PASSED` with five advisories, exit 0.**
@@ -438,6 +439,60 @@ Full detail: [`DESIGN.md`](./DESIGN.md) · conventions and gotchas:
 [`AGENTS.md`](./AGENTS.md)
 
 ---
+
+### XDI — the second binding
+
+The architecture claimed a second input format would be a parser rather
+than a pipeline. `inspect/xdi.py` + `map/xdi.py` are that claim cashed:
+they produce the same `ConceptRecord`, and emission, profile detection,
+validation and the CLI are untouched shared code. XDI needed almost none
+of the NeXus machinery, because XDI is a dictionary and HDF5 is a tree —
+concepts come out by lookup, and `map/crosswalk.py` is not involved.
+
+Dispatch is on what the file declares, not its extension. The space
+after `#` is optional: 118 of the 272 files in the XAS Data Library
+write `#XDI/1.0` closed up.
+
+All 55 XDI files in the XAS-CDIF corpus validate clean against the
+strict `xasDocument` composite.
+
+### What the second binding exposed in shared code
+
+Both were real defects that no NeXus example had reached:
+
+- Variables were named from the source path — right for HDF5, where the
+  path ends in the field name; wrong for XDI, where a column is located
+  by position. Values now carry an explicit `label`.
+- The sample object was typed `Thing`/`prov:Entity`; the profile wants
+  `schema:Product` + `schema:Thing` with both `MaterialSample` and the
+  iSamples IRI. No NeXus example carried sample properties, so nothing
+  had exercised it.
+
+### Structures belong on the distribution
+
+`cdi:isStructuredBy` was written at dataset level. The JSON Schema
+admits it only on a distribution item and the SHACL rule reaches it as
+`schema:distribution/isStructuredBy`; documents validated only because
+an unrecognised property at dataset level is ignored.
+
+Dataset level was also wrong on its own terms — a file with 26 entries
+and two layouts cannot say which entry has which. Both structures now
+sit on the distribution, inline with their components, and each part
+references the one it uses by `@id`. An `@id` reference is not a "bare"
+reference in RDF: it denotes the same node, so the SHACL check passes.
+
+That SHACL message said otherwise and has been corrected upstream in
+`metadataBuildingBlocks`.
+
+### Sentinels
+
+Where the profile requires an instrument property the file omits, it is
+emitted with a sentinel rather than left out — omitting it makes the
+instrument undescribable and fails validation. A missing source type is
+`Synchrotron X-ray Source` where the file declares XAS (by being XDI, or
+by declaring an NXxas definition) and the OGC nil URI otherwise: an
+NXtomo file may well have been measured at a synchrotron, but nothing in
+it says so.
 
 ## Effort B — CDIF XAS vocabulary
 
