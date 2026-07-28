@@ -246,7 +246,7 @@ document, validates it against the strict xasDocument composite, and
 reports `validation PASSED` with five advisories, exit 0.**
 
 Present: `inspect/hdf5.py`, `inspect/nexus.py`, `nxdl/`, `map/`,
-vendored SSSOM crosswalks and the legacy path table under
+copied SSSOM crosswalks and the legacy path table under
 `src/hdf5metadata/data/`, `docs/DESIGN-2026-07-27.md`,
 `AGENTS.md`, `README.md`, `pyproject.toml`, licence files, `.gitignore`.
 
@@ -290,7 +290,8 @@ matters: framing only ever *removes* a wrapper, so restoring one cannot
 contradict what the document said.
 
 **Profile artifacts are not bundled.** They belong to the CDIF profile
-repositories and are versioned there; vendoring pins this package to a
+repositories and are versioned there; copying them in would pin this
+package to a
 snapshot and invites drift. They are located at run time from
 `--profile-dir` or `HDF5METADATA_PROFILE_DIR`. Absent, validation
 reports itself **skipped** — a run that checked nothing must not read

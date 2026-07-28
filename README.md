@@ -87,13 +87,16 @@ file yields 22 concepts and 4 variables.
 
 | bundled crosswalk | direction |
 |---|---|
-| `cdifxas-to-nexus.sssom.tsv` | CDIF XAS concept → NeXus path *(vendored)* |
-| `xdi-to-cdifxas.sssom.tsv` | XDI key → CDIF XAS concept *(vendored)* |
+| `cdifxas-to-nexus.sssom.tsv` | CDIF XAS concept → NeXus path *(copied from upstream)* |
+| `xdi-to-cdifxas.sssom.tsv` | XDI key → CDIF XAS concept *(copied from upstream)* |
 | `cdifsas-to-nexus.sssom.tsv` | CDIF SAS concept → NeXus path |
 | `legacy-paths.tsv` | writer conventions that diverge from the standard |
 
-The two vendored files are copies from
-[XAS-CDIF](https://github.com/smrgeoinfo/XAS-CDIF); refresh with
+The first two are copies. Their master versions live in
+[XAS-CDIF](https://github.com/smrgeoinfo/XAS-CDIF) and are built there
+by `crosswalk/build_crosswalk.py`; the copies exist so this package
+works offline and so a release is pinned to a known crosswalk revision.
+Re-download them with
 `python -m hdf5metadata.map.crosswalk --refresh`.
 
 ## Adding an input format is a parser

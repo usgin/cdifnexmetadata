@@ -4,12 +4,12 @@ Two kinds of file live here, maintained differently.
 
 | File | Kind |
 |------|------|
-| `cdifxas-to-nexus.sssom.tsv` | vendored copy — **do not edit here** |
-| `xdi-to-cdifxas.sssom.tsv` | vendored copy — **do not edit here** |
+| `cdifxas-to-nexus.sssom.tsv` | copy of an upstream file — **do not edit here** |
+| `xdi-to-cdifxas.sssom.tsv` | copy of an upstream file — **do not edit here** |
 | `cdifsas-to-nexus.sssom.tsv` | authored in this repo — edit here |
 | `legacy-paths.tsv` | authored in this repo — edit here |
 
-## Vendored crosswalks
+## Crosswalks copied from upstream
 
 **These files are copies. Do not edit them here.**
 
@@ -19,8 +19,10 @@ which checks every subject against the CDIF XAS glossary, every NeXus
 path against the live NXDL, and every XDI key against the concept keys
 the production RML mapping actually reads.
 
-They are vendored so this package works offline and so a given release
-pins a known crosswalk revision. Refresh with:
+They are copied in rather than fetched, so this package works offline
+and so a given release is pinned to a known crosswalk revision. The cost
+is that these copies fall behind when the originals change. Refresh
+with:
 
     python -m hdf5metadata.map.crosswalk --refresh
 
@@ -65,9 +67,9 @@ is a crosswalk rather than a code change. It is: pass it with
 `--crosswalk` and an `NXsas` file yields concepts, variables and a data
 structure with nothing else touched.
 
-Authored here rather than vendored because there is no CDIF SAS
-glossary to vendor from; the concepts follow the same
-mint-now-redirect-later pattern under `https://w3id.org/cdif/sas/`.
+Authored here rather than copied, because there is no CDIF SAS glossary
+to copy from; the concepts follow the same mint-now-redirect-later
+pattern under `https://w3id.org/cdif/sas/`.
 
 See [`docs/NXsas.md`](../../../docs/NXsas.md) for what `NXsas` is, and
 the file's own header for why four technique-neutral concepts
