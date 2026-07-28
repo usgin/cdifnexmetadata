@@ -2,7 +2,7 @@
 
 The definitions are pinned to a specific commit by default because they
 are actively being revised -- see `repository.DEFAULT_REF` and the
-resilience notes in DESIGN.md.
+resilience notes in README.md.
 """
 
 from hdf5metadata.nxdl.definition import (

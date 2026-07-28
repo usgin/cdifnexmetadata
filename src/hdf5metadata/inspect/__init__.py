@@ -2,7 +2,7 @@
 
 `hdf5` reports what is *in* a file, carrying no vocabulary at all.
 `nexus` layers NeXus interpretation on that result. Neither knows
-anything about CDIF -- see the pipeline note in DESIGN.md.
+anything about CDIF -- see the pipeline note in README.md.
 """
 
 from hdf5metadata.inspect.hdf5 import (

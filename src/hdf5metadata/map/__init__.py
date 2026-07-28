@@ -3,7 +3,7 @@
 All the semantics live here. `crosswalk` holds the SSSOM correspondence
 and the NXDL-path matching; `legacy` records where non-standard writers
 actually put things; `concepts` produces the concept-keyed intermediate
-that is the hub of the architecture -- see DESIGN.md.
+that is the hub of the architecture -- see README.md.
 """
 
 from hdf5metadata.map.concepts import (

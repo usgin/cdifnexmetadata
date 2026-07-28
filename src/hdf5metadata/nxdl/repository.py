@@ -35,7 +35,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 #: The XAS community's working fork. Ahead of nexusformat/definitions and
-#: the target of the NeXusOntology generation scripts -- see DESIGN.md.
+#: the target of the NeXusOntology generation scripts -- see README.md.
 DEFAULT_REPO = "XraySpectroscopy/nexus_definitions"
 
 #: Pinned so results are reproducible while these definitions are in flux.

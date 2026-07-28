@@ -134,7 +134,7 @@ def test_the_energy_axis_is_a_dimension_not_a_measure(tmp_path):
 # ---------------------------------------------------------------------------
 
 def test_entries_become_parts_sharing_one_structure_by_reference(tmp_path):
-    """A scan series shares its layout. DESIGN.md emits the structure
+    """A scan series shares its layout. The emitter writes the structure
     once and has every matching part point at it, rather than repeating
     it per entry."""
     p = tmp_path / "f.nxs"

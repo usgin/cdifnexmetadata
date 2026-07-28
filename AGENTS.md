@@ -10,7 +10,7 @@ schema.org JSON-LD describing it — core, discovery, dataDescription, and
 dataStructure profiles, to the extent the file's own internal description
 supports each.
 
-**Read [`DESIGN.md`](./DESIGN.md) first.** It has the pipeline architecture,
+**Read [`docs/DESIGN-2026-07-27.md`](./docs/DESIGN-2026-07-27.md) first.** It has the pipeline architecture,
 the NeXus→CDIF mapping tables, the decisions already made (and why), the open
 questions, and a survey of reusable prior art in two other repositories.
 
@@ -45,7 +45,7 @@ properties neither format carries (creator, licence, identifiers).
 
 ## Conventions
 
-Carried forward deliberately from the prior codebases surveyed in DESIGN.md:
+Carried forward deliberately from the prior codebases surveyed in docs/DESIGN-2026-07-27.md:
 
 - **Stage boundary is sacred.** `inspect/` emits plain structural dicts with no
   CDIF vocabulary. `map/` holds all semantics. When CDIF vocabulary changes,

@@ -164,7 +164,7 @@ class MappingResult:
         """Key identifying entries that share a data structure.
 
         Entries in a scan series differ in title and timestamps but share
-        their layout, so DESIGN.md emits one `cdi:DataStructure` and has
+        their layout, so the emitter writes one `cdi:DataStructure` and has
         every matching part reference it. Two entries share a structure
         when the same concepts are present as arrays with the same shapes
         and dtypes.
@@ -488,7 +488,7 @@ def map_nexus(
         groups = out.structure_groups()
         out.warnings.append(
             f"{len(out.records)} entries resolve to {len(groups)} distinct "
-            f"data structure(s); per DESIGN.md these become parts of one "
+            f"data structure(s); these become parts of one "
             f"dataset sharing structure by reference"
         )
     return out

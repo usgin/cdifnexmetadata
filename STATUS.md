@@ -71,7 +71,7 @@ lookup table *is* the SSSOM alignment.
 general-purpose NeXus extractor (any technique); C is XAS-specific with a
 Dataverse round-trip. A should emit the concept-keyed intermediate so it
 can feed C's existing transform rather than duplicating it — see
-[`DESIGN.md`](./DESIGN.md).
+[`docs/DESIGN-2026-07-27.md`](./docs/DESIGN-2026-07-27.md).
 
 B supplies the hub both depend on.
 
@@ -247,7 +247,7 @@ reports `validation PASSED` with five advisories, exit 0.**
 
 Present: `inspect/hdf5.py`, `inspect/nexus.py`, `nxdl/`, `map/`,
 vendored SSSOM crosswalks and the legacy path table under
-`src/hdf5metadata/data/`, `DESIGN.md`,
+`src/hdf5metadata/data/`, `docs/DESIGN-2026-07-27.md`,
 `AGENTS.md`, `README.md`, `pyproject.toml`, licence files, `.gitignore`.
 
 Planned pipeline, with a hard boundary between structure and semantics
@@ -263,7 +263,7 @@ validate   validate per profile (JSON Schema + SHACL)
 All four stages are done. **Next steps** are no longer pipeline
 plumbing: broaden beyond XAS (a second crosswalk, no code change), add
 more writer conventions to the legacy table as they turn up, and settle
-the QUDT/UCUM unit normalisation DESIGN.md still lists as open.
+the QUDT/UCUM unit normalisation docs/DESIGN-2026-07-27.md still lists as open.
 
 ### validate.py — framing is where documents actually break
 
@@ -378,7 +378,7 @@ an undeclared file gets neither rather than both.
 26 entries, 9 concepts each, no false positives, resolving to **2**
 distinct data structures — the reference foil carries an `itrans`
 detector the 25 sample scans do not, which is exactly the archive-of-
-parts case DESIGN.md calls for.
+parts case docs/DESIGN-2026-07-27.md calls for.
 
 ### Legacy paths are a separate table — settled
 
@@ -435,7 +435,7 @@ core+discovery rather than failing; parse NXDL defensively; and make no
 structural assumptions beyond the NXDL grammar (the new `NXxas` does
 *not* put energy under `NXmonochromator`).
 
-Full detail: [`DESIGN.md`](./DESIGN.md) · conventions and gotchas:
+Full detail: [`docs/DESIGN-2026-07-27.md`](./docs/DESIGN-2026-07-27.md) · conventions and gotchas:
 [`AGENTS.md`](./AGENTS.md)
 
 ---
@@ -570,7 +570,7 @@ are still in flux** than after they stabilise.
 | What | Where |
 |---|---|
 | This file | `usgin/hdf5metadata` → `STATUS.md` (`main`) |
-| Extractor design | `usgin/hdf5metadata` → `DESIGN.md` (`main`) |
+| Extractor design | `usgin/hdf5metadata` → `docs/DESIGN-2026-07-27.md` (`main`) |
 | Extractor conventions | `usgin/hdf5metadata` → `AGENTS.md` (`main`) |
 | XAS gap analysis | `smrgeoinfo/XAS-CDIF` → `XAS_Glossary_vs_NeXus_analysis.md` (**`cdifxasRelease`**) |
 | Enumeration importer | `smrgeoinfo/XAS-CDIF` → `tools/import_nexus_enumerations.py` (**`cdifxasRelease`**) |

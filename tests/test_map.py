@@ -364,7 +364,7 @@ def test_concepts_the_definition_allows_but_the_file_lacks_are_reported(
 # ---------------------------------------------------------------------------
 
 def test_entries_sharing_a_layout_share_a_structural_signature(tmp_path):
-    """DESIGN.md treats a multi-entry file as an archive of parts, with
+    """A multi-entry file is an archive of parts, with
     one DataStructure per distinct layout referenced by every part that
     matches it. Two scans of the same sample differ in their values, not
     their shape; a scan that adds a transmission detector does not."""

@@ -40,7 +40,7 @@ Nothing is asserted that was not found
 
 `dcterms:conformsTo` is written per profile only when the content for
 that profile is actually present — the "detect conformance, don't assert
-it" decision in DESIGN.md. A file with no `NXdata` gets core and
+it" decision recorded in README.md. A file with no `NXdata` gets core and
 discovery and does not claim data_description.
 """
 from __future__ import annotations
@@ -684,7 +684,7 @@ def emit_document(
     """Assemble one CDIF JSON-LD document for a file.
 
     A multi-entry file becomes one Dataset with one part per NXentry --
-    the archive-of-parts model in DESIGN.md. What every entry shares
+    the archive-of-parts model described in README.md. What every entry shares
     (facility, beamline, monochromator, data structure) is stated once at
     file level and referenced; only what varies stays on the part.
     """

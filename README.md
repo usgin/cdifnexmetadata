@@ -149,6 +149,89 @@ missing source type becomes `Synchrotron X-ray Source` only where the
 file declares XAS; an `NXtomo` file may well have been measured at a
 synchrotron, but nothing in it says so.
 
+## Why these choices
+
+The reasoning behind the decisions above, including what was rejected.
+
+### Which NeXus definitions
+
+`XraySpectroscopy/nexus_definitions`, pinned to a commit SHA, not
+`nexusformat/definitions`. The XAS fork restructures `NXxas`
+substantially: the monolithic application definition is gone, replaced
+by one definition per detection mode — `NXxas_trans`, `NXxas_tfy`,
+`NXxas_tey`, `NXxas_pey`, `NXxas_pfy`, `NXxas_herfd`. **Detection mode
+*is* the application definition** there, which is why the crosswalk maps
+it as `skos:narrowMatch` against the definition rather than to a field.
+
+Those definitions are actively being revised, so the code is built to
+survive it: all three definition directories are searched and none is
+hardcoded, the resolved SHA is recorded, an unresolvable definition
+degrades to a lower resolution tier rather than failing, NXDL is parsed
+permissively (unknown elements ignored, never rejected), and no
+structural assumption is made beyond the NXDL grammar — the new `NXxas`
+does *not* put energy under `NXmonochromator`.
+
+### `NeXusOntology` — referenced, not depended on
+
+It would have been the obvious source of concept IRIs. It is not usable:
+the PURLs do not resolve, there is no licence, it has been stale about
+two years, and an open PR renames every IRI. Concepts are minted under
+`https://w3id.org/cdif/xas/` instead, on the mint-now-redirect-later
+pattern, so they can be redirected if an official vocabulary appears.
+
+Relatedly, `nxs:` is bound to `https://manual.nexusformat.org/classes/`
+provisionally, and naive concatenation does not resolve — `nxs:NXentry`
+404s. Only the two-segment forms work, so a dereferenceable link is
+built as `nxs:applications/NXxas.html`.
+
+### Why the signal needs four tiers
+
+`FeXAS.nxs` declares `definition=NXxas` and carries **no `signal` or
+`axes` attributes at all** — the NeXus-blessed way of saying which array
+is plottable is simply absent. So resolution proceeds by: the `signal`
+attribute where present; then soft-link targets, since `NXdata` links
+like `data/energy → monochromator/energy` reveal the structure; then the
+NXDL definition; then naming heuristics.
+
+The tiers are **additive, not exclusive**. An early version returned at
+the first success and so resolved `i0`/`ifluor`/`itrans` by link while
+dropping `mutrans` and `mufluor` — the derived absorption coefficients,
+which are the point of the measurement.
+
+### Multi-entry files are an archive of parts
+
+A NeXus file with N `NXentry` groups is one `schema:Dataset` with N
+parts, by analogy with a zip bundle. Not hypothetical: `FeXAS.nxs` holds
+26. Most part metadata is by reference — a scan series shares its
+instrument, source, sample and data structure, so only what actually
+varies per entry is stated on the part. Structural identity is decided
+by comparing shapes and dtypes, and entries with matching signatures
+share one structure object.
+
+### Hazards deliberately not inherited
+
+Two prior codebases were surveyed before starting. The patterns worth
+keeping — import-guarded heavy dependencies, warnings accumulated on a
+result rather than raised, per-profile validation rather than one
+monolithic schema — are in the code. The ones deliberately avoided: a
+single schema that grows until it describes nothing precisely, and
+domain mappings hardcoded in Python where they cannot be revised without
+a release.
+
+### Still open
+
+**Units** are passed through as the file writes them. QUDT/UCUM
+normalisation is intended and not done, so `NX_LENGTH` from a definition
+and `mm` from a real file both appear as `schema:unitText`.
+
+**An `NXsubentry` declaring a different definition from its parent** is
+not handled; it is rare and was tabled.
+
+**Processed-data profiles** — `NXxasproc` and the EXAFS analysis chain —
+are out of scope. Nothing in the NeXus ecosystem has moved on EXAFS
+since 2008, and processed data warrants its own profile rather than
+being folded into a raw-data one.
+
 ## Installation
 
 ```bash
@@ -233,8 +316,10 @@ python exampleMetadata/generate.py --profile-dir ../XAS-CDIF/release
 
 ## Related work
 
-- [`DESIGN.md`](./DESIGN.md) — the reasoning behind these decisions, the
-  ecosystem survey, and the prior art the design drew on
+- [`docs/DESIGN-2026-07-27.md`](./docs/DESIGN-2026-07-27.md) — the
+  original design record, written before the code existed. Archived: its
+  conclusions are folded in above, and it is kept because what was
+  expected beforehand is worth being able to compare against
 - [`STATUS.md`](./STATUS.md) — state of play across this and the CDIF XAS
   vocabulary effort
 - [`AGENTS.md`](./AGENTS.md) — conventions and known gotchas
