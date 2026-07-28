@@ -36,6 +36,7 @@ from hdf5metadata.map.concepts import (
     ConceptValue,
     MappingResult,
 )
+from hdf5metadata.emit import OGC_NIL_MISSING
 from hdf5metadata.map.crosswalk import Crosswalk, DATA_DIR, load_crosswalk
 
 DEFAULT_XDI_CROSSWALK = DATA_DIR / "xdi-to-cdifxas.sssom.tsv"
@@ -249,7 +250,28 @@ def map_xdi(
         canonical = _LABEL_ALIASES.get(label.lower(), label.lower())
         hit = lookup.get(f"column.{canonical}")
         if hit is None:
+            # Still recorded. A column that was measured belongs in the
+            # data description whether or not anyone has named its
+            # concept -- dropping it loses the fact that the file has
+            # seven columns, which is exactly what the data-structure
+            # profile is for. The concept is the OGC nil URI, so a
+            # consumer can see the measurement exists and that nothing
+            # is claimed about what it means.
             unmapped.append(f"Column.{label}")
+            record.add(ConceptValue(
+                concept=OGC_NIL_MISSING,
+                source_path=f"#column:{position}",
+                confidence=0.0,
+                is_array=True,
+                shape=(xdi.row_count,),
+                dtype="float64",
+                label=label,
+                long_name=label,
+                note=(
+                    f"column {label!r} was recorded in the file; no "
+                    f"crosswalk row names its concept"
+                ),
+            ))
             continue
         concept, predicate, confidence, comment = hit
         record.add(ConceptValue(

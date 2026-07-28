@@ -170,7 +170,9 @@ def test_a_single_entry_file_still_emits_one_part(tmp_path):
 
     doc = _emit(p, _xas_crosswalk(tmp_path)).document
     assert len(doc["schema:distribution"][0]["schema:hasPart"]) == 1
-    assert "schema:description" not in doc      # the multi-entry note
+    # A description is always written; a single-entry file gets the
+    # single-measurement wording rather than the archive-of-parts note.
+    assert "parts of one dataset" not in doc["schema:description"]
 
 
 # ---------------------------------------------------------------------------

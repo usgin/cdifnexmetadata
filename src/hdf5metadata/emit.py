@@ -73,6 +73,10 @@ CONTEXT = {
 
 PROFILE = "https://w3id.org/cdif/{}"
 
+#: This tool, named in the catalog record so a reader can tell how the
+#: metadata was produced and from what.
+APPLICATION = "hdf5metadata"
+
 #: Media types for the two input bindings.
 HDF5_MEDIA_TYPE = "application/x-hdf5"
 XDI_MEDIA_TYPE = "application/x-xdi"
@@ -414,7 +418,11 @@ def _variables(
         for cv in record.values[concept]:
             if not cv.is_array:
                 continue
-            local = concept.split(":", 1)[-1]
+            # An unmapped column has no concept to name it by, so the
+            # identifier comes from the label instead -- otherwise every
+            # unnamed column in a file would collide on one @id.
+            unmapped = concept == OGC_NIL_MISSING
+            local = _slug(cv.label) if unmapped else concept.split(":", 1)[-1]
             rv_id = f"{base}/rv/{local}"
             iv_id = f"ex:DV/{entry_slug}/iv/{local}"
             variables.append({
@@ -425,8 +433,9 @@ def _variables(
                 # describes this field in this file, which no generic
                 # concept label can do.
                 "schema:description": cv.long_name or _readable(local),
-                "schema:propertyID": [{"@id": concept.replace(
-                    "cdifxas:", "xas:")}],
+                "schema:propertyID": [{"@id": OGC_NIL_MISSING}]
+                if unmapped else
+                [{"@id": concept.replace("cdifxas:", "xas:")}],
                 "schema:unitText": cv.units or "",
                 "cdif:physicalDataType": _xsd_for(cv.dtype),
                 "cdif:uses": [rv_id],
@@ -681,6 +690,19 @@ def emit_document(
     """
     result = EmitResult()
     stem = Path(inspection.filename).stem
+    source_label = (
+        "XDI" if encoding_format == XDI_MEDIA_TYPE else "NeXus/HDF5"
+    )
+    # Whether this is XAS is settled before anything is written, because
+    # the description, the peer instruments and the profile list all
+    # depend on it.
+    is_xas = (
+        format_specification == XDI_SPECIFICATION
+        or any((d or "").startswith("NXxas") for d in nexus.definitions)
+    )
+    technique_label = (
+        "X-ray absorption spectroscopy" if is_xas else "Scientific"
+    )
     slug = _slug(stem)
     base = (base or DEFAULT_BASE).rstrip("/") + "/" + slug
 
@@ -795,11 +817,27 @@ def emit_document(
         # "looked, absent" rather than implying an unrestricted licence.
         "schema:license": [OGC_NIL_MISSING],
     }
+    # Always a description. CDIF core wants one, and a record with no
+    # prose is hard to place even when every field is populated.
     if len(records) > 1:
         doc["schema:description"] = (
-            f"{len(records)} measurements in one NeXus HDF5 container, "
+            f"{len(records)} measurements in one {source_label} container, "
             f"described as parts of one dataset."
         )
+    else:
+        subject = title or stem
+        doc["schema:description"] = (
+            f"{technique_label} measurement, {subject}, "
+            f"read from a {source_label} file."
+        )
+
+    # The creator belongs to the dataset, not to the record about it. It
+    # is a sentinel here because neither format carries one; a deployment
+    # with real depositor information overlays it.
+    doc["schema:creator"] = {
+        "@type": ["schema:Person"],
+        "schema:name": MISSING_TEXT,
+    }
 
     # Whether this is XAS is decided by what the file declares, not by
     # the namespace its concepts happen to sit in. Four genuinely
@@ -809,14 +847,6 @@ def emit_document(
     # conformance to the XAS profile and advertise itself as X-ray
     # absorption spectroscopy. A false conformance claim is worse than a
     # missing one: it survives into a catalogue and misroutes the record.
-    # An XDI file is an XAS measurement by construction -- the format is
-    # the X-ray Absorption Data Interchange format and describes nothing
-    # else -- so declaring the specification is declaring the technique.
-    # A NeXus file has to name an NXxas definition to say the same thing.
-    is_xas = (
-        format_specification == XDI_SPECIFICATION
-        or any((d or "").startswith("NXxas") for d in nexus.definitions)
-    )
     technique: list[dict[str, Any]] = [dict(XAS_TECHNIQUE)] if is_xas else []
     # Detection mode is collected across all entries rather than from
     # the shared set. In FeXAS the reference foil is Transmission and the
@@ -935,14 +965,16 @@ def emit_document(
         "@type": ["schema:Dataset"],
         "schema:additionalType": [{"@id": "dcat:CatalogRecord"}],
         "schema:about": {"@id": base},
-        "schema:description": f"metadata record for {stem}",
+        # What this record is and how it came to exist. No creator: a
+        # catalog record is machine output, and naming a person as its
+        # author would misattribute a generated artifact.
+        "schema:description": (
+            f"CDIF metadata generated by {APPLICATION} from a "
+            f"{source_label} file ({inspection.filename})."
+        ),
         "dcterms:conformsTo": [
             {"@id": PROFILE.format(p)} for p in profiles
         ],
-        "schema:creator": {
-            "@type": ["schema:Person"],
-            "schema:name": MISSING_TEXT,
-        },
     }
 
     result.document = doc

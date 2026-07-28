@@ -332,3 +332,51 @@ def test_a_sentinel_never_displaces_a_recorded_value(tmp_path):
     assert by_id["xas:dspacing"]["schema:value"] == "3.1355"
     assert "not recorded" not in by_id["xas:dspacing"].get(
         "schema:description", "")
+
+
+def test_an_unmapped_column_is_still_described(tmp_path):
+    """A column that was measured belongs in the data description
+    whether or not anyone has named its concept. Dropping it loses the
+    fact that the file has that many columns, which is what the
+    data-structure profile exists to record."""
+    from hdf5metadata.emit import OGC_NIL_MISSING
+
+    text = SPACED.replace(
+        "# Column.3: itrans",
+        "# Column.3: itrans\n# Column.4: lnitiref").replace(
+        "# energy i0 itrans", "# energy i0 itrans lnitiref")
+    doc = _emit(tmp_path, text).document
+    by_name = {v["schema:name"]: v for v in doc["schema:variableMeasured"]}
+    assert set(by_name) == {"energy", "i0", "itrans", "lnitiref"}
+    assert by_name["lnitiref"]["schema:propertyID"] == [
+        {"@id": OGC_NIL_MISSING}]
+    assert by_name["i0"]["schema:propertyID"] != [{"@id": OGC_NIL_MISSING}]
+
+
+def test_unmapped_columns_get_distinct_identifiers(tmp_path):
+    """They share a concept -- the nil URI -- so the identifier has to
+    come from the label, or every unnamed column collides on one @id."""
+    text = SPACED.replace(
+        "# Column.3: itrans",
+        "# Column.3: itrans\n# Column.4: lnitiref\n# Column.5: time").replace(
+        "# energy i0 itrans", "# energy i0 itrans lnitiref time")
+    doc = _emit(tmp_path, text).document
+    ids = [v["@id"] for v in doc["schema:variableMeasured"]]
+    assert len(ids) == len(set(ids)) == 5
+
+
+def test_the_catalog_record_says_how_it_was_made(tmp_path):
+    """A catalog record is machine output. It names the tool and the
+    source format, and carries no creator -- naming a person as the
+    author of a generated artifact misattributes it."""
+    from hdf5metadata.emit import APPLICATION
+
+    record = _emit(tmp_path).document["schema:subjectOf"]
+    assert APPLICATION in record["schema:description"]
+    assert "XDI" in record["schema:description"]
+    assert "schema:creator" not in record
+
+
+def test_the_creator_belongs_to_the_dataset(tmp_path):
+    doc = _emit(tmp_path).document
+    assert doc["schema:creator"]["schema:name"] == "Missing"
