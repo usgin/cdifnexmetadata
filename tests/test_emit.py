@@ -185,8 +185,13 @@ def test_profiles_are_claimed_only_where_the_content_exists(tmp_path):
         _entry(f, name="e", definition="NXxas_trans")
 
     result = _emit(bare, _xas_crosswalk(tmp_path))
-    assert result.profiles == ["core/1.1"]
+    # It declares a technique, so discovery is genuine. It measured
+    # nothing and carries no XAS content, so neither data_description nor
+    # xasCore may be claimed -- declaring NXxas_trans is not the same as
+    # satisfying it.
+    assert result.profiles == ["core/1.1", "discovery/1.1"]
     assert "data_description/1.1" not in result.profiles
+    assert "xasCore/1.0" not in result.profiles
 
     full = tmp_path / "full.nxs"
     with h5py.File(full, "w") as f:
@@ -502,3 +507,34 @@ def test_property_ids_are_the_concept_locals_the_profile_enumerates(tmp_path):
             f"{concept} emits xas:{slot.prop}, which the profile does not "
             f"name"
         )
+
+
+def test_a_non_xas_file_does_not_claim_the_xas_profile(tmp_path):
+    """Four technique-neutral concepts -- facility, beamline, probe,
+    source type -- are still minted under cdifxas: because that crosswalk
+    was written first. Deciding "is this XAS" from that prefix made an
+    NXsas file claim conformance to the XAS profile and advertise itself
+    as X-ray absorption spectroscopy. A false conformance claim survives
+    into a catalogue and misroutes the record."""
+    p = tmp_path / "sas.nxs"
+    with h5py.File(p, "w") as f:
+        e = _entry(f, name="entry", definition="NXsas")
+        inst = _group(e, "instrument", "NXinstrument")
+        inst["name"] = "APS 9-ID-C"
+        _group(inst, "source", "NXsource")["name"] = "Advanced Photon Source"
+        _group(inst, "detector", "NXdetector")["data"] = np.zeros((64, 64))
+
+    cw = _crosswalk(
+        tmp_path,
+        _row("cdifxas:facility", "skos:exactMatch", "nxdl:NXsource/name"),
+        _row("cdifxas:beamline", "skos:exactMatch", "nxdl:NXinstrument/name"),
+        _row("cdifsas:scatteringintensity", "skos:exactMatch",
+             "nxdl:NXsas/ENTRY:NXentry/INSTRUMENT:NXinstrument/"
+             "DETECTOR:NXdetector/data"),
+    )
+    result = _emit(p, cw)
+    assert "xasCore/1.0" not in result.profiles
+    assert "data_description/1.1" in result.profiles   # it did measure
+    names = {t.get("schema:termCode") for t
+             in result.document.get("schema:measurementTechnique", [])}
+    assert "XAS" not in names

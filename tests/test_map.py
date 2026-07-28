@@ -530,9 +530,19 @@ def test_the_bundled_legacy_table_names_only_real_concepts():
     """A typo in legacy-paths.tsv would otherwise just never match, and
     silently mapping nothing is exactly the failure this suite exists to
     catch."""
-    legacy, cw = load_legacy(), load_crosswalk()
+    from hdf5metadata.map.crosswalk import DATA_DIR
+
+    legacy = load_legacy()
+    # Every bundled crosswalk, not just the XAS one: the legacy table is
+    # shared across techniques, so the invariant is that a legacy concept
+    # is registered *somewhere*.
+    known: set[str] = set()
+    for tsv in sorted(DATA_DIR.glob("*-to-nexus.sssom.tsv")):
+        known |= load_crosswalk(tsv).concepts()
     assert legacy.paths, "bundled legacy table should not be empty"
-    assert legacy.concepts() <= cw.concepts()
+    assert legacy.concepts() <= known, (
+        f"legacy concepts with no crosswalk entry: "
+        f"{sorted(legacy.concepts() - known)}")
     assert "gsecars-athena" in legacy.conventions()
     assert all(p.path.startswith("/") for p in legacy.paths)
 

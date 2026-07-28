@@ -656,8 +656,16 @@ def emit_document(
             f"described as parts of one dataset."
         )
 
+    # Whether this is XAS is decided by what the file declares, not by
+    # the namespace its concepts happen to sit in. Four genuinely
+    # technique-neutral concepts -- facility, beamline, probe, source
+    # type -- are still minted under cdifxas: because that crosswalk was
+    # written first, so sniffing the prefix made an NXsas file claim
+    # conformance to the XAS profile and advertise itself as X-ray
+    # absorption spectroscopy. A false conformance claim is worse than a
+    # missing one: it survives into a catalogue and misroutes the record.
     is_xas = any(
-        c.startswith("cdifxas:") for r in records for c in r.values)
+        (d or "").startswith("NXxas") for d in nexus.definitions)
     technique: list[dict[str, Any]] = [dict(XAS_TECHNIQUE)] if is_xas else []
     # Detection mode is collected across all entries rather than from
     # the shared set. In FeXAS the reference foil is Transmission and the
@@ -748,7 +756,11 @@ def emit_document(
         profiles.append("data_description/1.1")
     if structures:
         profiles.append("data_structure/1.1")
-    if is_xas:
+    if is_xas and any(r.values for r in records):
+        # Declaring NXxas is necessary but not sufficient. xasCore is a
+        # claim about content, so an entry that declares the definition
+        # and carries none of it must not make the claim -- the whole
+        # point of detecting conformance rather than asserting it.
         profiles.append("xasCore/1.0")
     result.profiles = profiles
 

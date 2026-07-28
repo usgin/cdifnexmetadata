@@ -6,6 +6,7 @@ Two kinds of file live here, maintained differently.
 |------|------|
 | `cdifxas-to-nexus.sssom.tsv` | vendored copy — **do not edit here** |
 | `xdi-to-cdifxas.sssom.tsv` | vendored copy — **do not edit here** |
+| `cdifsas-to-nexus.sssom.tsv` | authored in this repo — edit here |
 | `legacy-paths.tsv` | authored in this repo — edit here |
 
 ## Vendored crosswalks
@@ -55,3 +56,19 @@ Currently covers `gsecars-athena` — the Athena/GSECARS HDF5 writer,
 which uses `NXscan` and `NXxrayedge` (not NeXus base classes) and puts
 ~20 `beamline_*` and `facility_*` fields on `NXsource` rather than
 `NXinstrument`.
+
+## `cdifsas-to-nexus.sssom.tsv`
+
+Small-angle scattering, mapped to `NXsas`. Written as the **second**
+binding onto the concept hub, to test whether adding a technique really
+is a crosswalk rather than a code change. It is: pass it with
+`--crosswalk` and an `NXsas` file yields concepts, variables and a data
+structure with nothing else touched.
+
+Authored here rather than vendored because there is no CDIF SAS
+glossary to vendor from; the concepts follow the same
+mint-now-redirect-later pattern under `https://w3id.org/cdif/sas/`.
+
+See [`docs/NXsas.md`](../../../docs/NXsas.md) for what `NXsas` is, and
+the file's own header for why four technique-neutral concepts
+(facility, beamline, probe, source type) still carry `cdifxas:` CURIEs.

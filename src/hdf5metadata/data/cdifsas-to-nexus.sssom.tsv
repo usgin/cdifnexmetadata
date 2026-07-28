@@ -1,0 +1,62 @@
+# mapping_set_id: https://w3id.org/cdif/sas/crosswalk/cdifsas-to-nexus
+# mapping_set_title: CDIF small-angle scattering concepts to NeXus NXsas
+# license: https://creativecommons.org/licenses/by/4.0/
+# mapping_provider: https://github.com/usgin/hdf5metadata
+# subject_source: https://w3id.org/cdif/sas/
+# object_source: https://github.com/XraySpectroscopy/nexus_definitions
+# object_source_version: 89971f3922664b5c3fc5eb9929b2fbf5252dcefd
+# comment: Written as the second binding onto the concept hub, to test the
+#   claim that adding a technique is a crosswalk rather than a code change.
+#   See docs/NXsas.md for what NXsas is and how real files depart from it.
+#
+#   Two namespaces appear as subjects, deliberately.
+#
+#   cdifsas: is minted here for concepts specific to small-angle
+#   scattering -- there is no CDIF SAS glossary yet, so these follow the
+#   w3id mint-now-redirect-later pattern the XAS concepts used.
+#
+#   cdifxas: appears for four concepts that are NOT XAS concepts at all:
+#   the facility, the beamline, the radiation probe and the source type.
+#   They are properties of any synchrotron or reactor measurement, and
+#   SSSOM identifies concepts rather than namespaces, so re-minting them
+#   under cdifsas: would assert that a SAS facility and a XAS facility
+#   are different things. They are not. That they currently sit in an
+#   XAS-flavoured namespace is an accident of which crosswalk was written
+#   first, and writing this second one is what exposed it: these belong
+#   in a technique-neutral namespace, and moving them is a change to the
+#   XAS glossary rather than something to paper over here.
+#
+#   Q is not mapped, because a raw NXsas file does not contain it. The
+#   scattering vector is computed from wavelength, detector distance,
+#   beam centre and pixel size -- which is why those scalars are part of
+#   the data description here rather than mere context.
+subject_id	subject_label	predicate_id	object_id	object_label	confidence	comment
+cdifsas:scatteringintensity	scattering intensity	skos:exactMatch	nxdl:NXsas/ENTRY:NXentry/INSTRUMENT:NXinstrument/DETECTOR:NXdetector/data	detector data	1.0	the 2-D area detector image; the primary measurement
+cdifsas:scatteringintensity	scattering intensity	skos:closeMatch	nxdl:NXsas/ENTRY:NXentry/DATA:NXdata/data	plottable data	0.9	where a writer puts the image in NXdata rather than on the detector; closeMatch because NXdata may hold a link or a reduced copy
+cdifsas:wavelength	incident wavelength	skos:exactMatch	nxdl:NXmonochromator/wavelength	wavelength	1.0	required to convert detector position to Q
+cdifsas:wavelengthspread	wavelength spread	skos:exactMatch	nxdl:NXmonochromator/wavelength_spread	wavelength_spread	1.0	delta-lambda over lambda; sets the Q resolution
+cdifsas:detectordistance	sample to detector distance	skos:exactMatch	nxdl:NXsas/ENTRY:NXentry/INSTRUMENT:NXinstrument/DETECTOR:NXdetector/distance	distance	1.0	required to convert detector position to Q
+cdifsas:beamcenterx	beam centre x	skos:exactMatch	nxdl:NXsas/ENTRY:NXentry/INSTRUMENT:NXinstrument/DETECTOR:NXdetector/beam_center_x	beam_center_x	1.0	where the direct beam would strike the detector; the origin of the Q reconstruction
+cdifsas:beamcentery	beam centre y	skos:exactMatch	nxdl:NXsas/ENTRY:NXentry/INSTRUMENT:NXinstrument/DETECTOR:NXdetector/beam_center_y	beam_center_y	1.0	as beam_center_x
+cdifsas:xpixelsize	detector pixel size x	skos:exactMatch	nxdl:NXsas/ENTRY:NXentry/INSTRUMENT:NXinstrument/DETECTOR:NXdetector/x_pixel_size	x_pixel_size	1.0	sets the angular scale of a pixel
+cdifsas:ypixelsize	detector pixel size y	skos:exactMatch	nxdl:NXsas/ENTRY:NXentry/INSTRUMENT:NXinstrument/DETECTOR:NXdetector/y_pixel_size	y_pixel_size	1.0	sets the angular scale of a pixel
+cdifsas:detectorpolarangle	detector polar angle	skos:exactMatch	nxdl:NXsas/ENTRY:NXentry/INSTRUMENT:NXinstrument/DETECTOR:NXdetector/polar_angle	polar_angle	1.0	detector placement
+cdifsas:detectorazimuthalangle	detector azimuthal angle	skos:exactMatch	nxdl:NXsas/ENTRY:NXentry/INSTRUMENT:NXinstrument/DETECTOR:NXdetector/azimuthal_angle	azimuthal_angle	1.0	detector placement
+cdifsas:detectorrotationangle	detector rotation angle	skos:exactMatch	nxdl:NXsas/ENTRY:NXentry/INSTRUMENT:NXinstrument/DETECTOR:NXdetector/rotation_angle	rotation_angle	1.0	detector placement
+cdifsas:detectoraequatorialangle	detector aequatorial angle	skos:exactMatch	nxdl:NXsas/ENTRY:NXentry/INSTRUMENT:NXinstrument/DETECTOR:NXdetector/aequatorial_angle	aequatorial_angle	1.0	detector placement
+cdifsas:collimationlength	collimation length	skos:exactMatch	nxdl:NXsas/ENTRY:NXentry/INSTRUMENT:NXinstrument/COLLIMATOR:NXcollimator/GEOMETRY:NXgeometry/SHAPE:NXshape/size	collimation length	1.0	with wavelength spread this sets the instrumental smearing
+cdifsas:collimatorshape	collimator shape	skos:exactMatch	nxdl:NXsas/ENTRY:NXentry/INSTRUMENT:NXinstrument/COLLIMATOR:NXcollimator/GEOMETRY:NXgeometry/SHAPE:NXshape/shape	shape	1.0	nxbox, nxcylinder and so on
+cdifsas:monitorintegral	integrated monitor counts	skos:exactMatch	nxdl:NXmonitor/integral	integral	1.0	the normalisation the intensity is divided by
+cdifsas:monitormode	monitor counting mode	skos:exactMatch	nxdl:NXmonitor/mode	mode	1.0	timer or monitor; says what preset means
+cdifsas:monitorpreset	monitor preset	skos:exactMatch	nxdl:NXmonitor/preset	preset	1.0	the count-to value for the chosen mode
+cdifsas:samplename	sample name	skos:exactMatch	nxdl:NXsample/name	name	1.0	descriptive name of the specimen
+cdifsas:sampleaequatorialangle	sample aequatorial angle	skos:exactMatch	nxdl:NXsample/aequatorial_angle	aequatorial_angle	1.0	sample orientation, significant for anisotropic scattering
+cdifsas:smallanglescatteringmode	small-angle scattering	skos:narrowMatch	nxdl:NXsas		1.0	the technique is the application definition itself, as detection mode is for the NXxas family
+cdifxas:facility	facility	skos:exactMatch	nxdl:NXsource/name	source name	1.0	NOT an XAS concept; see the header note on the shared namespace
+cdifxas:beamline	beamline	skos:exactMatch	nxdl:NXinstrument/name	instrument name	1.0	NOT an XAS concept; see the header note on the shared namespace
+cdifxas:probe	probe	skos:exactMatch	nxdl:NXsource/probe	probe	1.0	neutron or x-ray; NOT an XAS concept, see the header note
+cdifxas:xraysourcetype	source type	skos:exactMatch	nxdl:NXsource/type	source type	1.0	NOT an XAS concept; see the header note on the shared namespace
+cdifxas:temperature	sample temperature	skos:exactMatch	nxdl:NXsample/temperature	temperature	1.0	NOT an XAS concept; see the header note on the shared namespace
+cdifsas:backgroundintensity	background intensity	skos:relatedMatch	nxdl:NXsas		1.0	no NXsas field holds a beam-through-nothing image, though writers store one; registered here so the concept has an identifier and the legacy table can name it
+cdifsas:detectorhorizontal	detector horizontal coordinate	skos:relatedMatch	nxdl:NXsas		1.0	NXsas names no detector axes: position is meant to be reconstructed from wavelength, distance, beam centre and pixel size, so a writer that stores the axes explicitly has no standard place to put them
+cdifsas:detectorvertical	detector vertical coordinate	skos:relatedMatch	nxdl:NXsas		1.0	as detectorhorizontal
