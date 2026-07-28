@@ -71,6 +71,13 @@
       "schema:inDefinedTermSet": "http://purl.org/pan-science/PaNET/PaNET.owl",
       "schema:name": "X-Ray Absorption Spectroscopy",
       "schema:termCode": "XAS"
+    },
+    {
+      "@type": [
+        "schema:DefinedTerm"
+      ],
+      "schema:name": "Transmission",
+      "schema:inDefinedTermSet": "nxs:Field/NXxas/ENTRY/DATA/mode"
     }
   ],
   "schema:keywords": [
@@ -153,6 +160,52 @@
           }
         },
         {
+          "@id": "https://w3id.org/cdif/testing/CeO2/used/source",
+          "@type": [
+            "schema:Thing",
+            "prov:Entity"
+          ],
+          "schema:instrument": {
+            "@id": "https://w3id.org/cdif/testing/CeO2/instrument/source",
+            "@type": [
+              "schema:Product",
+              "schema:Thing"
+            ],
+            "schema:name": "X-ray source",
+            "schema:additionalType": [
+              {
+                "@id": "xas:source"
+              }
+            ],
+            "schema:additionalProperty": [
+              {
+                "@type": [
+                  "schema:PropertyValue"
+                ],
+                "schema:propertyID": [
+                  {
+                    "@id": "xas:probe"
+                  }
+                ],
+                "schema:name": "Probe",
+                "schema:value": "x-ray"
+              },
+              {
+                "@type": [
+                  "schema:PropertyValue"
+                ],
+                "schema:propertyID": [
+                  {
+                    "@id": "xas:xraysourcetype"
+                  }
+                ],
+                "schema:name": "X-ray source type",
+                "schema:value": "3.6cm undulator"
+              }
+            ]
+          }
+        },
+        {
           "@id": "https://w3id.org/cdif/testing/CeO2/used/xraymonochromator",
           "@type": [
             "schema:Thing",
@@ -181,7 +234,8 @@
                   }
                 ],
                 "schema:name": "monochromator d-spacing",
-                "schema:value": "3.134770"
+                "schema:value": "3.134770",
+                "schema:unitText": "Angstrom"
               },
               {
                 "@type": [
@@ -193,7 +247,19 @@
                   }
                 ],
                 "schema:name": "monochromator crystal",
-                "schema:value": "Si(111)"
+                "schema:value": "Si"
+              },
+              {
+                "@type": [
+                  "schema:PropertyValue"
+                ],
+                "schema:propertyID": [
+                  {
+                    "@id": "xas:reflectionplane"
+                  }
+                ],
+                "schema:name": "reflection plane",
+                "schema:value": "1 1 1"
               }
             ]
           }

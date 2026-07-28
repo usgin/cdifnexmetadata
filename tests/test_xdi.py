@@ -244,3 +244,50 @@ def test_the_sample_is_typed_as_a_material_sample(tmp_path):
     assert {"@id": MATERIAL_SAMPLE_IRI} in sample["schema:additionalType"]
     assert "MaterialSample" in sample["schema:additionalType"]
     assert sample["schema:name"]
+
+
+def test_probe_is_derived_from_the_format(tmp_path):
+    """No XDI header carries the probe -- not one of the 272 files in the
+    XAS Data Library has such a field. It follows from the format, which
+    describes X-ray absorption and nothing else."""
+    _insp, x = inspect_xdi(_write(tmp_path, SPACED))
+    probe = map_xdi(x).records[0].first("cdifxas:probe")
+    assert probe.value == "x-ray"
+    assert "implied by the format" in probe.note
+
+
+def test_detection_mode_is_derived_from_the_columns(tmp_path):
+    """XDI has no detection-mode field either. Which intensities were
+    recorded is what distinguishes the modes, and it is the same
+    inference every XDI reader makes to plot a spectrum."""
+    _insp, x = inspect_xdi(_write(tmp_path, SPACED))
+    mode = map_xdi(x).records[0].first("cdifxas:xasmeasurementmode")
+    assert mode.value == "Transmission"
+    assert "derived from" in mode.note
+
+    fluo = SPACED.replace("# Column.3: itrans", "# Column.3: ifluor")
+    fluo = fluo.replace("# energy i0 itrans", "# energy i0 ifluor")
+    _insp2, x2 = inspect_xdi(_write(tmp_path, fluo, "f.xdi"))
+    assert map_xdi(x2).records[0].value_of(
+        "cdifxas:xasmeasurementmode") == "Fluorescence"
+
+
+def test_mono_name_is_split_into_material_and_reflection(tmp_path):
+    """XDI writes "Si(111)" for what CDIF keeps as two concepts. The
+    crosswalk already records the conflation; splitting recovers both
+    without asserting anything the file does not contain."""
+    _insp, x = inspect_xdi(_write(tmp_path, SPACED))
+    record = map_xdi(x).records[0]
+    assert record.value_of("cdifxas:monochromatortype") == "Si"
+    assert record.value_of("cdifxas:reflectionplane") == "1 1 1"
+
+
+def test_d_spacing_gets_the_unit_the_dictionary_specifies(tmp_path):
+    """The XDI dictionary fixes Mono.d_spacing in Angstrom, so a file
+    that states the number and not the unit is terse, not ambiguous."""
+    text = SPACED.replace(
+        "# Mono.name: Si(111)", "# Mono.name: Si(111)\n# Mono.d_spacing: 3.1355")
+    _insp, x = inspect_xdi(_write(tmp_path, text))
+    dspacing = map_xdi(x).records[0].first("cdifxas:dspacing")
+    assert dspacing.value == "3.1355"
+    assert dspacing.units == "Angstrom"

@@ -27,6 +27,7 @@ downstream layout.
 """
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from hdf5metadata.inspect.xdi import XDIResult
@@ -38,6 +39,49 @@ from hdf5metadata.map.concepts import (
 from hdf5metadata.map.crosswalk import Crosswalk, DATA_DIR, load_crosswalk
 
 DEFAULT_XDI_CROSSWALK = DATA_DIR / "xdi-to-cdifxas.sssom.tsv"
+
+#: Two concepts the XAS profile requires that no XDI header carries.
+#:
+#: Neither appears as a field in any of the 272 files in the XAS Data
+#: Library, so a crosswalk row for either would map something that does
+#: not exist. They are derived instead, and each derived value says in
+#: its note where it came from -- the alternative, leaving them out, is a
+#: document that cannot satisfy the profile over information the file
+#: does in fact determine.
+#:
+#: The probe follows from the format. XDI is the X-ray Absorption Data
+#: Interchange format; it describes nothing but X-ray absorption.
+XDI_PROBE = "x-ray"
+
+#: Units the XDI dictionary specifies for a tag, where a file states the
+#: value and not the unit. Supplying these is reading the specification,
+#: not guessing: the dictionary fixes the unit for the tag, so a file
+#: that omits it is not ambiguous, merely terse.
+_DICTIONARY_UNITS = {
+    "mono.d_spacing": "Angstrom",
+}
+
+#: "Si(111)" -- the crystal material and the reflection in one string.
+#: The crosswalk already records that Mono.name conflates the two, which
+#: is why it maps at closeMatch rather than exactMatch; splitting it
+#: recovers both without asserting anything the file does not contain.
+_MONO_NAME = re.compile(
+    r"^\s*(?P<material>[A-Za-z][A-Za-z0-9]*)\s*[\(\[]\s*"
+    r"(?P<reflection>\d{3}|\d+\s+\d+\s+\d+)\s*[\)\]]\s*$"
+)
+
+#: The detection mode follows from which intensities were recorded. This
+#: is the same inference every XDI reader makes to plot a spectrum:
+#: a transmitted-beam column means transmission, a fluorescence column
+#: means fluorescence. Ordered, because a file carrying both is a
+#: transmission measurement with fluorescence recorded alongside.
+_MODE_BY_CONCEPT = (
+    ("cdifxas:transmittedintensity", "Transmission"),
+    ("cdifxas:absorptioncoefficient", "Transmission"),
+    ("cdifxas:fluorescenceintensity", "Fluorescence"),
+    ("cdifxas:fluorescenceabsorptioncoefficient", "Fluorescence"),
+    ("cdifxas:electronyieldintensity", "Electron Yield"),
+)
 
 #: Column labels a file may use for the same quantity. The crosswalk
 #: names the canonical ones; these are spellings seen in real files that
@@ -78,6 +122,71 @@ def _index(crosswalk: Crosswalk) -> dict[str, tuple[str, str, float, str]]:
             concept, m.predicate_id, m.confidence, m.comment,
         )
     return out
+
+
+def _derive(record: ConceptRecord, xdi: XDIResult) -> None:
+    """Add the concepts the file determines but does not state.
+
+    Kept apart from the crosswalk loop on purpose: a crosswalk row says
+    "this header means this concept", and neither of these has a header.
+    Writing them as rows would put fields in the mapping set that no XDI
+    file has ever contained.
+    """
+    version_line = f"#XDI/{xdi.xdi_version}" if xdi.xdi_version else "#XDI"
+
+    if "cdifxas:probe" not in record.values:
+        record.add(ConceptValue(
+            concept="cdifxas:probe",
+            value=XDI_PROBE,
+            source_path=version_line,
+            confidence=1.0,
+            note=(
+                "implied by the format: XDI describes X-ray absorption "
+                "only, and no XDI header carries the probe"
+            ),
+        ))
+
+    mono = record.first("cdifxas:monochromatortype")
+    if mono and mono.value and "cdifxas:reflectionplane" not in record.values:
+        m = _MONO_NAME.match(str(mono.value))
+        if m:
+            digits = m.group("reflection").split() or list(
+                m.group("reflection"))
+            if len(digits) == 1:
+                digits = list(digits[0])
+            record.add(ConceptValue(
+                concept="cdifxas:reflectionplane",
+                value=" ".join(digits),
+                source_path=mono.source_path,
+                confidence=0.9,
+                note=(
+                    f"read out of Mono.name ({mono.value!r}), which XDI "
+                    f"uses for the crystal material and the reflection "
+                    f"together"
+                ),
+            ))
+            mono.value = m.group("material")
+            mono.note = (
+                (mono.note + "; " if mono.note else "")
+                + "reflection split out into reflectionplane"
+            )
+
+    if "cdifxas:xasmeasurementmode" not in record.values:
+        for concept, mode in _MODE_BY_CONCEPT:
+            if concept in record.values:
+                source = record.first(concept).source_path
+                record.add(ConceptValue(
+                    concept="cdifxas:xasmeasurementmode",
+                    value=mode,
+                    source_path=source,
+                    confidence=0.9,
+                    note=(
+                        f"derived from the presence of "
+                        f"{concept.split(':')[-1]}; XDI has no detection "
+                        f"mode field"
+                    ),
+                ))
+                break
 
 
 def map_xdi(
@@ -121,6 +230,7 @@ def map_xdi(
         record.add(ConceptValue(
             concept=concept,
             value=value,
+            units=_DICTIONARY_UNITS.get(key.lower()),
             source_path=f"#{key}",
             predicate=predicate,
             confidence=confidence,
@@ -151,6 +261,8 @@ def map_xdi(
             long_name=label,
             note=comment,
         ))
+
+    _derive(record, xdi)
 
     if unmapped:
         # Not an error: XDI lets a file define its own namespaces, and a
