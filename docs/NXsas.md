@@ -5,9 +5,22 @@ scattering data collected with a monochromatic beam and an area
 detector.
 
 In the definition's own words, it covers *"raw, monochromatic 2-D SAS
-data with an area detector"*, and is meant to suit both neutron SANS and
-X-ray SAXS. It explicitly covers SAS, WSAS, grazing incidence and GISAS —
-any monochromatic technique that reads out a 2-D detector.
+data with an area detector"*, and is meant to suit both **SANS**
+(small-angle neutron scattering) and **SAXS** (small-angle X-ray
+scattering). It explicitly covers *"SAS, WSAS, grazing incidence and
+GISAS"* — that is, plain small-angle scattering, **GISAS**
+(grazing-incidence small-angle scattering), and anything else
+monochromatic that reads out a 2-D detector.
+
+`WSAS` is the definition's own abbreviation and it is **not expanded
+anywhere in the NeXus source**, so it is left unexpanded here rather
+than guessed at. The context — listed beside plain SAS, in the way SAXS
+is usually paired with WAXS (wide-angle X-ray scattering) — suggests a
+wider-angle variant, but that reading is inference, not something the
+definition states.
+
+Throughout this document **SAS** means small-angle scattering, the
+technique family, without committing to neutrons or X-rays.
 
 Two boundaries matter:
 
@@ -36,10 +49,11 @@ given three things the definition therefore insists on:
 | where the direct beam lands | `NXdetector/beam_center_x`, `beam_center_y` |
 | pixel size | `NXdetector/x_pixel_size`, `y_pixel_size` |
 
-That is the interesting structural point for CDIF: **the intensity array
-alone is not interpretable.** Unlike a XAS spectrum, where energy is
-stored beside μ(E) as a coordinate array, a SAS image stores only pixel
-indices. The coordinate axis has to be *reconstructed* from scalar
+That is the interesting structural point for CDIF (Cross-Domain
+Interoperability Framework): **the intensity array alone is not
+interpretable.** Unlike an XAS (X-ray absorption spectroscopy) spectrum,
+where energy is stored beside μ(E) as a coordinate array, a SAS image
+stores only pixel indices. The coordinate axis has to be *reconstructed* from scalar
 instrument geometry. So the geometry scalars are not incidental context
 here — they are part of the data description.
 
@@ -77,9 +91,11 @@ drives how the crosswalk is written.
 field-for-field, because it was generated from it. Its arrays are all
 placeholder scalars.
 
-**`APS/NXsas/hdf5/nexus-example.hdf5`** is a real USAXS/pinSAXS
-measurement from APS 9-ID-C, and it differs in ways the definition does
-not anticipate:
+**`APS/NXsas/hdf5/nexus-example.hdf5`** is a real measurement from
+beamline 9-ID-C at the APS (Advanced Photon Source), made on its
+**USAXS** (ultra-small-angle X-ray scattering) instrument in its
+**pinSAXS** (pinhole SAXS) configuration. It differs from the definition
+in ways the definition does not anticipate:
 
 - The detector group has **no `data` field**. The measurement lives in
   `NXdata` as `frames`, shape `(10, 195, 487)` — ten frames of a
