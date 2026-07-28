@@ -44,7 +44,12 @@ metadata plus a best-effort structural description.
 pip install -e .
 ```
 
-Requires Python 3.11+ and `h5py`.
+Requires Python 3.11+ and `h5py`. To check emitted documents against the
+CDIF profiles as well as produce them:
+
+```bash
+pip install -e ".[validate]"
+```
 
 ## Usage
 
@@ -52,7 +57,55 @@ Requires Python 3.11+ and `h5py`.
 hdf5metadata path/to/file.nxs -o metadata.jsonld
 ```
 
-*(CLI not yet implemented — see DESIGN.md)*
+Describe several files at once, writing one document per file:
+
+```bash
+hdf5metadata data/*.nxs -o metadata/
+```
+
+See what was extracted, and — as importantly — what was looked for and
+not found. The report goes to stderr, so the document on stdout stays
+pipeable:
+
+```bash
+hdf5metadata scan.nxs --report
+```
+
+### Validating
+
+Validation needs the profile's schema, frame and SHACL shapes. They are
+**not bundled**: they belong to the CDIF profile repositories and are
+versioned there, so vendoring them would pin this package to a snapshot
+and invite the copies to drift. Point at a release directory instead:
+
+```bash
+hdf5metadata scan.nxs --validate --profile-dir ../XAS-CDIF/release
+```
+
+or set `HDF5METADATA_PROFILE_DIR` once for the environment. Without
+either, validation reports itself **skipped** rather than passing — a run
+that checked nothing must not read like a run that found nothing wrong.
+
+Exit codes suit a pipeline: `0` when everything asked for succeeded, `1`
+when a document failed validation, `2` when a file could not be read.
+
+### What conformance is claimed
+
+`dcterms:conformsTo` is written per profile only where the content for
+that profile is actually present — detected, not asserted. A file with no
+measured arrays gets core and discovery and does not claim
+`data_description`.
+
+### Non-standard file layouts
+
+Writers that predate or diverge from the NeXus standard put things in
+their own places: the Athena/GSECARS writer uses `NXscan` and
+`NXxrayedge`, neither a NeXus base class, and hangs ~20 `beamline_*`
+fields off `NXsource`. Those locations live in
+`src/hdf5metadata/data/legacy-paths.tsv`, consulted only for concepts the
+standard crosswalk did not find, and never overriding a standards-based
+value. Values recovered that way carry a `convention` marker so a
+consumer can tell. Pass `--no-legacy` to use standard paths only.
 
 ## Related work
 
