@@ -4,7 +4,8 @@ Orientation for future Claude Code (or human) sessions.
 
 ## What this repo is
 
-A Python tool that reads a NeXus-formatted HDF5 file and emits CDIF 1.1
+A Python tool that reads a NeXus-formatted HDF5 file **or an XDI text
+file** and emits CDIF 1.1
 schema.org JSON-LD describing it — core, discovery, dataDescription, and
 dataStructure profiles, to the extent the file's own internal description
 supports each.
@@ -15,7 +16,22 @@ questions, and a survey of reusable prior art in two other repositories.
 
 ## Current state
 
-Design phase. Repo has scaffolding + design docs; no extraction code yet.
+All four stages implemented and tested: 189 tests, 2 skipped.
+
+- **Two input formats.** NeXus/HDF5 and XDI, dispatched on what the file
+  declares.
+- **Three crosswalks bundled** in `src/hdf5metadata/data/`:
+  `cdifxas-to-nexus` and `xdi-to-cdifxas` (vendored from XAS-CDIF),
+  `cdifsas-to-nexus` (authored here). Plus `legacy-paths.tsv` for
+  writers that diverge from the standard.
+- **Worked examples** in `exampleData/` and `exampleMetadata/`, spanning
+  XAS, SAS, an XDI file, and two techniques no crosswalk covers.
+- **Validation** against JSON Schema + SHACL via `--profile-dir`.
+  FeXAS.nxs and all 55 XDI files in the XAS-CDIF corpus validate clean
+  against the strict `xasDocument` composite.
+
+Not started: importing schema.org metadata, or a form for the CDIF core
+properties neither format carries (creator, licence, identifiers).
 
 ## Key external references
 
@@ -34,6 +50,28 @@ Carried forward deliberately from the prior codebases surveyed in DESIGN.md:
 - **Stage boundary is sacred.** `inspect/` emits plain structural dicts with no
   CDIF vocabulary. `map/` holds all semantics. When CDIF vocabulary changes,
   only `map/` moves.
+- **Two input bindings, one hub.** `inspect/nexus.py` + `map/concepts.py`
+  read HDF5; `inspect/xdi.py` + `map/xdi.py` read XDI. Both produce the
+  same `ConceptRecord`, keyed on concept URIs (`cdifxas:facility`), with
+  the source location carried *beside* each value rather than encoded in
+  the key. That is what lets a second format be a parser rather than a
+  second pipeline — do not key the intermediate on anything
+  format-specific.
+- **Dispatch on what the file declares, never on its extension.** XDI
+  announces itself on line 1; anything else is tried as HDF5. A `.txt`
+  holding XDI is read as XDI.
+- **Adding a technique is a crosswalk.** Drop an SSSOM TSV in
+  `data/`; selection picks it up from the application definitions it
+  covers. No code change, no registration step. NXsas was added this
+  way.
+- **Emission is the only place that knows CDIF.** `CONCEPT_SLOTS` in
+  `emit.py` is deliberately Python, not a fourth TSV: "where does this
+  concept go in a schema.org graph" involves nesting and
+  cross-references a flat table cannot express.
+- **`cdi:isStructuredBy` goes on the distribution.** The JSON Schema
+  admits it only on a distribution item and the SHACL rule reaches it
+  there. Each part references its structure by `@id`. Dataset level
+  validates only because it is ignored.
 - **Import-guard heavy dependencies.** `h5py`, `numpy`, `pyshacl` missing
   produces a warning in the result, not an ImportError.
 - **Accumulate, don't raise.** Non-fatal problems go into `warnings: list[str]`
@@ -57,6 +95,24 @@ both tools read consistently:
 
 Prefer *omitting* an optional field over filling it with a sentinel. Sentinels
 are for fields the profile requires.
+
+## Derivations, and why they are not crosswalk rows
+
+Some concepts a profile requires are determined by a file without being
+stated in it. These live in `map/xdi.py::_derive`, not in the crosswalk,
+because a crosswalk row says "this header means this concept" and none of
+these has a header. Each derived value records in its `note` where it
+came from.
+
+| concept | derived from |
+|---|---|
+| `probe` | the format — XDI describes X-ray absorption and nothing else |
+| detection mode | which intensity columns are present |
+| reflection plane | split out of `Mono.name` (`Si(311)` → `Si` + `3 1 1`) |
+| d-spacing units | the XDI dictionary, which fixes the tag in Angstrom |
+
+None of these appears as a field in any of the 272 files in the XAS Data
+Library. A crosswalk row for one would map something that does not exist.
 
 ## Gotchas already known
 
