@@ -239,7 +239,9 @@ Prefer *omitting* an optional field over filling it with a sentinel.
 ## Effort A — `usgin/hdf5metadata`
 
 Public, CC-BY-4.0, Python ≥3.11. **Stages 1, 1b and 2 implemented and
-tested (93 tests); stage 3 not started.**
+tested (118 tests). `emit.py` produces a CDIF document that validates
+clean against the strict xasDocument composite with zero SHACL
+violations. `validate.py` and `cli.py` not started.**
 
 Present: `inspect/hdf5.py`, `inspect/nexus.py`, `nxdl/`, `map/`,
 vendored SSSOM crosswalks and the legacy path table under
@@ -256,8 +258,58 @@ emit +     assemble, detect satisfied profiles, write conformsTo,
 validate   validate per profile (JSON Schema + SHACL)
 ```
 
-`inspect/` and `map/` are done. **Next step:** `emit.py` — concept
-records to CDIF JSON-LD, then `validate.py` and `cli.py`.
+`inspect/`, `map/` and `emit.py` are done. **Next step:** `validate.py`
+(wire the JSON Schema + SHACL check into the package) and `cli.py`.
+
+### emit.py, and what validating it surfaced
+
+Reads two inputs because CDIF needs two kinds of fact: core and
+discovery are technique-independent and come from the NeXus structure
+and the file on disk; the domain facts come from the concept records.
+The concept-to-CDIF binding is a dict in code, not a fourth TSV — `map`
+answers "what concept is this value", `emit` answers "where does it go",
+and the second answer is the shape of a schema.org graph. A concept with
+no binding still reaches the output as additionalProperty, with a
+warning.
+
+Arrays become `schema:variableMeasured` plus a DataStructure component;
+scalars become instrument, sample or event context. HDF5 paths are
+`cdif:LocatorMapping` with `cdif:locator`, never indices.
+
+Validating against the real profile found five defects worth recording,
+because each would silently produce a wrong or lossy document:
+
+* **A flat `prov:used` disappears when framed.** It validates as raw
+  JSON and then vanishes, because a frame drops what it does not
+  declare. The profile frame declares `schema:instrument` beneath
+  `prov:used`.
+* **Beamline, source and monochromator are three peers, not one.** The
+  profile distinguishes them and constrains each; folding source into
+  beamline reads sensibly and satisfies neither.
+* **propertyIDs must be the concept locals verbatim.** The profile
+  enumerates the same tokens, so a tidier spelling
+  (`xas:xray_source_type` for `xas:xraysourcetype`) yields a document
+  that cannot conform. A test now keeps the two in step.
+* **`schema:value` must be a string.** A d-spacing as a JSON float, or a
+  reflection plane as `[3, 1, 1]`, fails the constraint that says the
+  monochromator must report those values at all.
+* **The catalog record must be an IRI.** SHACL targets it by identity,
+  and nothing outside a document can refer to a blank node inside it.
+
+### The one profile change this required
+
+`xasCore`'s distribution `contains` demanded `dcterms:conformsTo`
+include the **XDI specification**, which an HDF5 file cannot truthfully
+claim. It also contradicted the `@type` constraint beside it, already
+format-neutral. Relaxed to accept either the XDI spec or a NeXus
+application definition — strictly widening, and the profile's own three
+examples still validate. Committed to
+`metadataBuildingBlocks/_sources/xasProperties/xasCore/schema.yaml` and
+mirrored into `XAS-CDIF/release/`.
+
+Remaining SHACL output on FeXAS is warnings only, for what a NeXus file
+genuinely does not carry: a creator, a contact point, and an instrument
+category from a controlled vocabulary.
 
 ### What the map layer settled
 
