@@ -81,6 +81,30 @@ XDI_MEDIA_TYPE = "application/x-xdi"
 #: The iSamples term the XAS profile requires on a sample, alongside the
 #: bare "MaterialSample" string. Both, and in that combination -- the
 #: profile checks for each separately.
+#: What the XAS profile requires each peer instrument to carry, and the
+#: unit the XDI dictionary fixes where there is one.
+#:
+#: A file that omits one of these still has to produce a describable
+#: instrument, so the property is emitted with the sentinel rather than
+#: left out -- the same choice the RML pipeline makes, and the reason its
+#: documents validate where an omission would not.
+#:
+#: UNKNOWN, not a plausible default. The RML pipeline writes
+#: "Synchrotron X-ray Source" for a missing source type, which is true of
+#: every file in this corpus and is still an assertion no file made. A
+#: reader can act on "unknown"; it cannot tell an asserted default from a
+#: recorded fact.
+UNKNOWN = "unknown"
+
+REQUIRED_INSTRUMENT_PROPERTIES = {
+    "xas:source": (("probe", None), ("xraysourcetype", None)),
+    "xas:xraymonochromator": (
+        ("monochromatortype", None),
+        ("dspacing", "Angstrom"),
+        ("reflectionplane", None),
+    ),
+}
+
 MATERIAL_SAMPLE_IRI = (
     "https://w3id.org/isample/vocabulary/materialsampleobjecttype/"
     "materialsample"
@@ -520,6 +544,42 @@ def _keywords(pairs: list[tuple[str, str]]) -> list[dict[str, Any]]:
     return out
 
 
+def _with_sentinels(kind: str, props: list) -> list:
+    """Fill out an instrument the profile has requirements for.
+
+    Only properties the profile names for this instrument are added, and
+    only when absent -- a value read from the file is never displaced.
+    Each sentinel says in its own description that it is one, so a
+    consumer can tell a gap from a reading without re-running anything.
+    """
+    required = REQUIRED_INSTRUMENT_PROPERTIES.get(kind)
+    if not required:
+        return props
+    present = {
+        pv["schema:propertyID"][0]["@id"] for pv in props
+        if pv.get("schema:propertyID")
+    }
+    out = list(props)
+    for prop, unit in required:
+        if f"xas:{prop}" in present:
+            continue
+        sentinel: dict[str, Any] = {
+            "@type": ["schema:PropertyValue"],
+            "schema:propertyID": [{"@id": f"xas:{prop}"}],
+            "schema:name": _readable(prop),
+            "schema:value": UNKNOWN,
+            "schema:description": (
+                "not recorded in the source file; the profile requires "
+                "this property, so it is reported as unknown rather than "
+                "omitted or guessed"
+            ),
+        }
+        if unit:
+            sentinel["schema:unitText"] = unit
+        out.append(sentinel)
+    return out
+
+
 def _sample_name(records) -> str | None:
     """A name for the sample, where a binding supplied one."""
     for record in records:
@@ -536,6 +596,7 @@ def _instruments(buckets: dict[str, Any], base: str) -> list[dict[str, Any]]:
     settled on, so the two bindings produce comparable graphs."""
     def used(name: str, kind: str, props: list) -> dict[str, Any]:
         slug = kind.split(":", 1)[-1]
+        props = _with_sentinels(kind, props)
         # The entity wraps the instrument rather than being it. That
         # nesting is what the profile frame declares, and a frame drops
         # what it does not declare -- so a flat prov:used passes

@@ -136,6 +136,19 @@
                 ],
                 "schema:name": "X-ray source type",
                 "schema:value": "Synchrotron X-ray Source"
+              },
+              {
+                "@type": [
+                  "schema:PropertyValue"
+                ],
+                "schema:propertyID": [
+                  {
+                    "@id": "xas:probe"
+                  }
+                ],
+                "schema:name": "probe",
+                "schema:value": "unknown",
+                "schema:description": "not recorded in the source file; the profile requires this property, so it is reported as unknown rather than omitted or guessed"
               }
             ]
           }

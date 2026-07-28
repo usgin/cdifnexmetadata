@@ -291,3 +291,44 @@ def test_d_spacing_gets_the_unit_the_dictionary_specifies(tmp_path):
     dspacing = map_xdi(x).records[0].first("cdifxas:dspacing")
     assert dspacing.value == "3.1355"
     assert dspacing.units == "Angstrom"
+
+
+def test_a_required_property_the_file_omits_becomes_a_sentinel(tmp_path):
+    """The profile requires the monochromator to report a d-spacing. The
+    Diamond B18 series gives Mono.name and no Mono.d_spacing, so the
+    property is emitted as unknown -- omitting it makes the instrument
+    undescribable, and guessing asserts a number nobody measured."""
+    from hdf5metadata.emit import UNKNOWN
+
+    text = SPACED.replace("# Mono.name: Si(111)", "# Mono.name: Si(111)")
+    doc = _emit(tmp_path, text).document
+    mono = next(
+        u["schema:instrument"]
+        for u in doc["prov:wasGeneratedBy"][0]["prov:used"]
+        if u["schema:instrument"]["schema:additionalType"][0]["@id"]
+        == "xas:xraymonochromator")
+    by_id = {p["schema:propertyID"][0]["@id"]: p
+             for p in mono["schema:additionalProperty"]}
+    dspacing = by_id["xas:dspacing"]
+    assert dspacing["schema:value"] == UNKNOWN
+    assert dspacing["schema:unitText"] == "Angstrom"
+    assert "not recorded in the source file" in dspacing["schema:description"]
+    # A value the file did supply is untouched.
+    assert by_id["xas:monochromatortype"]["schema:value"] == "Si"
+
+
+def test_a_sentinel_never_displaces_a_recorded_value(tmp_path):
+    text = SPACED.replace(
+        "# Mono.name: Si(111)",
+        "# Mono.name: Si(111)\n# Mono.d_spacing: 3.1355")
+    doc = _emit(tmp_path, text).document
+    mono = next(
+        u["schema:instrument"]
+        for u in doc["prov:wasGeneratedBy"][0]["prov:used"]
+        if u["schema:instrument"]["schema:additionalType"][0]["@id"]
+        == "xas:xraymonochromator")
+    by_id = {p["schema:propertyID"][0]["@id"]: p
+             for p in mono["schema:additionalProperty"]}
+    assert by_id["xas:dspacing"]["schema:value"] == "3.1355"
+    assert "not recorded" not in by_id["xas:dspacing"].get(
+        "schema:description", "")
