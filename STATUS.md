@@ -191,7 +191,8 @@ these, as did an earlier pass in this one:
   Use manual URLs now ([§3](#3-nxs-prefix-concatenation-does-not-resolve))
   and treat any future ontology IRI as a later `skos:exactMatch` row,
   which is exactly what SSSOM is for.
-- **`XAS_Glossary_SKOS_v2_draft.json` changed on 2026-07-27** — 89 → 90
+- **The XAS glossary changed on 2026-07-27** (`XAS_Glossary_SKOS.json`,
+  named `XAS_Glossary_SKOS.json` at the time) — 89 → 90
   concepts (added `emissionline`), and `edgeanalyzed` /
   `xasmeasurementmode` gained `dc:references` to three new value-list
   schemes. Anchor SSSOM on the current file, and use the imported
@@ -515,7 +516,7 @@ Enumeration import (recommendation item 1), via the re-runnable
 | `XAS_edges_SKOS.json` | 39 | `NXabsorption_edge/name` |
 | `XAS_emissionlines_SKOS.json` | 432 | `NXemission_line/name` |
 | `XAS_detectionmodes_SKOS.json` | 7 | union of upstream + fork |
-| `XAS_Glossary_SKOS_v2_draft.json` | 90 | +1 (`emissionline`) |
+| `XAS_Glossary_SKOS.json` | 90 | +1 (`emissionline`) |
 
 Kept as **separate schemes** rather than folded into the glossary: 478
 concepts against 89 would be a 6× inflation, and the publishing pipeline
@@ -549,7 +550,7 @@ loses terms.
 
 An SSSOM alignment set for the **transmission slice** end-to-end —
 element, edge, energy, i0/itrans, facility, mono/d-spacing — anchored on
-the current `XAS_Glossary_SKOS_v2_draft.json`, with XDI tokens as one
+the current `XAS_Glossary_SKOS.json`, with XDI tokens as one
 binding and `NXxas_trans` concept paths as the other. Validate the XDI
 side against the concept keys `mapping_dds.ttl` actually references, and
 diff the emitted output against the existing reference JSON-LD.
