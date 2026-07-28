@@ -1,0 +1,34 @@
+# Legacy layout paths -- deliberately NOT SSSOM.
+#
+# The SSSOM crosswalk records what a CDIF concept corresponds to in the
+# NeXus standard. This table records where writers that predate or
+# diverge from that standard actually put the value. Those are different
+# kinds of claim, and mixing them would make the crosswalk unpublishable
+# as an alignment artifact.
+#
+# Consulted only after the crosswalk, and only for concepts still
+# missing. A legacy path never overrides a standards-based value.
+#
+# Columns
+#   concept      CDIF concept CURIE; must exist in the crosswalk.
+#   convention   Which writer produces this layout. Provenance, not
+#                dispatch -- the paths name non-standard classes and so
+#                identify themselves.
+#   path         Entry-relative, same NXDL syntax as the crosswalk:
+#                name:NXclass segments, uppercase names are placeholders.
+#   confidence   Lower than a standards mapping unless the legacy field
+#                is unambiguous.
+#   comment      Why this is not the standard location.
+#
+# license: CC-BY-4.0
+concept	convention	path	confidence	comment
+cdifxas:elementanalyzed	gsecars-athena	/scan:NXscan/xrayedge:NXxrayedge/element	1.0	NXscan and NXxrayedge are not NeXus base classes; restructured NXxas uses element:NXelement/name
+cdifxas:edgeanalyzed	gsecars-athena	/scan:NXscan/xrayedge:NXxrayedge/edge	1.0	restructured NXxas uses NXabsorption_edge/name
+cdifxas:edgeenergy	gsecars-athena	/scan:NXscan/edge_energy	0.9	written as a string with no units attribute; eV by convention at this beamline but not asserted in the file
+cdifxas:beamline	gsecars-athena	/INSTRUMENT:NXinstrument/source:NXsource/beamline_name	1.0	the standard puts the beamline name on NXinstrument; this writer puts it on NXsource alongside ~20 other beamline_* fields
+cdifxas:facility	gsecars-athena	/INSTRUMENT:NXinstrument/source:NXsource/facility_name	1.0	fires only where NXsource/name is absent; where both exist, facility_name is the cleaner value -- see comment in map/legacy.py
+cdifxas:xraysourcetype	gsecars-athena	/INSTRUMENT:NXinstrument/source:NXsource/facility_xray_source	0.9	insertion-device description rather than a source type term
+cdifxas:absorptioncoefficient	gsecars-athena	/DATA:NXdata/mutrans	1.0	restructured NXxas carries this as ENTRY/intensity, disambiguated by the declared mode; here the field name carries the mode
+cdifxas:fluorescenceabsorptioncoefficient	gsecars-athena	/DATA:NXdata/mufluor	1.0	as mutrans, for fluorescence
+cdifxas:xasmeasurementmode	gsecars-athena	/DATA:NXdata/mode	0.9	free text (Transmission, Fluorescence), not the NXxas_* definition name; needs normalising before use as a mode term
+cdifxas:monochromatortype	gsecars-athena	/INSTRUMENT:NXinstrument/monochromator:NXmonochromator/crystal:NXcrystal/chemical_formula	0.8	crystal material rather than a monochromator type; the standard NXcrystal/type is absent

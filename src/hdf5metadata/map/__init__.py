@@ -1,8 +1,9 @@
 """Stage 2: NeXus semantics to CDIF concepts.
 
 All the semantics live here. `crosswalk` holds the SSSOM correspondence
-and the NXDL-path matching; `concepts` produces the concept-keyed
-intermediate that is the hub of the architecture -- see DESIGN.md.
+and the NXDL-path matching; `legacy` records where non-standard writers
+actually put things; `concepts` produces the concept-keyed intermediate
+that is the hub of the architecture -- see DESIGN.md.
 """
 
 from hdf5metadata.map.concepts import (
@@ -20,15 +21,19 @@ from hdf5metadata.map.crosswalk import (
     parse_path,
     resolve_path,
 )
+from hdf5metadata.map.legacy import LegacyPath, LegacyTable, load_legacy
 
 __all__ = [
     "ConceptRecord",
     "ConceptValue",
     "Crosswalk",
+    "LegacyPath",
+    "LegacyTable",
     "Mapping",
     "MappingResult",
     "Segment",
     "load_crosswalk",
+    "load_legacy",
     "map_entry",
     "map_nexus",
     "parse_path",

@@ -14,6 +14,7 @@ import numpy as np  # noqa: E402
 
 from hdf5metadata.inspect import inspect_file, read_nexus  # noqa: E402
 from hdf5metadata.map.concepts import map_entry, map_nexus  # noqa: E402
+from hdf5metadata.map.legacy import load_legacy  # noqa: E402
 from hdf5metadata.map.crosswalk import (  # noqa: E402
     Mapping,
     load_crosswalk,
@@ -416,3 +417,121 @@ def test_the_bundled_crosswalk_loads_and_covers_every_detection_mode():
     assert len(cw.mappings) > 40
     assert {"NXxas_trans", "NXxas_tfy", "NXxas_tey"} <= cw.definitions()
     assert all(m.subject_id.startswith("cdifxas:") for m in cw.mappings)
+
+
+# ---------------------------------------------------------------------------
+# legacy paths
+# ---------------------------------------------------------------------------
+
+LEGACY_HEADER = "concept\tconvention\tpath\tconfidence\tcomment"
+
+
+def _legacy(tmp_path, *rows):
+    p = tmp_path / "legacy.tsv"
+    p.write_text(
+        "# a comment line\n" + LEGACY_HEADER + "\n" + "\n".join(rows) + "\n",
+        encoding="utf-8",
+    )
+    return load_legacy(p)
+
+
+def _lrow(concept, convention, path, conf="1.0", comment=""):
+    return f"{concept}\t{convention}\t{path}\t{conf}\t{comment}"
+
+
+def _gsecars(f, name="entry", element="Fe", edge="K"):
+    """A file laid out the way the Athena/GSECARS writer lays them out:
+    NXscan and NXxrayedge, neither of which is a NeXus base class."""
+    e = _entry(f, name=name, definition="NXxas")
+    scan = _group(e, "scan", "NXscan")
+    scan["edge_energy"] = "7112.000"
+    xe = _group(scan, "xrayedge", "NXxrayedge")
+    xe["element"] = element
+    xe["edge"] = edge
+    return e
+
+
+def test_legacy_recovers_values_the_crosswalk_cannot_see(tmp_path):
+    p = tmp_path / "f.nxs"
+    with h5py.File(p, "w") as f:
+        _gsecars(f)
+
+    entry = _read(p).entries[0]
+    cw = _crosswalk(
+        tmp_path,
+        _row("cdifxas:elementanalyzed", "skos:exactMatch",
+             "nxdl:NXxas/ENTRY:NXentry/element:NXelement/name",
+             label="elementanalyzed"),
+    )
+    # The standard path finds nothing: this file has no NXelement.
+    assert map_entry(entry, cw).concepts == set()
+
+    lg = _legacy(tmp_path, _lrow(
+        "cdifxas:elementanalyzed", "gsecars-athena",
+        "/scan:NXscan/xrayedge:NXxrayedge/element"))
+    rec = map_entry(entry, cw, lg)
+    cv = rec.first("cdifxas:elementanalyzed")
+    assert cv.value == "Fe"
+    assert cv.convention == "gsecars-athena"
+    assert any("non-standard paths" in w for w in rec.warnings)
+
+
+def test_legacy_never_displaces_a_standards_based_value(tmp_path):
+    """The rule that makes the table safe to extend: adding a convention
+    can fill gaps but cannot change an answer the standard already gave."""
+    p = tmp_path / "f.nxs"
+    with h5py.File(p, "w") as f:
+        e = _entry(f, definition="NXxas")
+        inst = _group(e, "instrument", "NXinstrument")
+        src = _group(inst, "source", "NXsource")
+        src["name"] = "APS, undulator 36mm, 66 poles, 13-ID-E"
+        src["facility_name"] = "APS"
+
+    cw = _crosswalk(
+        tmp_path,
+        _row("cdifxas:facility", "skos:exactMatch", "nxdl:NXsource/name"),
+    )
+    lg = _legacy(tmp_path, _lrow(
+        "cdifxas:facility", "gsecars-athena",
+        "/INSTRUMENT:NXinstrument/source:NXsource/facility_name"))
+    rec = map_entry(_read(p).entries[0], cw, lg)
+
+    assert rec.value_of("cdifxas:facility").startswith("APS, undulator")
+    assert rec.first("cdifxas:facility").convention == ""
+    assert len(rec.values["cdifxas:facility"]) == 1
+
+
+def test_legacy_is_optional(tmp_path):
+    p = tmp_path / "f.nxs"
+    with h5py.File(p, "w") as f:
+        _gsecars(f)
+    cw = _crosswalk(tmp_path, _row("cdifxas:facility", "skos:exactMatch",
+                                   "nxdl:NXsource/name"))
+    # No table at all, and a table pointing at a file that is not there.
+    assert map_entry(_read(p).entries[0], cw, None).concepts == set()
+    assert load_legacy(tmp_path / "nope.tsv").paths == []
+
+
+def test_legacy_confidence_and_comment_travel_with_the_value(tmp_path):
+    p = tmp_path / "f.nxs"
+    with h5py.File(p, "w") as f:
+        _gsecars(f)
+    cw = _crosswalk(tmp_path, _row("cdifxas:edgeenergy", "skos:exactMatch",
+                                   "nxdl:NXabsorption_edge/energy"))
+    lg = _legacy(tmp_path, _lrow(
+        "cdifxas:edgeenergy", "gsecars-athena", "/scan:NXscan/edge_energy",
+        conf="0.9", comment="string with no units attribute"))
+    cv = map_entry(_read(p).entries[0], cw, lg).first("cdifxas:edgeenergy")
+    assert cv.value == "7112.000" and cv.confidence == 0.9
+    assert "no units" in cv.note
+
+
+def test_the_bundled_legacy_table_names_only_real_concepts():
+    """A typo in legacy-paths.tsv would otherwise just never match, and
+    silently mapping nothing is exactly the failure this suite exists to
+    catch."""
+    legacy, cw = load_legacy(), load_crosswalk()
+    assert legacy.paths, "bundled legacy table should not be empty"
+    assert legacy.concepts() <= cw.concepts()
+    assert "gsecars-athena" in legacy.conventions()
+    assert all(p.path.startswith("/") for p in legacy.paths)

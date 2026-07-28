@@ -238,7 +238,7 @@ def _match_groups(
     return candidates
 
 
-def _resolve_from(
+def resolve_segments(
     roots: list[NXGroup], segments: list[Segment]
 ) -> list[NXField | NXGroup]:
     if not segments:
@@ -274,7 +274,7 @@ def resolve_path(entry: NXEntry, path: str) -> list[NXField | NXGroup]:
     segments = parse_path(path)
     if segments and segments[0].nx_class == "NXentry":
         segments = segments[1:]
-    return _resolve_from([entry.root], segments)
+    return resolve_segments([entry.root], segments)
 
 
 def resolve_mapping(
@@ -305,18 +305,18 @@ def resolve_mapping(
     segments = parse_path(mapping.path)
 
     if segments and segments[0].nx_class == "NXentry":
-        return _resolve_from([entry.root], segments[1:])
+        return resolve_segments([entry.root], segments[1:])
 
     definition = mapping.definition
     if definition and definition.startswith("NX"):
         holders = entry.find(definition)
         if holders:
-            return _resolve_from(holders, segments)
+            return resolve_segments(holders, segments)
         # The class is absent from this file: the concept simply is not
         # present, which is a normal outcome.
         return []
 
-    return _resolve_from([entry.root], segments)
+    return resolve_segments([entry.root], segments)
 
 
 def _refresh(dest: Path = DEFAULT_CROSSWALK) -> int:

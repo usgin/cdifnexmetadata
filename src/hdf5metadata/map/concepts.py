@@ -50,6 +50,7 @@ from hdf5metadata.map.crosswalk import (
     load_crosswalk,
     resolve_mapping,
 )
+from hdf5metadata.map.legacy import LegacyTable, load_legacy, resolve_legacy
 
 
 @dataclass
@@ -70,6 +71,11 @@ class ConceptValue:
     dtype: str = ""
     #: Free-text note from the crosswalk row, where it flags a caveat.
     note: str = ""
+    #: Set when the value came from the legacy path table rather than the
+    #: standards crosswalk, naming the writer convention that put it
+    #: there. Machine-checkable so a consumer can filter on it rather than
+    #: having to read `note`.
+    convention: str = ""
 
     @property
     def has_value(self) -> bool:
@@ -118,6 +124,8 @@ class ConceptRecord:
                         "shape": list(cv.shape),
                         "dtype": cv.dtype,
                         **({"note": cv.note} if cv.note else {}),
+                        **({"convention": cv.convention}
+                           if cv.convention else {}),
                     }
                     for cv in vals
                 ]
@@ -133,6 +141,7 @@ class MappingResult:
 
     records: list[ConceptRecord] = field(default_factory=list)
     crosswalk_source: str = ""
+    legacy_source: str = ""
     warnings: list[str] = field(default_factory=list)
 
     @property
@@ -165,6 +174,7 @@ class MappingResult:
     def to_dict(self) -> dict[str, Any]:
         return {
             "crosswalk_source": self.crosswalk_source,
+            "legacy_source": self.legacy_source,
             "record_count": len(self.records),
             "records": [r.to_dict() for r in self.records],
             "warnings": self.warnings,
@@ -214,6 +224,7 @@ def _value_from_group(g: NXGroup, m: Mapping) -> ConceptValue:
 def map_entry(
     entry: NXEntry,
     crosswalk: Crosswalk,
+    legacy: LegacyTable | None = None,
 ) -> ConceptRecord:
     """Express one entry as concept values."""
     record = ConceptRecord(
@@ -253,8 +264,14 @@ def map_entry(
             elif isinstance(hit, NXGroup):
                 record.add(_value_from_group(hit, m))
 
-    still_missing = _try_sibling_definitions(record, entry, crosswalk)
+    _try_sibling_definitions(record, entry, crosswalk)
+    _apply_legacy(record, entry, legacy)
 
+    still_missing = {
+        m.subject_label or m.subject_id
+        for m in applicable
+        if m.is_identifying and m.path and m.subject_id not in record.values
+    }
     if still_missing:
         # Normal, not an error: a file need not carry every concept its
         # definition allows.
@@ -285,11 +302,57 @@ def _ambiguous_paths(crosswalk: Crosswalk) -> set[str]:
     return {p for p, concepts in by_path.items() if len(concepts) > 1}
 
 
+def _apply_legacy(
+    record: ConceptRecord, entry: NXEntry, legacy: LegacyTable | None
+) -> None:
+    """Fill what remains from where non-standard writers actually put it.
+
+    Last resort by construction: only concepts still missing after the
+    crosswalk and its same-family fallback are considered, so a
+    standards-based value is never displaced. See `map.legacy` for why
+    this is a separate table from the SSSOM crosswalk, and for what the
+    never-override rule costs.
+    """
+    if legacy is None or not legacy.paths:
+        return
+    filled: list[str] = []
+    conventions: set[str] = set()
+    for lp in legacy.paths:
+        if lp.concept in record.values:
+            continue
+        for hit in resolve_legacy(entry, lp):
+            cv = ConceptValue(
+                concept=lp.concept,
+                units=getattr(hit, "units", None),
+                source_path=hit.path,
+                predicate="skos:exactMatch",
+                confidence=lp.confidence,
+                note=lp.comment,
+                convention=lp.convention,
+            )
+            if isinstance(hit, NXField):
+                if hit.has_value:
+                    cv.value = hit.value
+                else:
+                    cv.is_array = True
+                cv.shape, cv.dtype = hit.shape, hit.dtype
+            else:
+                cv.value = hit.name or None
+            record.add(cv)
+            filled.append(f"{lp.concept.split(':')[-1]} <- {lp.path}")
+            conventions.add(lp.convention)
+    if filled:
+        record.warnings.append(
+            f"{len(filled)} concept(s) filled from non-standard paths "
+            f"({', '.join(sorted(conventions))}): " + ", ".join(sorted(filled))
+        )
+
+
 def _try_sibling_definitions(
     record: ConceptRecord, entry: NXEntry, crosswalk: Crosswalk
-) -> set[str]:
+) -> None:
     """Fill remaining concepts from more specific definitions in the same
-    family, and report what is still absent.
+    family.
 
     A file may declare the family base — `definition=NXxas` — while its
     structure is that of one specific mode, either because it predates the
@@ -306,12 +369,6 @@ def _try_sibling_definitions(
     silent about the ones only the declaration could disambiguate.
     """
     declared = entry.definition
-    expected = {
-        m.subject_id: (m.subject_label or m.subject_id)
-        for m in crosswalk.for_definition(declared)
-        if m.is_identifying and m.path
-    }
-
     if declared:
         ambiguous = _ambiguous_paths(crosswalk)
         borrowed: list[str] = []
@@ -347,11 +404,6 @@ def _try_sibling_definitions(
                 f"family: " + ", ".join(sorted(borrowed))
             )
 
-    return {
-        label for concept, label in expected.items()
-        if concept not in record.values
-    }
-
 
 def _add_definition_derived(
     record: ConceptRecord, entry: NXEntry, crosswalk: Crosswalk
@@ -385,10 +437,12 @@ def _add_definition_derived(
 def map_nexus(
     nexus: NeXusResult,
     crosswalk: Crosswalk | None = None,
+    legacy: LegacyTable | None = None,
 ) -> MappingResult:
     """Express every entry in a file as concept values."""
     cw = crosswalk or load_crosswalk()
-    out = MappingResult(crosswalk_source=cw.source)
+    lg = legacy if legacy is not None else load_legacy()
+    out = MappingResult(crosswalk_source=cw.source, legacy_source=lg.source)
 
     if not cw.mappings:
         out.warnings.append(
@@ -401,7 +455,7 @@ def map_nexus(
         return out
 
     for entry in nexus.entries:
-        out.records.append(map_entry(entry, cw))
+        out.records.append(map_entry(entry, cw, lg))
 
     if out.is_multi_entry:
         groups = out.structure_groups()
