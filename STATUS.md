@@ -42,7 +42,7 @@ placement, cardinality, or transformation logic. So it is the
 *correspondence* layer, not the whole crosswalk; layer 3 holds the rest.
 
 **Consequence: adding a format is adding a parser, not a pipeline.**
-`smrgeoinfo/cdif-xas` already runs this shape — a concept intermediate
+`smrgeoinfo/cdif-xas`( a fork from https://github.com/UKDSResearch/cdif-xas) already runs this shape — a concept intermediate
 (`resources/cdif_skos.json`) consumed by an RML transform
 (`resources/mapping_dds.ttl`, ~40 TriplesMaps), then framed and
 validated. Adding NeXus means writing a second parser that emits the

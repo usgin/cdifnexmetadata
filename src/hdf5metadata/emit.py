@@ -680,6 +680,13 @@ def emit_document(
             None)
         title = _text(entry.title) if entry and entry.title else None
 
+    # A title of one or two characters -- "Cu" as a Sample.name -- is
+    # below what the profile accepts and useless to a reader anyway, so
+    # the filename stands in. The file's own words are preferred whenever
+    # they are usable.
+    if title and len(str(title).strip()) < 3:
+        title = f"{title} ({stem})"
+
     doc: dict[str, Any] = {
         "@context": CONTEXT,
         "@id": base,

@@ -66,8 +66,11 @@ _DICTIONARY_UNITS = {
 #: is why it maps at closeMatch rather than exactMatch; splitting it
 #: recovers both without asserting anything the file does not contain.
 _MONO_NAME = re.compile(
-    r"^\s*(?P<material>[A-Za-z][A-Za-z0-9]*)\s*[\(\[]\s*"
-    r"(?P<reflection>\d{3}|\d+\s+\d+\s+\d+)\s*[\)\]]\s*$"
+    r"^\s*\[?\s*'?\s*"
+    r"(?P<material>[A-Za-z][A-Za-z0-9]*)"
+    r"\s*[\(\[]?\s*"
+    r"(?P<reflection>\d\s*\d\s*\d|\d+(?:\s+\d+){2})"
+    r"\s*[\)\]]?\s*'?\s*\]?\s*$"
 )
 
 #: The detection mode follows from which intensities were recorded. This
