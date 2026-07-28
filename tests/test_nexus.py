@@ -378,3 +378,28 @@ def test_real_file_resolves():
     assert e.definition
     assert e.data, "expected at least one NXdata"
     assert e.data[0].signals, "expected at least one signal"
+
+
+def test_a_list_valued_definition_is_read_as_one_name(tmp_path):
+    """Soleil, SLS and the APS area-detector writer store `definition` as
+    a one-element array. A list is unhashable, so this used to take down
+    the whole read the moment distinct definitions were collected --
+    eight real facility files in the example corpus, from four
+    institutions."""
+    p = tmp_path / "listdef.nxs"
+    with h5py.File(p, "w") as f:
+        e = _entry(f, name="entry")
+        e["definition"] = np.array([b"NXsas"])
+
+    nx = read_nexus(inspect_file(p))
+    assert nx.entries[0].definition == "NXsas"
+    assert nx.definitions == ["NXsas"]      # hashable, so this cannot throw
+
+
+def test_an_empty_definition_array_is_no_definition(tmp_path):
+    p = tmp_path / "emptydef.nxs"
+    with h5py.File(p, "w") as f:
+        e = _entry(f, name="entry")
+        e["definition"] = np.array([b""])
+
+    assert read_nexus(inspect_file(p)).entries[0].definition is None

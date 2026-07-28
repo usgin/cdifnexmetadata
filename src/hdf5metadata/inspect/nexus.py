@@ -536,6 +536,27 @@ def resolve_nxdata(
 # entry point
 # ---------------------------------------------------------------------------
 
+def _definition_name(value) -> str | None:
+    """The application definition as a single name.
+
+    Real writers do not all store `definition` as a scalar string. Soleil,
+    SLS and the APS area-detector writer store it as a one-element array,
+    which arrives here as a list -- and a list is unhashable, so it used
+    to take down the whole read the moment the distinct definitions were
+    collected. Take the first entry: a NeXus entry declares one
+    application definition, so a sequence is a serialisation detail
+    rather than a claim to conform to several.
+    """
+    if isinstance(value, (list, tuple)):
+        value = next((v for v in value if v not in (None, "")), None)
+    if isinstance(value, bytes):
+        value = value.decode("utf-8", "replace")
+    if value is None:
+        return None
+    text = str(value).strip()
+    return text or None
+
+
 def read_nexus(
     result: InspectionResult,
     nxdl_resolver: Callable[[str], Any] | None = None,
@@ -570,7 +591,7 @@ def read_nexus(
 
         definition = entry.root.fields.get("definition")
         if definition is not None and definition.has_value:
-            entry.definition = definition.value
+            entry.definition = _definition_name(definition.value)
             ver = definition.attributes.get("version")
             entry.definition_version = ver if isinstance(ver, str) else None
 
