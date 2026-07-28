@@ -535,3 +535,44 @@ def test_the_bundled_legacy_table_names_only_real_concepts():
     assert legacy.concepts() <= cw.concepts()
     assert "gsecars-athena" in legacy.conventions()
     assert all(p.path.startswith("/") for p in legacy.paths)
+
+
+def test_discriminating_classes_come_from_the_crosswalk_not_a_hardcoded_list(
+    tmp_path,
+):
+    """Which classes carry a meaningful instance name is a fact about the
+    crosswalk, so reading it from there cannot go stale when a definition
+    adds a detector."""
+    cw = _crosswalk(
+        tmp_path,
+        _row("cdifxas:incidentintensity", "skos:exactMatch",
+             "nxdl:NXxas_trans/ENTRY:NXentry/i0:NXdetector/data"),
+        _row("cdifxas:transmittedintensity", "skos:exactMatch",
+             "nxdl:NXxas_trans/ENTRY:NXentry/itrans:NXdetector/data"),
+        _row("cdifxas:facility", "skos:exactMatch",
+             "nxdl:NXxas_trans/ENTRY:NXentry/source:NXsource/name"),
+    )
+    assert cw.discriminating_classes() == frozenset({"NXdetector"})
+
+
+def test_a_lone_detector_is_not_mistaken_for_the_one_that_is_missing(tmp_path):
+    """With only `i0` present, forgiving a missing `itrans` because the
+    class has one instance would report the incident beam as the
+    transmitted beam. That is a wrong claim, not a near miss."""
+    p = tmp_path / "f.nxs"
+    with h5py.File(p, "w") as f:
+        e = _entry(f, definition="NXxas_trans")
+        inst = _group(e, "instrument", "NXinstrument")
+        _group(inst, "i0", "NXdetector")["data"] = np.arange(5.0)
+
+    cw = _crosswalk(
+        tmp_path,
+        _row("cdifxas:incidentintensity", "skos:exactMatch",
+             "nxdl:NXxas_trans/ENTRY:NXentry/INSTRUMENT:NXinstrument/"
+             "i0:NXdetector/data"),
+        _row("cdifxas:transmittedintensity", "skos:exactMatch",
+             "nxdl:NXxas_trans/ENTRY:NXentry/INSTRUMENT:NXinstrument/"
+             "itrans:NXdetector/data"),
+    )
+    rec = map_entry(_read(p).entries[0], cw)
+    assert rec.concepts == {"cdifxas:incidentintensity"}

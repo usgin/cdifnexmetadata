@@ -112,6 +112,7 @@ class Crosswalk:
     mappings: list[Mapping] = field(default_factory=list)
     metadata: dict[str, str] = field(default_factory=dict)
     source: str = ""
+    _discriminating: frozenset[str] | None = None
 
     def for_definition(self, name: str | None) -> list[Mapping]:
         """Mappings whose object is in the named definition.
@@ -128,6 +129,34 @@ class Crosswalk:
                 if m.definition == name and not m.is_base_class
             ]
         return out
+
+    def discriminating_classes(self) -> frozenset[str]:
+        """Classes whose instances the crosswalk tells apart by name.
+
+        `NXdetector` appears in the XAS definitions as `i0`, `itrans`,
+        `ifluor`, `iey` and `irefer` -- five different concepts, one
+        class, distinguished only by name. `NXsource` appears once. So
+        the crosswalk itself says which classes carry a meaningful name,
+        and there is no need to hardcode a list that would go stale the
+        moment a definition adds a detector.
+
+        This matters because of the forgiveness rule in `_match_groups`:
+        a missing literal name falls back to the class when the class has
+        one instance. For a lone `NXsource` called `synchrotron` that is
+        right. For a file with only `i0` in it, it would resolve a
+        missing `itrans` to `i0` and report the incident beam as the
+        transmitted beam -- a wrong scientific claim, not a near miss.
+        """
+        if self._discriminating is None:
+            names: dict[str, set[str]] = {}
+            for m in self.mappings:
+                for seg in parse_path(m.path):
+                    if seg.nx_class and not seg.is_placeholder and seg.name:
+                        names.setdefault(seg.nx_class, set()).add(
+                            seg.name.lower())
+            self._discriminating = frozenset(
+                cls for cls, seen in names.items() if len(seen) > 1)
+        return self._discriminating
 
     def concepts(self) -> set[str]:
         return {m.subject_id for m in self.mappings}
@@ -213,7 +242,9 @@ def parse_path(path: str) -> list[Segment]:
 
 
 def _match_groups(
-    groups: Iterable[NXGroup], seg: Segment
+    groups: Iterable[NXGroup],
+    seg: Segment,
+    discriminating: frozenset[str] = frozenset(),
 ) -> list[NXGroup]:
     if seg.nx_class:
         candidates = [g for g in groups if g.nx_class == seg.nx_class]
@@ -227,19 +258,24 @@ def _match_groups(
         ]
         if named:
             return named
-        # The literal name is absent. Where the class has exactly one
-        # instance the name is only a label and can be forgiven -- a lone
-        # NXsource is the source whatever it is called. Where there are
-        # several, the name is what tells them apart: `i0`, `itrans`,
-        # `ifluor` and `iey` are all NXdetector, and treating a missing
-        # `iey` as "any detector" would report the incident-beam monitor
-        # as an electron-yield measurement. So that is a miss.
+        # The literal name is absent. Where the class is one the
+        # crosswalk distinguishes by name -- NXdetector, whose instances
+        # are i0, itrans, ifluor, iey -- the name is the whole content of
+        # the match and its absence is a miss, however few candidates
+        # there are. Reporting the incident-beam monitor as the
+        # transmitted beam is a wrong claim, not a near miss.
+        if seg.nx_class in discriminating:
+            return []
+        # Otherwise the name is only a label: a lone NXsource is the
+        # source whatever it is called.
         return candidates if len(candidates) == 1 else []
     return candidates
 
 
 def resolve_segments(
-    roots: list[NXGroup], segments: list[Segment]
+    roots: list[NXGroup],
+    segments: list[Segment],
+    discriminating: frozenset[str] = frozenset(),
 ) -> list[NXField | NXGroup]:
     if not segments:
         return list(roots)
@@ -255,7 +291,7 @@ def resolve_segments(
             return out
         nxt: list[NXGroup] = []
         for g in current:
-            nxt.extend(_match_groups(g.groups, seg))
+            nxt.extend(_match_groups(g.groups, seg, discriminating))
         if not nxt:
             return []
         current = nxt
@@ -278,7 +314,9 @@ def resolve_path(entry: NXEntry, path: str) -> list[NXField | NXGroup]:
 
 
 def resolve_mapping(
-    entry: NXEntry, mapping: Mapping
+    entry: NXEntry,
+    mapping: Mapping,
+    discriminating: frozenset[str] = frozenset(),
 ) -> list[NXField | NXGroup]:
     """Everything in ``entry`` that a crosswalk row's object refers to.
 
@@ -305,18 +343,18 @@ def resolve_mapping(
     segments = parse_path(mapping.path)
 
     if segments and segments[0].nx_class == "NXentry":
-        return resolve_segments([entry.root], segments[1:])
+        return resolve_segments([entry.root], segments[1:], discriminating)
 
     definition = mapping.definition
     if definition and definition.startswith("NX"):
         holders = entry.find(definition)
         if holders:
-            return resolve_segments(holders, segments)
+            return resolve_segments(holders, segments, discriminating)
         # The class is absent from this file: the concept simply is not
         # present, which is a normal outcome.
         return []
 
-    return resolve_segments([entry.root], segments)
+    return resolve_segments([entry.root], segments, discriminating)
 
 
 def _refresh(dest: Path = DEFAULT_CROSSWALK) -> int:

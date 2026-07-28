@@ -240,6 +240,7 @@ def map_entry(
             "the meaning of 'intensity' cannot be determined"
         )
 
+    discriminating = crosswalk.discriminating_classes()
     applicable = crosswalk.for_definition(entry.definition)
     if not applicable:
         # Not a reason to stop: a file declaring a family base has no
@@ -258,7 +259,7 @@ def map_entry(
             continue
         if not m.path:
             continue
-        for hit in resolve_mapping(entry, m):
+        for hit in resolve_mapping(entry, m, discriminating):
             if isinstance(hit, NXField):
                 record.add(_value_from_field(hit, m))
             elif isinstance(hit, NXGroup):
@@ -379,7 +380,7 @@ def _try_sibling_definitions(
                 continue
             if m.subject_id in record.values or m.path in ambiguous:
                 continue
-            hits = resolve_mapping(entry, m)
+            hits = resolve_mapping(entry, m, crosswalk.discriminating_classes())
             for hit in hits:
                 cv = (
                     _value_from_field(hit, m)
