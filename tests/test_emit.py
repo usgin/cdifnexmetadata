@@ -332,10 +332,9 @@ def test_legacy_provenance_survives_into_the_document(tmp_path):
     cw = _crosswalk(tmp_path, _row("cdifxas:edgeenergy", "skos:exactMatch",
                                    "nxdl:NXabsorption_edge/energy"))
     doc = _emit(p, cw, load_legacy(lg_file)).document
-    props = [
-        pv for used in doc["prov:wasGeneratedBy"][0]["prov:used"]
-        for pv in used.get("schema:additionalProperty", [])
-    ]
+    # Edge energy is a property of the measurement, not of a piece of
+    # hardware, so the profile puts it on the activity.
+    props = doc["prov:wasGeneratedBy"][0]["schema:additionalProperty"]
     edge = next(pv for pv in props if pv["schema:value"] == "7112.000")
     assert "gsecars-athena" in edge["schema:description"]
 
@@ -350,3 +349,156 @@ def test_a_file_with_no_nexus_content_still_emits_core(tmp_path):
     assert result.document["schema:name"] == "plain"
     assert result.document["schema:distribution"][0]["spdx:checksum"][
         "spdx:algorithm"] == "spdx:checksumAlgorithm_sha256"
+
+
+def test_prov_used_nests_the_instrument_so_framing_keeps_it(tmp_path):
+    """A flat prov:used validates as raw JSON and then disappears when
+    framed, because a frame drops what it does not declare. The profile
+    frame declares schema:instrument beneath prov:used, so that is the
+    shape the entity has to take."""
+    p = tmp_path / "f.nxs"
+    with h5py.File(p, "w") as f:
+        _scan(f, "scan1")
+
+    used = _emit(p, _xas_crosswalk(tmp_path)).document[
+        "prov:wasGeneratedBy"][0]["prov:used"]
+    assert used and all("schema:instrument" in u for u in used)
+    assert all(u["@type"] == ["schema:Thing", "prov:Entity"] for u in used)
+    inst = used[0]["schema:instrument"]
+    assert inst["@type"] == ["schema:Product", "schema:Thing"]
+    assert inst["schema:name"] == "13-ID-E"
+
+
+def test_the_catalog_record_is_an_iri_not_a_blank_node(tmp_path):
+    """SHACL targets the catalog record by identity, and nothing outside
+    a document can refer to a blank node inside it."""
+    p = tmp_path / "f.nxs"
+    with h5py.File(p, "w") as f:
+        _scan(f, "scan1")
+
+    doc = _emit(p, _xas_crosswalk(tmp_path)).document
+    record = doc["schema:subjectOf"]
+    assert record["@id"] == doc["@id"] + "/metadata"
+    assert record["schema:about"]["@id"] == doc["@id"]
+
+
+def test_a_variable_is_described_in_the_writers_own_words_when_it_can_be(
+    tmp_path,
+):
+    """NeXus `long_name` is the field describing itself in this file,
+    which beats any label the crosswalk could supply generically."""
+    p = tmp_path / "f.nxs"
+    with h5py.File(p, "w") as f:
+        e = _scan(f, "scan1")
+        e["instrument/i0"]["data"].attrs["long_name"] = "I0 ion chamber"
+
+    doc = _emit(p, _xas_crosswalk(tmp_path)).document
+    described = {
+        v["schema:description"] for v in doc["schema:variableMeasured"]
+    }
+    assert "I0 ion chamber" in described
+    # And a field without one still gets a readable label, never a blank.
+    assert all(v["schema:description"].strip() for v
+               in doc["schema:variableMeasured"])
+
+
+def test_physical_mapping_points_back_at_the_variable_it_formats(tmp_path):
+    p = tmp_path / "f.nxs"
+    with h5py.File(p, "w") as f:
+        _scan(f, "scan1")
+
+    doc = _emit(p, _xas_crosswalk(tmp_path)).document
+    ivs = {v["@id"] for v in doc["schema:variableMeasured"]}
+    formatted = {
+        c["cdif:hasPhysicalMapping"]["cdif:formats_InstanceVariable"]["@id"]
+        for s in doc["cdi:isStructuredBy"]
+        for c in s["cdi:has_DataStructureComponent"]
+    }
+    assert formatted and formatted <= ivs
+
+
+def test_beamline_source_and_monochromator_are_separate_peers(tmp_path):
+    """The profile distinguishes them: the beamline is where the
+    measurement happened, the source is what made the X-rays, the
+    monochromator is what selected their energy. Folding source into
+    beamline reads sensibly and satisfies neither constraint."""
+    p = tmp_path / "f.nxs"
+    with h5py.File(p, "w") as f:
+        e = _scan(f, "scan1")
+        src = e["instrument/source"]
+        src["probe"] = "X-ray"
+        src["type"] = "Synchrotron X-ray Source"
+        mono = e["instrument/monochromator"]
+        cr = mono.create_group("crystal")
+        cr.attrs["NX_class"] = "NXcrystal"
+        cr["d_spacing"] = 1.6375
+
+    cw = _crosswalk(
+        tmp_path,
+        _row("cdifxas:beamline", "skos:exactMatch", "nxdl:NXinstrument/name"),
+        _row("cdifxas:probe", "skos:exactMatch", "nxdl:NXsource/probe"),
+        _row("cdifxas:xraysourcetype", "skos:exactMatch",
+             "nxdl:NXsource/type"),
+        _row("cdifxas:dspacing", "skos:exactMatch",
+             "nxdl:NXcrystal/d_spacing"),
+    )
+    used = _emit(p, cw).document["prov:wasGeneratedBy"][0]["prov:used"]
+    types = [u["schema:instrument"]["schema:additionalType"][0]["@id"]
+             for u in used]
+    assert types == ["xas:beamline", "xas:source", "xas:xraymonochromator"]
+
+    source = next(u["schema:instrument"] for u in used
+                  if u["schema:instrument"]["schema:additionalType"][0]["@id"]
+                  == "xas:source")
+    ids = {pv["schema:propertyID"][0]["@id"]
+           for pv in source["schema:additionalProperty"]}
+    assert ids == {"xas:probe", "xas:xraysourcetype"}
+    probe = next(pv for pv in source["schema:additionalProperty"]
+                 if pv["schema:propertyID"][0]["@id"] == "xas:probe")
+    assert probe["schema:name"] == "Probe"   # the profile matches on this
+
+
+def test_property_values_are_strings_even_when_the_file_says_otherwise(
+    tmp_path,
+):
+    """A d-spacing emitted as a JSON float, or a reflection plane emitted
+    as [3, 1, 1], silently fails the constraint that says the
+    monochromator must report those values at all."""
+    p = tmp_path / "f.nxs"
+    with h5py.File(p, "w") as f:
+        e = _scan(f, "scan1")
+        cr = e["instrument/monochromator"].create_group("crystal")
+        cr.attrs["NX_class"] = "NXcrystal"
+        cr["d_spacing"] = 1.6375
+        cr["d_spacing"].attrs["units"] = "Angstroms"
+        cr["reflection"] = np.array([3, 1, 1])
+
+    cw = _crosswalk(
+        tmp_path,
+        _row("cdifxas:dspacing", "skos:exactMatch",
+             "nxdl:NXcrystal/d_spacing"),
+        _row("cdifxas:reflectionplane", "skos:exactMatch",
+             "nxdl:NXcrystal/reflection"),
+    )
+    mono = _emit(p, cw).document["prov:wasGeneratedBy"][0][
+        "prov:used"][0]["schema:instrument"]
+    by_id = {pv["schema:propertyID"][0]["@id"]: pv
+             for pv in mono["schema:additionalProperty"]}
+    assert by_id["xas:dspacing"]["schema:value"].startswith("1.6375")
+    assert by_id["xas:dspacing"]["schema:unitText"]      # value AND unit
+    assert by_id["xas:reflectionplane"]["schema:value"] == "3 1 1"
+
+
+def test_property_ids_are_the_concept_locals_the_profile_enumerates(tmp_path):
+    """The profile enumerates the very same tokens, so a tidier spelling
+    here -- an earlier version had xas:xray_source_type -- produces a
+    document that cannot satisfy it."""
+    from hdf5metadata.emit import CONCEPT_SLOTS
+
+    for concept, slot in CONCEPT_SLOTS.items():
+        if slot.target in ("keyword", "technique", "facility", "instrument"):
+            continue
+        assert slot.prop == concept.split(":", 1)[-1], (
+            f"{concept} emits xas:{slot.prop}, which the profile does not "
+            f"name"
+        )

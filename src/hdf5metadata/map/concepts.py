@@ -69,6 +69,10 @@ class ConceptValue:
     is_array: bool = False
     shape: tuple[int, ...] = ()
     dtype: str = ""
+    #: The NeXus `long_name` attribute, where the writer supplied one.
+    #: It is the field's own description of itself, so it beats anything
+    #: the crosswalk could say generically.
+    long_name: str | None = None
     #: Free-text note from the crosswalk row, where it flags a caveat.
     note: str = ""
     #: Set when the value came from the legacy path table rather than the
@@ -196,6 +200,7 @@ def _value_from_field(
         confidence=m.confidence,
         shape=f.shape,
         dtype=f.dtype,
+        long_name=f.long_name,
         note=m.comment,
     )
     if f.has_value:
@@ -337,6 +342,7 @@ def _apply_legacy(
                 else:
                     cv.is_array = True
                 cv.shape, cv.dtype = hit.shape, hit.dtype
+                cv.long_name = hit.long_name
             else:
                 cv.value = hit.name or None
             record.add(cv)

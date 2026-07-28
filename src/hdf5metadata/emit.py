@@ -120,27 +120,46 @@ class Slot:
 #: table still reach the output as additionalProperty on the acquisition
 #: event -- losing a value because nobody wrote a binding for it would be
 #: the worst of the available failures.
+#:
+#: The propertyID is the concept local, unchanged. That is not cosmetic:
+#: the XAS profile names the very same tokens in its own enumerations
+#: (`xas:xraysourcetype`, `xas:monochromatortype`, `xas:edgeenergy`,
+#: `xas:temperature`), so inventing a tidier spelling here -- an earlier
+#: version had `xas:xray_source_type` -- silently produces a document
+#: that cannot satisfy the profile.
 CONCEPT_SLOTS: dict[str, Slot] = {
-    "cdifxas:facility": Slot("facility", "schema:name", "facility"),
-    "cdifxas:beamline": Slot("instrument", "schema:name", "beamline"),
-    "cdifxas:probe": Slot("source", "probe", "probe"),
-    "cdifxas:xraysourcetype": Slot("source", "xray_source_type",
+    "cdifxas:facility": Slot("facility", "facility", "facility"),
+    "cdifxas:beamline": Slot("instrument", "beamline", "beamline"),
+    # The profile matches the probe entry by name as well as by
+    # propertyID, and it spells it with a capital.
+    "cdifxas:probe": Slot("source", "probe", "Probe"),
+    "cdifxas:xraysourcetype": Slot("source", "xraysourcetype",
                                    "X-ray source type"),
     "cdifxas:elementanalyzed": Slot("keyword", "element", "element analyzed"),
     "cdifxas:edgeanalyzed": Slot("keyword", "edge", "absorption edge"),
-    "cdifxas:edgeenergy": Slot("source", "edge_energy", "edge energy"),
+    # Edge energy belongs to the measurement, not to a piece of hardware,
+    # and the profile enumerates it among the activity properties.
+    "cdifxas:edgeenergy": Slot("activity", "edgeenergy", "edge energy"),
     "cdifxas:xasmeasurementmode": Slot("technique", "mode", "detection mode"),
-    "cdifxas:dspacing": Slot("monochromator", "d_spacing",
+    "cdifxas:dspacing": Slot("monochromator", "dspacing",
                              "monochromator d-spacing"),
-    "cdifxas:reflectionplane": Slot("monochromator", "reflection",
+    "cdifxas:reflectionplane": Slot("monochromator", "reflectionplane",
                                     "reflection plane"),
-    "cdifxas:monochromatortype": Slot("monochromator", "type",
+    "cdifxas:monochromatortype": Slot("monochromator", "monochromatortype",
                                       "monochromator crystal"),
     "cdifxas:temperature": Slot("sample", "temperature",
                                 "sample temperature"),
-    "cdifxas:samplepreparation": Slot("sample", "description",
+    "cdifxas:samplepreparation": Slot("sample", "samplepreparation",
                                       "sample preparation"),
 }
+
+#: What the profile calls the two peer instruments of an XAS acquisition.
+#: These are `const` values in its `contains` constraints, so a document
+#: using any other token has no beamline and no monochromator as far as
+#: validation is concerned.
+BEAMLINE_TYPE = "xas:beamline"
+SOURCE_TYPE = "xas:source"
+MONOCHROMATOR_TYPE = "xas:xraymonochromator"
 
 #: Element symbol -> name, for the keyword DefinedTerm. Only the ones a
 #: XAS beamline actually runs; an unknown symbol still emits a term with
@@ -216,6 +235,19 @@ def _checksum(path: Path) -> dict[str, Any] | None:
     }
 
 
+def _readable(local: str) -> str:
+    """`fluorescenceabsorptioncoefficient` -> `fluorescence absorption
+    coefficient`. The concept locals run their words together, which is
+    fine as an identifier and poor as a human-facing label."""
+    for word in (
+        "absorptioncoefficient", "intensity", "energy", "monochromator",
+        "fluorescence", "electronyield", "incident", "transmitted",
+        "reference", "uncertainty", "emission", "count", "time",
+    ):
+        local = local.replace(word, f" {word} ")
+    return " ".join(local.split()).strip() or local
+
+
 def _modified(inspection: InspectionResult) -> str:
     """The file's last-modified date. Falls back to today only when the
     file is not on disk to ask."""
@@ -234,6 +266,15 @@ def _text(value: Any) -> str:
     return str(value)
 
 
+def _scalar_text(value: Any) -> str:
+    """A PropertyValue value as the profile wants it: a string. Sequences
+    become space-separated, which is how NeXus writes a reflection plane
+    in its own text serialisations."""
+    if isinstance(value, (list, tuple)):
+        return " ".join(_text(v) for v in value)
+    return _text(value)
+
+
 def _property_value(
     prop: str, cv: ConceptValue, base: str, label: str = ""
 ) -> dict[str, Any]:
@@ -241,8 +282,11 @@ def _property_value(
         "@type": ["schema:PropertyValue"],
         "schema:propertyID": [{"@id": f"xas:{prop}"}],
         "schema:name": label or prop.replace("_", " "),
-        "schema:value": cv.value if not isinstance(cv.value, bytes)
-        else _text(cv.value),
+        # Always a string. The profile types schema:value as one, and a
+        # d-spacing emitted as a JSON float or a reflection plane emitted
+        # as [3, 1, 1] silently fails the constraint that says the
+        # monochromator must report those values at all.
+        "schema:value": _scalar_text(cv.value),
     }
     if cv.units:
         pv["schema:unitText"] = cv.units
@@ -308,10 +352,15 @@ def _variables(
                 continue
             local = concept.split(":", 1)[-1]
             rv_id = f"{base}/rv/{local}"
+            iv_id = f"ex:DV/{entry_slug}/iv/{local}"
             variables.append({
-                "@id": f"ex:DV/{entry_slug}/iv/{local}",
+                "@id": iv_id,
                 "@type": ["cdi:InstanceVariable", "schema:PropertyValue"],
                 "schema:name": Path(cv.source_path).name,
+                # The writer's own long_name where there is one: it
+                # describes this field in this file, which no generic
+                # concept label can do.
+                "schema:description": cv.long_name or _readable(local),
                 "schema:propertyID": [{"@id": concept.replace(
                     "cdifxas:", "xas:")}],
                 "schema:unitText": cv.units or "",
@@ -329,12 +378,21 @@ def _variables(
                 "cdif:isDefinedBy_RepresentedVariable": {
                     "@id": rv_id,
                     "@type": ["cdi:RepresentedVariable"],
-                    "schema:name": local,
+                    "schema:name": _readable(local),
+                    "cdif:name": {
+                        "@type": ["cdi:ObjectName"],
+                        "cdif:name": _readable(local),
+                    },
                 },
                 "cdif:hasPhysicalMapping": {
+                    "@id": f"ex:DV/{entry_slug}/pm/{local}",
                     "@type": ["cdif:LocatorMapping"],
                     "cdif:locator": cv.source_path,
                     "cdif:physicalDataType": _xsd_for(cv.dtype),
+                    # The back-reference closes the loop CDIF expects:
+                    # the mapping says which variable it formats, so a
+                    # consumer can go from bytes to meaning either way.
+                    "cdif:formats_InstanceVariable": {"@id": iv_id},
                 },
             })
     return variables, components
@@ -388,7 +446,7 @@ def _place_scalars(
     buckets: dict[str, Any] = {
         "facility": None, "instrument": None, "source": [],
         "monochromator": [], "sample": [], "keyword": [],
-        "technique": [], "unbound": [],
+        "technique": [], "activity": [], "unbound": [],
     }
     for concept, values in sorted(shared.items()):
         cv = values[0]
@@ -439,21 +497,39 @@ def _instruments(buckets: dict[str, Any], base: str) -> list[dict[str, Any]]:
     """Source and monochromator as peer instruments of the acquisition,
     each carrying its own settings. Mirrors the shape the XDI converter
     settled on, so the two bindings produce comparable graphs."""
-    out: list[dict[str, Any]] = []
-    if buckets["instrument"] or buckets["source"]:
-        src: dict[str, Any] = {
-            "@type": ["schema:IndividualProduct", "prov:Entity"],
-            "schema:name": buckets["instrument"] or "X-ray source",
+    def used(name: str, kind: str, props: list) -> dict[str, Any]:
+        slug = kind.split(":", 1)[-1]
+        # The entity wraps the instrument rather than being it. That
+        # nesting is what the profile frame declares, and a frame drops
+        # what it does not declare -- so a flat prov:used passes
+        # validation of the raw document and then vanishes when framed.
+        instrument: dict[str, Any] = {
+            "@id": f"{base}/instrument/{slug}",
+            "@type": ["schema:Product", "schema:Thing"],
+            "schema:name": name,
+            "schema:additionalType": [{"@id": kind}],
         }
-        if buckets["source"]:
-            src["schema:additionalProperty"] = buckets["source"]
-        out.append(src)
+        if props:
+            instrument["schema:additionalProperty"] = props
+        return {
+            "@id": f"{base}/used/{slug}",
+            "@type": ["schema:Thing", "prov:Entity"],
+            "schema:instrument": instrument,
+        }
+
+    # Three peers, because the profile distinguishes them: the beamline
+    # is where the measurement happened, the source is what made the
+    # X-rays, the monochromator is what selected their energy. An earlier
+    # version folded source into beamline, which reads sensibly and
+    # satisfies neither constraint.
+    out: list[dict[str, Any]] = []
+    if buckets["instrument"]:
+        out.append(used(buckets["instrument"], BEAMLINE_TYPE, []))
+    if buckets["source"]:
+        out.append(used("X-ray source", SOURCE_TYPE, buckets["source"]))
     if buckets["monochromator"]:
-        out.append({
-            "@type": ["schema:IndividualProduct", "prov:Entity"],
-            "schema:name": "monochromator",
-            "schema:additionalProperty": buckets["monochromator"],
-        })
+        out.append(used("monochromator", MONOCHROMATOR_TYPE,
+                        buckets["monochromator"]))
     return out
 
 
@@ -622,6 +698,7 @@ def emit_document(
         if "schema:temporalCoverage" in p
     ]
     event: dict[str, Any] = {
+        "@id": f"{base}/acquisition",
         "@type": ["schema:Action", "prov:Activity"],
         "schema:additionalType": [{"@id": "xas:analysisevent"}],
         "schema:name": f"acquisition of {stem}",
@@ -641,8 +718,9 @@ def emit_document(
             "schema:name": "sample",
             "schema:additionalProperty": buckets["sample"],
         }
-    if buckets["unbound"]:
-        event["schema:additionalProperty"] = buckets["unbound"]
+    if buckets["activity"] or buckets["unbound"]:
+        event["schema:additionalProperty"] = (
+            buckets["activity"] + buckets["unbound"])
     if times:
         event["schema:startDate"] = sorted(times)[0].split("/")[0]
     doc["prov:wasGeneratedBy"] = [event]
@@ -675,6 +753,10 @@ def emit_document(
     result.profiles = profiles
 
     doc["schema:subjectOf"] = {
+        # The catalog record must be an IRI, not a blank node: SHACL
+        # targets it by identity, and a blank node cannot be referred to
+        # from outside the document it appears in.
+        "@id": f"{base}/metadata",
         "@type": ["schema:Dataset"],
         "schema:additionalType": [{"@id": "dcat:CatalogRecord"}],
         "schema:about": {"@id": base},
