@@ -1,8 +1,8 @@
 """Stage 1: structural inspection.
 
-Modules here report what is *in* a file. They carry no CDIF vocabulary
-and no NeXus semantics beyond what `nexus` explicitly layers on top --
-see the pipeline note in DESIGN.md.
+`hdf5` reports what is *in* a file, carrying no vocabulary at all.
+`nexus` layers NeXus interpretation on that result. Neither knows
+anything about CDIF -- see the pipeline note in DESIGN.md.
 """
 
 from hdf5metadata.inspect.hdf5 import (
@@ -12,6 +12,18 @@ from hdf5metadata.inspect.hdf5 import (
     InspectionResult,
     inspect_file,
 )
+from hdf5metadata.inspect.nexus import (
+    NeXusResult,
+    NXAxis,
+    NXData,
+    NXEntry,
+    NXField,
+    NXGroup,
+    NXSignal,
+    is_nexus,
+    read_nexus,
+    resolve_nxdata,
+)
 
 __all__ = [
     "Dataset",
@@ -19,4 +31,14 @@ __all__ = [
     "HDF5Inspector",
     "InspectionResult",
     "inspect_file",
+    "NeXusResult",
+    "NXAxis",
+    "NXData",
+    "NXEntry",
+    "NXField",
+    "NXGroup",
+    "NXSignal",
+    "is_nexus",
+    "read_nexus",
+    "resolve_nxdata",
 ]
