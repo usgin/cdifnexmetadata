@@ -69,6 +69,11 @@ class ConceptValue:
     is_array: bool = False
     shape: tuple[int, ...] = ()
     dtype: str = ""
+    #: The name the source gave this thing -- a NeXus field name, an XDI
+    #: column label. Kept separately from `source_path` because the two
+    #: coincide in HDF5, where the path ends in the field name, and do
+    #: not in XDI, where a column is located by position.
+    label: str = ""
     #: The NeXus `long_name` attribute, where the writer supplied one.
     #: It is the field's own description of itself, so it beats anything
     #: the crosswalk could say generically.
@@ -204,6 +209,7 @@ def _value_from_field(
         confidence=m.confidence,
         shape=f.shape,
         dtype=f.dtype,
+        label=f.name,
         long_name=f.long_name,
         note=m.comment,
     )

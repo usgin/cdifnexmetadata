@@ -16,12 +16,20 @@ import os
 import sys
 from pathlib import Path
 
-from hdf5metadata.emit import DEFAULT_BASE, emit_document
+from hdf5metadata.emit import (
+    DEFAULT_BASE,
+    HDF5_MEDIA_TYPE,
+    XDI_MEDIA_TYPE,
+    XDI_SPECIFICATION,
+    emit_document,
+)
 from hdf5metadata.inspect import inspect_file, read_nexus
+from hdf5metadata.inspect.xdi import inspect_xdi, is_xdi
 from hdf5metadata.map import map_nexus
 from hdf5metadata.map.concepts import MappingResult
 from hdf5metadata.map.crosswalk import load_crosswalk
 from hdf5metadata.map.legacy import LegacyTable, load_legacy
+from hdf5metadata.map.xdi import load_xdi_crosswalk, map_xdi
 from hdf5metadata.validate import Profile, find_profile, validate_document
 
 #: Lets a working environment be configured once rather than passed on
@@ -105,7 +113,32 @@ def _report(path: Path, mapping: MappingResult, out) -> None:
             print(f"  ! {w}", file=out)
 
 
+def _process_xdi(path: Path, args, err) -> tuple:
+    """Read an XDI file. Flat text, so the concepts come out by lookup
+    and none of the NeXus tree machinery is involved."""
+    inspection, xdi = inspect_xdi(path)
+    for w in inspection.warnings + xdi.warnings:
+        if not args.quiet:
+            print(f"{path.name}: {w}", file=err)
+    crosswalk = (
+        load_xdi_crosswalk(args.crosswalk) if args.crosswalk else None
+    )
+    return inspection, xdi, map_xdi(xdi, crosswalk)
+
+
 def _process(path: Path, args, profile: Profile, err) -> tuple[dict, int]:
+    # Dispatch on what the file says it is, not on its extension. XDI
+    # declares itself on line 1; anything else is tried as HDF5.
+    if is_xdi(path):
+        inspection, source, mapping = _process_xdi(path, args, err)
+        result = emit_document(
+            inspection, source, mapping,
+            base=args.base, source_url=args.source_url,
+            encoding_format=XDI_MEDIA_TYPE,
+            format_specification=XDI_SPECIFICATION,
+        )
+        return _finish(path, args, profile, err, mapping, result)
+
     inspection = inspect_file(path)
     for w in inspection.warnings:
         if not args.quiet:
@@ -125,8 +158,13 @@ def _process(path: Path, args, profile: Profile, err) -> tuple[dict, int]:
 
     result = emit_document(
         inspection, nexus, mapping,
-        base=args.base, source_url=args.source_url)
+        base=args.base, source_url=args.source_url,
+        encoding_format=HDF5_MEDIA_TYPE)
+    return _finish(path, args, profile, err, mapping, result)
 
+
+def _finish(path, args, profile, err, mapping, result) -> tuple[dict, int]:
+    """Report and validate, whichever binding produced the document."""
     if args.report:
         _report(path, mapping, err)
     if not args.quiet:

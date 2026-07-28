@@ -18,14 +18,14 @@
   ],
   "schema:name": "['NeXus NXsas example']",
   "schema:identifier": "local:APS-USAXS-pinSAXS",
-  "schema:url": "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS.nxs",
+  "schema:url": "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS.hdf5",
   "schema:distribution": [
     {
       "@type": [
         "schema:DataDownload",
         "cdi:PhysicalDataSet"
       ],
-      "schema:contentUrl": "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS.nxs",
+      "schema:contentUrl": "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS.hdf5",
       "schema:encodingFormat": [
         "application/x-hdf5"
       ],

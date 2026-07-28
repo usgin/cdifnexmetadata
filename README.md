@@ -79,6 +79,26 @@ pipeable:
 hdf5metadata scan.nxs --report
 ```
 
+### Input formats
+
+Two, dispatched on what the file declares itself to be rather than on
+its extension:
+
+| Format | Recognised by | Crosswalk |
+|--------|---------------|-----------|
+| NeXus / HDF5 | HDF5 signature, `NX_class` attributes | chosen from the declared application definition |
+| XDI | first line matches `# XDI/…` (the space is optional) | `xdi-to-cdifxas.sssom.tsv` |
+
+```bash
+hdf5metadata scan.nxs spectrum.xdi -o metadata/
+```
+
+XDI needs almost none of the NeXus machinery: it is flat text, so its
+concepts come out by dictionary lookup rather than by resolving
+class-qualified paths through a tree. Both bindings produce the same
+`ConceptRecord`, and everything downstream — emission, profile
+detection, validation — is shared.
+
 ### Worked examples
 
 `exampleData/` holds five NeXus files and `exampleMetadata/` the CDIF

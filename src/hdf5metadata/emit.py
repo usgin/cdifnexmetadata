@@ -73,6 +73,24 @@ CONTEXT = {
 
 PROFILE = "https://w3id.org/cdif/{}"
 
+#: Media types for the two input bindings.
+HDF5_MEDIA_TYPE = "application/x-hdf5"
+XDI_MEDIA_TYPE = "application/x-xdi"
+
+#: The XDI specification, as the XAS profile names it.
+#: The iSamples term the XAS profile requires on a sample, alongside the
+#: bare "MaterialSample" string. Both, and in that combination -- the
+#: profile checks for each separately.
+MATERIAL_SAMPLE_IRI = (
+    "https://w3id.org/isample/vocabulary/materialsampleobjecttype/"
+    "materialsample"
+)
+
+XDI_SPECIFICATION = (
+    "https://github.com/XraySpectroscopy/XAS-Data-Interchange/"
+    "blob/master/specification/spec.md"
+)
+
 #: Placeholder base for generated identifiers. Real deployments pass
 #: their own; this one at least resolves to a page saying what it is.
 DEFAULT_BASE = "https://w3id.org/cdif/testing"
@@ -248,6 +266,12 @@ def _readable(local: str) -> str:
     return " ".join(local.split()).strip() or local
 
 
+def _suffix(inspection: InspectionResult) -> str:
+    """The source file's own extension, so a generated contentUrl points
+    at something with the right name rather than always saying .nxs."""
+    return Path(inspection.filename).suffix or ".dat"
+
+
 def _modified(inspection: InspectionResult) -> str:
     """The file's last-modified date. Falls back to today only when the
     file is not on disk to ask."""
@@ -316,12 +340,15 @@ def _emit_entry(
     part: dict[str, Any] = {
         "@id": f"{base}/{eid}",
         "@type": ["schema:MediaObject"],
-        "schema:name": _text(entry.field_value("title") or record.entry_name),
+        "schema:name": _text(entry.title or record.entry_name),
         "schema:contentUrl": f"{base}#{record.entry_path}",
         "cdi:isStructuredBy": {"@id": struct_id},
     }
-    start = entry.field_value("start_time")
-    end = entry.field_value("end_time")
+    # `.title`, `.start_time` and `.end_time` are properties on both
+    # NXEntry and XDIEntry. Going through them rather than a NeXus-only
+    # field lookup is what lets this function serve either binding.
+    start = entry.start_time
+    end = entry.end_time
     if start:
         part["schema:temporalCoverage"] = (
             f"{_text(start)}/{_text(end)}" if end else _text(start)
@@ -356,7 +383,7 @@ def _variables(
             variables.append({
                 "@id": iv_id,
                 "@type": ["cdi:InstanceVariable", "schema:PropertyValue"],
-                "schema:name": Path(cv.source_path).name,
+                "schema:name": cv.label or Path(cv.source_path).name,
                 # The writer's own long_name where there is one: it
                 # describes this field in this file, which no generic
                 # concept label can do.
@@ -493,6 +520,16 @@ def _keywords(pairs: list[tuple[str, str]]) -> list[dict[str, Any]]:
     return out
 
 
+def _sample_name(records) -> str | None:
+    """A name for the sample, where a binding supplied one."""
+    for record in records:
+        for concept in ("cdifxas:samplename", "cdifsas:samplename"):
+            value = record.value_of(concept)
+            if value:
+                return _text(value)
+    return None
+
+
 def _instruments(buckets: dict[str, Any], base: str) -> list[dict[str, Any]]:
     """Source and monochromator as peer instruments of the acquisition,
     each carrying its own settings. Mirrors the shape the XDI converter
@@ -539,6 +576,8 @@ def emit_document(
     mapping: MappingResult,
     base: str | None = None,
     source_url: str | None = None,
+    encoding_format: str = HDF5_MEDIA_TYPE,
+    format_specification: str | None = None,
 ) -> EmitResult:
     """Assemble one CDIF JSON-LD document for a file.
 
@@ -604,8 +643,8 @@ def emit_document(
         # the byte stream typed as a dataset in its own right, not only
         # as a way of getting one.
         "@type": ["schema:DataDownload", "cdi:PhysicalDataSet"],
-        "schema:contentUrl": source_url or f"{base}.nxs",
-        "schema:encodingFormat": ["application/x-hdf5"],
+        "schema:contentUrl": source_url or f"{base}{_suffix(inspection)}",
+        "schema:encodingFormat": [encoding_format],
     }
     if inspection.file_size is not None:
         distribution["schema:contentSize"] = str(inspection.file_size)
@@ -613,10 +652,16 @@ def emit_document(
         checksum = _checksum(Path(inspection.source))
         if checksum:
             distribution["spdx:checksum"] = checksum
-    if nexus.definitions:
-        distribution["dcterms:conformsTo"] = [
-            {"@id": f"nxs:applications/{d}.html"} for d in nexus.definitions
-        ]
+    # What specification the bytes follow. A NeXus file names its
+    # application definitions; an XDI file names the XDI specification.
+    # The XAS profile requires one or the other to be declared here.
+    conforms = [
+        {"@id": f"nxs:applications/{d}.html"} for d in nexus.definitions
+    ]
+    if format_specification:
+        conforms.insert(0, {"@id": format_specification})
+    if conforms:
+        distribution["dcterms:conformsTo"] = conforms
     if parts:
         distribution["schema:hasPart"] = parts
 
@@ -641,7 +686,7 @@ def emit_document(
         "@type": ["schema:Dataset"],
         "schema:name": title or stem,
         "schema:identifier": f"local:{slug}",
-        "schema:url": source_url or f"{base}.nxs",
+        "schema:url": source_url or f"{base}{_suffix(inspection)}",
         "schema:distribution": [distribution],
         # The file's own mtime, not the run time: this states when the
         # data last changed, which is what a harvester wants to compare.
@@ -664,8 +709,14 @@ def emit_document(
     # conformance to the XAS profile and advertise itself as X-ray
     # absorption spectroscopy. A false conformance claim is worse than a
     # missing one: it survives into a catalogue and misroutes the record.
-    is_xas = any(
-        (d or "").startswith("NXxas") for d in nexus.definitions)
+    # An XDI file is an XAS measurement by construction -- the format is
+    # the X-ray Absorption Data Interchange format and describes nothing
+    # else -- so declaring the specification is declaring the technique.
+    # A NeXus file has to name an NXxas definition to say the same thing.
+    is_xas = (
+        format_specification == XDI_SPECIFICATION
+        or any((d or "").startswith("NXxas") for d in nexus.definitions)
+    )
     technique: list[dict[str, Any]] = [dict(XAS_TECHNIQUE)] if is_xas else []
     # Detection mode is collected across all entries rather than from
     # the shared set. In FeXAS the reference foil is Transmission and the
@@ -721,9 +772,21 @@ def emit_document(
     if instruments:
         event["prov:used"] = instruments
     if buckets["sample"]:
+        # Typed as a material sample, which the profile requires in two
+        # places at once: schema:Product and schema:Thing on @type, and
+        # both the bare "MaterialSample" string and the iSamples IRI on
+        # additionalType. An earlier version emitted a plain
+        # Thing/prov:Entity, which no NeXus example exercised because
+        # none of them carried sample properties -- the first XDI file
+        # through the pipeline found it.
         event["schema:object"] = {
-            "@type": ["schema:Thing", "prov:Entity"],
-            "schema:name": "sample",
+            "@id": f"{base}/sample",
+            "@type": ["schema:Product", "schema:Thing"],
+            "schema:additionalType": [
+                {"@id": MATERIAL_SAMPLE_IRI},
+                "MaterialSample",
+            ],
+            "schema:name": _sample_name(records) or "sample",
             "schema:additionalProperty": buckets["sample"],
         }
     if buckets["activity"] or buckets["unbound"]:
