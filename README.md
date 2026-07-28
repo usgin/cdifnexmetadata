@@ -71,6 +71,21 @@ pipeable:
 hdf5metadata scan.nxs --report
 ```
 
+### Worked examples
+
+`exampleData/` holds five NeXus files and `exampleMetadata/` the CDIF
+document generated from each, with a README in both. They span what the
+extractor actually meets rather than only what it handles well: a
+26-entry XAS file that validates against a full CDIF profile, a real SAS
+beamline file that departs from its own declared definition, the
+definition-generated counterpart for contrast, and two techniques no
+crosswalk covers yet — included so the gap can be read directly instead
+of inferred.
+
+```bash
+python exampleMetadata/generate.py --profile-dir ../XAS-CDIF/release
+```
+
 ### Validating
 
 Validation needs the profile's schema, frame and SHACL shapes. They are
