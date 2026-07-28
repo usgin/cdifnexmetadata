@@ -21,10 +21,19 @@ the production RML mapping actually reads.
 
 They are copied in rather than fetched, so this package works offline
 and so a given release is pinned to a known crosswalk revision. The cost
-is that these copies fall behind when the originals change. Refresh
+is that these copies fall behind when the originals change. Refresh both
 with:
 
     python -m hdf5metadata.map.crosswalk --refresh
+
+That downloads from the `cdifxasRelease` branch on GitHub, so it sees
+only what has been pushed there. **Neither file is edited by hand at
+either end** — both are output from `crosswalk/build_crosswalk.py`
+upstream, which curates the rows as Python tables and validates them
+against the glossary, the live NXDL, and the concept keys the RML
+converter reads. Changing a mapping means editing that script and
+re-running it. To pick up an upstream edit that has not been pushed
+yet, copy the two files across directly rather than refreshing.
 
 | File | Direction |
 |------|-----------|
