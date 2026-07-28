@@ -239,9 +239,10 @@ Prefer *omitting* an optional field over filling it with a sentinel.
 ## Effort A — `usgin/hdf5metadata`
 
 Public, CC-BY-4.0, Python ≥3.11. **Stages 1, 1b and 2 implemented and
-tested (118 tests). `emit.py` produces a CDIF document that validates
-clean against the strict xasDocument composite with zero SHACL
-violations. `validate.py` and `cli.py` not started.**
+tested (146 tests). **The pipeline runs end to end**: `hdf5metadata
+FeXAS.nxs --validate --profile-dir ../XAS-CDIF/release` emits a CDIF
+document, validates it against the strict xasDocument composite, and
+reports `validation PASSED` with five advisories, exit 0.**
 
 Present: `inspect/hdf5.py`, `inspect/nexus.py`, `nxdl/`, `map/`,
 vendored SSSOM crosswalks and the legacy path table under
@@ -258,8 +259,42 @@ emit +     assemble, detect satisfied profiles, write conformsTo,
 validate   validate per profile (JSON Schema + SHACL)
 ```
 
-`inspect/`, `map/` and `emit.py` are done. **Next step:** `validate.py`
-(wire the JSON Schema + SHACL check into the package) and `cli.py`.
+All four stages are done. **Next steps** are no longer pipeline
+plumbing: broaden beyond XAS (a second crosswalk, no code change), add
+more writer conventions to the legacy table as they turn up, and settle
+the QUDT/UCUM unit normalisation DESIGN.md still lists as open.
+
+### validate.py — framing is where documents actually break
+
+The profiles are written against the *framed* document, so framing is
+part of validation rather than a prelude to it. That matters: the flat
+`prov:used` fixed earlier passed raw JSON Schema and vanished on
+framing, because a frame drops what it does not declare.
+
+Framing also damages a document in four ways that say nothing about its
+content. Three are decidable without the schema — inserted `null`s, a
+single-element `@type` compacted to a string, and IRI values compacted
+against the document's own context so a conformance URI stops matching
+the `const` it is checked against. The fourth, collapsed single-element
+arrays, is **asked of the validator rather than guessed**: guessing by
+name fails in both directions, since `schema:identifier` is an array on
+an instrument and a string on the dataset. A `contains` failure reports
+only that nothing matched, so its sub-schema is run against each item
+explicitly — otherwise a collapsed array inside a `contains` is
+invisible and the constraint reads as unsatisfiable when it is one
+wrapper away.
+
+The repair is safe in one direction only, which is the direction that
+matters: framing only ever *removes* a wrapper, so restoring one cannot
+contradict what the document said.
+
+**Profile artifacts are not bundled.** They belong to the CDIF profile
+repositories and are versioned there; vendoring pins this package to a
+snapshot and invites drift. They are located at run time from
+`--profile-dir` or `HDF5METADATA_PROFILE_DIR`. Absent, validation
+reports itself **skipped** — a run that checked nothing must not read
+like a run that found nothing wrong. A missing optional dependency is
+likewise a skip, never a pass.
 
 ### emit.py, and what validating it surfaced
 
