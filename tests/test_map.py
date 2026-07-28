@@ -586,3 +586,85 @@ def test_a_lone_detector_is_not_mistaken_for_the_one_that_is_missing(tmp_path):
     )
     rec = map_entry(_read(p).entries[0], cw)
     assert rec.concepts == {"cdifxas:incidentintensity"}
+
+
+# ---------------------------------------------------------------------------
+# choosing a crosswalk
+# ---------------------------------------------------------------------------
+
+def test_the_crosswalk_is_chosen_from_what_the_file_declares():
+    """An ingest handed a folder of mixed techniques must not need to be
+    told which is which. Being told is how every SAS file in a mixed
+    folder silently comes out thin."""
+    from hdf5metadata.map.crosswalk import select_crosswalk
+
+    xas, why = select_crosswalk(["NXxas"])
+    assert "cdifxas" in why and "NXxas" in why
+    assert "cdifxas:dspacing" in xas.concepts()
+
+    sas, why = select_crosswalk(["NXsas"])
+    assert "cdifsas" in why and "NXsas" in why
+    assert "cdifsas:scatteringintensity" in sas.concepts()
+
+
+def test_a_mode_specific_definition_still_picks_the_family_crosswalk():
+    from hdf5metadata.map.crosswalk import select_crosswalk
+
+    cw, why = select_crosswalk(["NXxas_trans"])
+    assert "cdifxas" in why
+    assert "cdifxas:transmittedintensity" in cw.concepts()
+
+
+def test_base_classes_never_decide_the_choice():
+    """NXsource and NXsample appear in every crosswalk. Selecting on them
+    would make each one look like a match for every file."""
+    from hdf5metadata.map.crosswalk import bundled_crosswalks, load_crosswalk
+
+    for path in bundled_crosswalks():
+        apps = load_crosswalk(path).application_definitions()
+        assert "NXsource" not in apps
+        assert "NXsample" not in apps
+        assert apps, f"{path.name} covers no application definition"
+
+
+def test_an_uncovered_technique_falls_back_and_says_so(tmp_path):
+    """Still worth running: base-class mappings apply to any definition,
+    so facility and beamline are found even for a technique nobody has
+    written a crosswalk for. The reason has to make that clear."""
+    from hdf5metadata.map.crosswalk import select_crosswalk
+
+    cw, why = select_crosswalk(["NXtomo"])
+    assert cw.mappings
+    assert "no bundled crosswalk covers NXtomo" in why
+    assert "base-class" in why
+
+    p = tmp_path / "t.nxs"
+    with h5py.File(p, "w") as f:
+        e = _entry(f, definition="NXtomo")
+        inst = _group(e, "instrument", "NXinstrument")
+        _group(inst, "source", "NXsource")["name"] = "Diamond"
+
+    result = map_nexus(_read(p))
+    assert result.records[0].value_of("cdifxas:facility") == "Diamond"
+    assert any("no bundled crosswalk covers" in w for w in result.warnings)
+
+
+def test_an_undeclared_file_falls_back_and_says_so():
+    from hdf5metadata.map.crosswalk import select_crosswalk
+
+    _cw, why = select_crosswalk([])
+    assert "declares no application definition" in why
+
+
+def test_an_explicit_crosswalk_still_wins(tmp_path):
+    p = tmp_path / "f.nxs"
+    with h5py.File(p, "w") as f:
+        e = _entry(f, definition="NXxas")
+        inst = _group(e, "instrument", "NXinstrument")
+        _group(inst, "source", "NXsource")["name"] = "APS"
+
+    cw = _crosswalk(tmp_path, _row("cdifxas:facility", "skos:exactMatch",
+                                   "nxdl:NXsource/name"))
+    result = map_nexus(_read(p), cw)
+    assert result.crosswalk_reason == "supplied by the caller"
+    assert result.records[0].concepts == {"cdifxas:facility"}

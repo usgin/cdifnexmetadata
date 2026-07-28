@@ -63,6 +63,14 @@ Describe several files at once, writing one document per file:
 hdf5metadata data/*.nxs -o metadata/
 ```
 
+The files need not be the same technique. The crosswalk is chosen from
+the application definition each file declares — `NXxas` and its detection
+modes, or `NXsas` — so a mixed folder needs no per-file configuration.
+`--crosswalk` overrides that where you need it. A file declaring
+something no crosswalk covers still yields the base-class concepts
+(facility, beamline, probe, sample temperature) and says in a warning
+that the technique-specific ones are missing.
+
 See what was extracted, and — as importantly — what was looked for and
 not found. The report goes to stderr, so the document on stdout stays
 pipeable:

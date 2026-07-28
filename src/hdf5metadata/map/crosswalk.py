@@ -164,6 +164,84 @@ class Crosswalk:
     def definitions(self) -> set[str]:
         return {m.definition for m in self.mappings if m.definition}
 
+    def application_definitions(self) -> set[str]:
+        """The application definitions this crosswalk actually covers.
+
+        Not the same as :meth:`definitions`, which also returns the base
+        classes -- `NXsource`, `NXsample`, `NXmonitor` -- and those appear
+        in every crosswalk. Selecting on them would make each crosswalk
+        look like a match for every file.
+        """
+        return {
+            m.definition for m in self.mappings
+            if m.definition and not m.is_base_class
+        }
+
+
+def bundled_crosswalks() -> list[Path]:
+    """Every crosswalk shipped with the package."""
+    return sorted(DATA_DIR.glob("*-to-nexus.sssom.tsv"))
+
+
+_LOADED: dict[str, Crosswalk] = {}
+
+
+def _load_cached(path: Path) -> Crosswalk:
+    key = str(path)
+    if key not in _LOADED:
+        _LOADED[key] = load_crosswalk(path)
+    return _LOADED[key]
+
+
+def select_crosswalk(
+    definitions: Iterable[str],
+) -> tuple[Crosswalk, str]:
+    """Pick the crosswalk that covers what the file declares.
+
+    Returns the crosswalk and a sentence saying why, because a silent
+    choice between vocabularies is the kind of thing that is impossible
+    to debug from the output alone.
+
+    The alternative -- making the caller name the crosswalk -- means an
+    ingest handed a folder of mixed techniques produces thin documents
+    for everything it was not told about, and produces them without
+    complaint. Reading the declaration the file already carries is
+    strictly better than being told.
+
+    A file whose declaration no crosswalk covers still gets the default
+    one: base-class mappings apply to any definition, so facility,
+    beamline, probe and the like are still found. The reason says so.
+    """
+    declared = {d for d in definitions if d}
+    candidates = []
+    for path in bundled_crosswalks():
+        cw = _load_cached(path)
+        covered = cw.application_definitions()
+        overlap = declared & covered
+        if overlap:
+            # Most specific wins if two crosswalks both claim it.
+            weight = sum(
+                1 for m in cw.mappings if m.definition in overlap
+            )
+            candidates.append((weight, path.name, cw, sorted(overlap)))
+
+    if candidates:
+        candidates.sort(key=lambda c: (-c[0], c[1]))
+        _w, name, cw, overlap = candidates[0]
+        return cw, f"{name} covers {', '.join(overlap)}"
+
+    cw = _load_cached(DEFAULT_CROSSWALK)
+    if declared:
+        return cw, (
+            f"no bundled crosswalk covers {', '.join(sorted(declared))}; "
+            f"using {DEFAULT_CROSSWALK.name} for its base-class mappings "
+            f"only, so technique-specific concepts will be missing"
+        )
+    return cw, (
+        f"the file declares no application definition; using "
+        f"{DEFAULT_CROSSWALK.name} for its base-class mappings only"
+    )
+
 
 def load_crosswalk(path: str | Path | None = None) -> Crosswalk:
     """Load an SSSOM TSV. The YAML metadata block is carried as comment

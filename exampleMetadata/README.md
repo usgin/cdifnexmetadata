@@ -6,6 +6,11 @@ Outputs, not fixtures. Regenerate with:
 python exampleMetadata/generate.py --profile-dir ../XAS-CDIF/release
 ```
 
+`generate.py` names no crosswalk for any of these. The mapper reads the
+application definition each file declares and picks one itself, which is
+why the XAS and SAS examples can sit in the same list. The documents are
+byte-identical to those produced when the crosswalk was passed by hand.
+
 | Document | Entries | Concepts | Variables | Profiles claimed |
 |----------|--------:|---------:|----------:|------------------|
 | `FeXAS.jsonld` | 26 | 17 | 10 | core, discovery, data_description, data_structure, xasCore |

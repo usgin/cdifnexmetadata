@@ -47,8 +47,8 @@ from hdf5metadata.inspect.nexus import (
 from hdf5metadata.map.crosswalk import (
     Crosswalk,
     Mapping,
-    load_crosswalk,
     resolve_mapping,
+    select_crosswalk,
 )
 from hdf5metadata.map.legacy import LegacyTable, load_legacy, resolve_legacy
 
@@ -145,6 +145,9 @@ class MappingResult:
 
     records: list[ConceptRecord] = field(default_factory=list)
     crosswalk_source: str = ""
+    #: Why this crosswalk was chosen. A silent choice between
+    #: vocabularies cannot be debugged from the output alone.
+    crosswalk_reason: str = ""
     legacy_source: str = ""
     warnings: list[str] = field(default_factory=list)
 
@@ -178,6 +181,7 @@ class MappingResult:
     def to_dict(self) -> dict[str, Any]:
         return {
             "crosswalk_source": self.crosswalk_source,
+            "crosswalk_reason": self.crosswalk_reason,
             "legacy_source": self.legacy_source,
             "record_count": len(self.records),
             "records": [r.to_dict() for r in self.records],
@@ -447,9 +451,16 @@ def map_nexus(
     legacy: LegacyTable | None = None,
 ) -> MappingResult:
     """Express every entry in a file as concept values."""
-    cw = crosswalk or load_crosswalk()
+    if crosswalk is not None:
+        cw, why = crosswalk, "supplied by the caller"
+    else:
+        cw, why = select_crosswalk(nexus.definitions)
     lg = legacy if legacy is not None else load_legacy()
-    out = MappingResult(crosswalk_source=cw.source, legacy_source=lg.source)
+    out = MappingResult(
+        crosswalk_source=cw.source,
+        crosswalk_reason=why,
+        legacy_source=lg.source,
+    )
 
     if not cw.mappings:
         out.warnings.append(
@@ -460,6 +471,9 @@ def map_nexus(
     if not nexus.is_nexus:
         out.warnings.append("file carries no NeXus markers; nothing to map")
         return out
+
+    if why.startswith("no bundled crosswalk") or why.startswith("the file"):
+        out.warnings.append(why)
 
     for entry in nexus.entries:
         out.records.append(map_entry(entry, cw, lg))

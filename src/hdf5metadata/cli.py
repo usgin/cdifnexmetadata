@@ -52,7 +52,10 @@ def build_parser() -> argparse.ArgumentParser:
                    help="URL the file is published at; used for "
                         "schema:contentUrl instead of a generated one")
     p.add_argument("--crosswalk", type=Path,
-                   help="SSSOM crosswalk TSV (default: the bundled one)")
+                   help="SSSOM crosswalk TSV. By default the crosswalk is "
+                        "chosen from the application definition the file "
+                        "declares, so a folder of mixed techniques needs "
+                        "no per-file configuration; this overrides that.")
     p.add_argument("--legacy", type=Path,
                    help="legacy path table TSV (default: the bundled one); "
                         "pass --no-legacy to use none")
@@ -84,7 +87,8 @@ def _report(path: Path, mapping: MappingResult, out) -> None:
     """What was found, and — as importantly — what was looked for and
     was not there."""
     print(f"\n{path.name}", file=out)
-    print(f"  crosswalk: {Path(mapping.crosswalk_source).name}", file=out)
+    print(f"  crosswalk: {Path(mapping.crosswalk_source).name} "
+          f"({mapping.crosswalk_reason})", file=out)
     for record in mapping.records[:3]:
         concepts = sorted(c.split(":", 1)[-1] for c in record.values)
         print(f"  {record.entry_name} ({record.definition or 'no definition'})"
