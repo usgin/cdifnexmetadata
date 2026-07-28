@@ -290,17 +290,26 @@ overriding a standards-based value. Recovered values carry a
 
 ## Worked examples
 
-`exampleData/` holds eight source files and `exampleMetadata/` the
-document generated from each, with a README in both. They span what the
-extractor actually meets rather than only what it handles well: a
+Two sets, kept apart because they answer different questions.
+
+**`exampleData/` → `exampleMetadata-NEXUS/`** — eight source files and
+the document generated from each, with a README in both. They span what
+the extractor actually meets rather than only what it handles well: a
 26-entry XAS file that validates against a full profile, a real SAS
 beamline file that departs from its own declared definition, an XDI
 file, a deliberately thin file that *fails*, and two techniques no
 crosswalk covers yet.
 
 ```bash
-python exampleMetadata/generate.py --profile-dir ../XAS-CDIF/release
+python exampleMetadata-NEXUS/generate.py --profile-dir ../XAS-CDIF/release
 ```
+
+**`exampleMetadata-xdi/`** — the 55 XDI files in
+[`XAS-CDIF/exampleData`](https://github.com/smrgeoinfo/XAS-CDIF) run
+through this pipeline, so the output can be compared against what the
+production RML pipeline makes of the same bytes. Both sets validate
+55/55; the interesting part is what each says where a file is silent.
+See its README.
 
 ## Not yet done
 

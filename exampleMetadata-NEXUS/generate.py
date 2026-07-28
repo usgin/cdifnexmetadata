@@ -1,6 +1,6 @@
 """Regenerate the example CDIF documents from ``exampleData/``.
 
-    python exampleMetadata/generate.py [--profile-dir DIR]
+    python exampleMetadata-NEXUS/generate.py [--profile-dir DIR]
 
 Everything it needs is in the repository, so this runs anywhere the
 package does. The documents in this directory are *outputs*, not
