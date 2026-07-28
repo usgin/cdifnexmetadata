@@ -239,10 +239,11 @@ Prefer *omitting* an optional field over filling it with a sentinel.
 ## Effort A — `usgin/hdf5metadata`
 
 Public, CC-BY-4.0, Python ≥3.11. **Stages 1, 1b and 2 implemented and
-tested (88 tests); stage 3 not started.**
+tested (93 tests); stage 3 not started.**
 
 Present: `inspect/hdf5.py`, `inspect/nexus.py`, `nxdl/`, `map/`,
-vendored SSSOM crosswalks under `src/hdf5metadata/data/`, `DESIGN.md`,
+vendored SSSOM crosswalks and the legacy path table under
+`src/hdf5metadata/data/`, `DESIGN.md`,
 `AGENTS.md`, `README.md`, `pyproject.toml`, licence files, `.gitignore`.
 
 Planned pipeline, with a hard boundary between structure and semantics
@@ -291,13 +292,51 @@ distinct data structures — the reference foil carries an `itrans`
 detector the 25 sample scans do not, which is exactly the archive-of-
 parts case DESIGN.md calls for.
 
-Four concepts reported missing are **physically present at legacy
-paths**: element and edge at `scan:NXscan/xrayedge:NXxrayedge/{element,
-edge}`, edge energy at `scan/edge_energy`, and beamline name at
-`source/beamline_name`. `NXscan` and `NXxrayedge` are not NeXus base
-classes at all — they are the old GSECARS/Athena convention. Whether to
-carry a legacy-path layer is an open decision; the SSSOM crosswalk is
-deliberately not the place for it.
+### Legacy paths are a separate table — settled
+
+Several concepts were physically present but at paths the standard does
+not name: element and edge at `scan:NXscan/xrayedge:NXxrayedge/{element,
+edge}`, edge energy at `scan/edge_energy`, beamline name at
+`source/beamline_name`, and the absorption coefficients at
+`data/{mutrans,mufluor}`. `NXscan` and `NXxrayedge` are not NeXus base
+classes — they are the Athena/GSECARS writer's convention.
+
+These live in `data/legacy-paths.tsv`, **deliberately not SSSOM and
+deliberately not upstream**. The crosswalk states what a concept
+corresponds to *in the standard* and is worth publishing as an
+alignment; the legacy table records local practice and will keep growing
+as more conventions appear. Mixing them would make the crosswalk a
+quirks list.
+
+The rule that keeps it safe to extend: consulted only after the
+crosswalk and its same-family fallback, and only for concepts still
+missing. A legacy path fills a gap but **never displaces** a
+standards-based value, whatever the confidences say. Values carry a
+`convention` field so consumers filter on provenance rather than parsing
+a note.
+
+Adding a convention is appending rows. A test asserts every concept
+named there exists in the crosswalk, so a typo fails the suite instead
+of silently never matching.
+
+**Open crosswalk question this surfaced.** In FeXAS `NXsource/name` is
+`"APS, undulator 36mm, 66 poles, 13-ID-E"` — facility, insertion device
+and beamline concatenated — while `facility_name` beside it is just
+`"APS"`. The never-override rule means `cdifxas:facility` gets the
+concatenation. That is a question about whether `cdifxas:facility`
+should map to `NXsource/name` at all, and it belongs in the crosswalk,
+not in an override switch.
+
+### FeXAS.nxs with the legacy table
+
+9 concepts per entry becomes **17**, and the entries now differ
+correctly: `FeFoil.001` gets `absorptioncoefficient` from `data/mutrans`
+and mode `Transmission`; the 25 sample scans get neither and read
+`Fluorescence`. `data/mode` recovers the detection mode per entry — the
+thing restructured NXxas gets from the application definition.
+
+Still genuinely absent: `temperature`, `samplepreparation` (`NXsample`
+is empty) and `intensityuncertainty`.
 
 Resilience requirements — the XAS definitions are in flux, so the code
 must: search all three definition directories and never hardcode which
