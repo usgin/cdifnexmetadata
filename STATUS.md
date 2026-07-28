@@ -238,11 +238,12 @@ Prefer *omitting* an optional field over filling it with a sentinel.
 
 ## Effort A — `usgin/hdf5metadata`
 
-Public, CC-BY-4.0, Python ≥3.11. **Design phase — no extraction code
-yet, deliberately.**
+Public, CC-BY-4.0, Python ≥3.11. **Stages 1, 1b and 2 implemented and
+tested (88 tests); stage 3 not started.**
 
-Present: `DESIGN.md`, `AGENTS.md`, `README.md`, `pyproject.toml`,
-licence files, `.gitignore`.
+Present: `inspect/hdf5.py`, `inspect/nexus.py`, `nxdl/`, `map/`,
+vendored SSSOM crosswalks under `src/hdf5metadata/data/`, `DESIGN.md`,
+`AGENTS.md`, `README.md`, `pyproject.toml`, licence files, `.gitignore`.
 
 Planned pipeline, with a hard boundary between structure and semantics
 so that CDIF vocabulary changes touch only one layer:
@@ -254,8 +255,49 @@ emit +     assemble, detect satisfied profiles, write conformsTo,
 validate   validate per profile (JSON Schema + SHACL)
 ```
 
-**Next step:** `inspect/hdf5.py` (generic h5py walker) and
-`inspect/nexus.py` (`NX_class`-aware overlay).
+`inspect/` and `map/` are done. **Next step:** `emit.py` — concept
+records to CDIF JSON-LD, then `validate.py` and `cli.py`.
+
+### What the map layer settled
+
+Two crosswalk path kinds have to be told apart, **structurally rather
+than by name**: application-definition paths are rooted at the entry and
+lead with an `NXentry` segment; base-class paths (`nxdl:NXsource/name`)
+are relative to an instance of that class wherever it appears. An early
+version conflated them and mapped zero concepts from a file full of
+them. Detecting base classes by name prefix instead has the same failure
+mode one level up — it classes every non-XAS definition as a base class,
+so an `NXsas` path would be applied to an XAS file.
+
+A literal name absent from the file is a **miss** when siblings share
+its class: `i0`, `itrans`, `ifluor` and `iey` are all `NXdetector` and
+only the name distinguishes them, so treating a missing `iey` as "any
+detector" reports the incident-beam monitor as an electron-yield
+measurement. Where the class has one instance the name is only a label
+and is forgiven.
+
+A file declaring the family base (`definition=NXxas`) may still be laid
+out as one specific mode. Concepts are filled from more specific
+definitions in the same family and noted as borrowed — but never for a
+path that names different concepts in different definitions.
+`/ENTRY/intensity` is the absorption coefficient in transmission and the
+fluorescence-derived one in TFY; only the declaration disambiguates, so
+an undeclared file gets neither rather than both.
+
+### FeXAS.nxs, measured
+
+26 entries, 9 concepts each, no false positives, resolving to **2**
+distinct data structures — the reference foil carries an `itrans`
+detector the 25 sample scans do not, which is exactly the archive-of-
+parts case DESIGN.md calls for.
+
+Four concepts reported missing are **physically present at legacy
+paths**: element and edge at `scan:NXscan/xrayedge:NXxrayedge/{element,
+edge}`, edge energy at `scan/edge_energy`, and beamline name at
+`source/beamline_name`. `NXscan` and `NXxrayedge` are not NeXus base
+classes at all — they are the old GSECARS/Athena convention. Whether to
+carry a legacy-path layer is an open decision; the SSSOM crosswalk is
+deliberately not the place for it.
 
 Resilience requirements — the XAS definitions are in flux, so the code
 must: search all three definition directories and never hardcode which
