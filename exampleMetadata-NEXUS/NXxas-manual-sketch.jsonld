@@ -281,6 +281,22 @@
           }
         ]
       },
+      "schema:additionalProperty": [
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
+              "@id": "xas:monochromatorenergy"
+            }
+          ],
+          "schema:name": "monochromatorenergy",
+          "schema:value": "7000.0 7005.0 7010.0 7015.0 7020.0 7025.0 7030.0 7035.0 7040.0 7045.0 7050.0 7055.0 7060.0 7065.0 7070.0 7075.0 7080.0 7085.0 7090.0 7095.0 7100.0 7105.0 7110.0 7115.0 7120.0 7125.0 7130.0 7135.0 7140.0 7145.0 7150.0 7155.0 7160.0 7165.0 7170.0 7175.0 7180.0 7185.0 7190.0 7195.0 7200.0 7205.0 7210.0 7215.0 7220.0 7225.0 7230.0 7235.0 7240.0 7245.0 7250.0 7255.0 7260.0 7265.0 7270.0 7275.0 7280.0 7285.0 7290.0 7295.0 7300.0",
+          "schema:unitText": "eV",
+          "schema:description": "read from a non-standard file layout (nexus-manual-sketch)"
+        }
+      ],
       "schema:startDate": "2026-07-28T00:00:00Z"
     }
   ],

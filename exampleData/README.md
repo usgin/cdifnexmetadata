@@ -99,6 +99,18 @@ Its document fails validation with 4 errors, for the same reason
 target element and classified instrument peers, and the file records
 none of them.
 
-Whether these two layouts belong in `data/legacy-paths.tsv` is an open
-question. They come from a sketch rather than from a writer known to
-produce files, so nothing is known to break without them.
+One of the two is now in `data/legacy-paths.tsv`, under the convention
+`nexus-manual-sketch`, and the file maps 3 concepts rather than 2.
+
+The other **cannot be expressed there**, which is the more useful
+finding. Legacy paths use NXDL syntax, where an uppercase segment name
+means "any instance of this class" — so `I:NXdetector` matches every
+detector in the entry, not the one named `I`. Adding that row made
+`transmittedintensity` resolve to *both* `I` and `I0`, writing the
+incident beam into the transmitted concept, and it broke two emit tests
+by attaching itself to every fixture that has any detector. It was
+removed; `legacy-paths.tsv` records why at the top.
+
+So a writer that names detectors in capitals is beyond what the path
+syntax can describe. Nothing here needs that today, and the constraint
+is now written down rather than waiting to be rediscovered.

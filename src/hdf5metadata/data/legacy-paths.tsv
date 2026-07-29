@@ -18,6 +18,13 @@
 #                name:NXclass segments, uppercase names are placeholders.
 #   confidence   Lower than a standards mapping unless the legacy field
 #                is unambiguous.
+#
+# A detector named with capitals cannot be expressed here. Uppercase
+# segment names are NXDL's "any instance of this class" convention, so
+# `I:NXdetector` matches every detector in the entry, not the one named
+# I. The NeXus manual's XAS sketch names its detectors I and I0, so its
+# transmittedintensity gets no row here: the row would have matched I0
+# as well and written the incident beam into the transmitted concept.
 #   comment      Why this is not the standard location.
 #
 # license: CC-BY-4.0
@@ -36,3 +43,4 @@ cdifsas:backgroundintensity	aps-usaxs	/DATA:NXdata/blank	1.0	beam-through-nothin
 cdifsas:detectorhorizontal	aps-usaxs	/DATA:NXdata/horizontal	1.0	detector column coordinate; NXsas names no axes at all, since position is meant to be reconstructed from the geometry scalars
 cdifsas:detectorvertical	aps-usaxs	/DATA:NXdata/vertical	1.0	detector row coordinate; as horizontal
 cdifsas:collimationlength	aps-usaxs	/INSTRUMENT:NXinstrument/COLLIMATOR:NXcollimator/GEOMETRY:NXgeometry/SHAPE:NXshape/size_x	0.8	this writer splits the definition's single size into size_x and size_y; taking x alone is a simplification
+cdifxas:monochromatorenergy	nexus-manual-sketch	/monochromator:NXmonochromator/energy	0.9	monochromator directly under the entry, not under NXinstrument; the standard path requires an NXinstrument segment
