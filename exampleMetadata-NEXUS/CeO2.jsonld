@@ -394,6 +394,18 @@
             ],
             "schema:propertyID": [
               {
+                "@id": "xas:samplepreparation"
+              }
+            ],
+            "schema:name": "sample preparation",
+            "schema:value": "powder on tape"
+          },
+          {
+            "@type": [
+              "schema:PropertyValue"
+            ],
+            "schema:propertyID": [
+              {
                 "@id": "xas:temperature"
               }
             ],
