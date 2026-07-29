@@ -47,6 +47,22 @@ EXAMPLES = [
     "cu_metal_rt.nxs",
     "cu_metal_10K.nxs",
     "NXxas-manual-sketch.hdf5",
+    # Two of the ten Newville single-spectrum files, not all ten: the set
+    # is near-identical, so the rest would only repeat what these show.
+    #
+    # feo_rt1 earns its place -- it is the one file whose NeXus encoding
+    # yields MORE than its XDI counterpart (14 concepts against 12),
+    # because its NeXus version records a facility and an x-ray source
+    # type that its XDI header omits. Everywhere else XDI wins 16-15.
+    #
+    # pt_metal_rt is here as a paired counterpart, not for anything it
+    # shows alone: on the NeXus side it is indistinguishable from
+    # cu_metal_rt (same 15 concepts, same variables). Its interest is on
+    # the XDI side, where an unmapped `time` column exercises the
+    # nil-propertyID variable path -- which is a property of
+    # XAS-CDIF/exampleData/pt_metal_rt.xdi, not of this file.
+    "pt_metal_rt.nxs",
+    "feo_rt1.nxs",
     "CeO2.xdi",
 ]
 
