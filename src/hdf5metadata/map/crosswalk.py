@@ -27,6 +27,7 @@ goes unfilled — with a warning — rather than producing a wrong value.
 """
 from __future__ import annotations
 
+import functools
 import csv
 import re
 from dataclasses import dataclass, field
@@ -436,6 +437,39 @@ def resolve_mapping(
         return []
 
     return resolve_segments([entry.root], segments, discriminating)
+
+
+#: Units the CDIF XAS glossary states for a concept, keyed by concept
+#: CURIE. Generated upstream by crosswalk/build_crosswalk.py; see
+#: data/README.md.
+CONCEPT_UNITS_FILE = DATA_DIR / "cdifxas-units.tsv"
+
+#: QUDT prefix, so the emitted unit is a resolvable IRI rather than a
+#: CURIE a consumer has to know how to expand.
+QUDT_UNIT_BASE = "http://qudt.org/vocab/unit/"
+
+
+@functools.lru_cache(maxsize=1)
+def load_concept_units(path: Path | None = None) -> dict[str, str]:
+    """concept CURIE -> unit IRI, from the bundled units table.
+
+    Absent file is not an error: the table is a convenience, and a build
+    without it simply emits no unit where the file records none.
+    """
+    src = Path(path) if path is not None else CONCEPT_UNITS_FILE
+    if not src.is_file():
+        return {}
+    units: dict[str, str] = {}
+    with src.open(encoding="utf-8", newline="") as f:
+        rows = [ln for ln in f if not ln.startswith("#")]
+    for row in csv.DictReader(rows, delimiter="\t"):
+        concept, unit = row.get("concept_id"), row.get("unit_id")
+        if not concept or not unit:
+            continue
+        if unit.startswith("unit:"):
+            unit = QUDT_UNIT_BASE + unit.split(":", 1)[1]
+        units[concept] = unit
+    return units
 
 
 def _refresh(data_dir: Path = DATA_DIR) -> int:

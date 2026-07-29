@@ -1098,7 +1098,10 @@
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/FeXAS/rv/fluorescenceabsorptioncoefficient"
-      ]
+      ],
+      "schema:unitCode": {
+        "@id": "http://qudt.org/vocab/unit/UNITLESS"
+      }
     },
     {
       "@id": "ex:DV/FeXAS/1/iv/fluorescenceintensity",
@@ -1189,7 +1192,10 @@
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/FeXAS/rv/fluorescenceabsorptioncoefficient"
-      ]
+      ],
+      "schema:unitCode": {
+        "@id": "http://qudt.org/vocab/unit/UNITLESS"
+      }
     },
     {
       "@id": "ex:DV/FeXAS/2/iv/fluorescenceintensity",

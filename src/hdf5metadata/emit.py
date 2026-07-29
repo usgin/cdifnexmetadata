@@ -56,6 +56,7 @@ from typing import Any
 from hdf5metadata.inspect.hdf5 import InspectionResult
 from hdf5metadata.inspect.nexus import NeXusResult, NXEntry
 from hdf5metadata.map.concepts import ConceptRecord, ConceptValue, MappingResult
+from hdf5metadata.map.crosswalk import load_concept_units
 
 CONTEXT = {
     "schema": "http://schema.org/",
@@ -439,13 +440,25 @@ def _variables(
                 "cdif:physicalDataType": _xsd_for(cv.dtype),
                 "cdif:uses": [rv_id],
             }
-            # Only when the source says so. An empty string asserts that
-            # the unit IS the empty string; leaving the key out says the
-            # file did not record one, which is the true statement and
-            # the one a consumer can act on. The profile does not require
-            # unitText on a variable, so absence is legal.
+            # Two different claims, kept apart on purpose.
+            #
+            # schema:unitText is what THIS FILE recorded. Only written
+            # when the source says so: an empty string would assert that
+            # the unit IS the empty string, where absence says the file
+            # did not record one.
+            #
+            # schema:unitCode is what the CONCEPT is, from the glossary,
+            # and is written only where the file is silent. It is how a
+            # consumer learns that mutrans is dimensionless rather than
+            # unit-unknown -- no XAS format records that, because to a
+            # physicist it goes without saying. As an IRI it needs no
+            # parsing.
             if cv.units:
                 iv["schema:unitText"] = cv.units
+            elif not unmapped:
+                stated = load_concept_units().get(concept)
+                if stated:
+                    iv["schema:unitCode"] = {"@id": stated}
             variables.append(iv)
             # A NeXus path locates an array inside a container; it is not
             # a column index, so LocatorMapping is the right mapping
