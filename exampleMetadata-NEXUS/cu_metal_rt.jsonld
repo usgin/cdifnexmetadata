@@ -387,12 +387,11 @@
                 ],
                 "schema:propertyID": [
                   {
-                    "@id": "xas:monochromatortype"
+                    "@id": "xas:reflectionplane"
                   }
                 ],
-                "schema:name": "monochromator crystal",
-                "schema:value": "Si",
-                "schema:description": "read from a non-standard file layout (gsecars-athena)"
+                "schema:name": "reflection plane",
+                "schema:value": "1 1 1"
               },
               {
                 "@type": [
@@ -400,11 +399,12 @@
                 ],
                 "schema:propertyID": [
                   {
-                    "@id": "xas:reflectionplane"
+                    "@id": "xas:monochromatortype"
                   }
                 ],
-                "schema:name": "reflection plane",
-                "schema:value": "1 1 1"
+                "schema:name": "monochromator type",
+                "schema:value": "unknown",
+                "schema:description": "not recorded in the source file; the profile requires this property, so it is reported as unknown rather than omitted or guessed"
               }
             ]
           }
@@ -423,6 +423,18 @@
           "schema:name": "edge energy",
           "schema:value": "8980.0",
           "schema:description": "read from a non-standard file layout (gsecars-athena)"
+        },
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
+              "@id": "xas:monochromatorchemicalformula"
+            }
+          ],
+          "schema:name": "monochromatorchemicalformula",
+          "schema:value": "Si"
         }
       ],
       "schema:startDate": "2001-06-26T22:27:31"

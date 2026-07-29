@@ -31,7 +31,6 @@ cdifxas:xraysourcetype	gsecars-athena	/INSTRUMENT:NXinstrument/source:NXsource/f
 cdifxas:absorptioncoefficient	gsecars-athena	/DATA:NXdata/mutrans	1.0	restructured NXxas carries this as ENTRY/intensity, disambiguated by the declared mode; here the field name carries the mode
 cdifxas:fluorescenceabsorptioncoefficient	gsecars-athena	/DATA:NXdata/mufluor	1.0	as mutrans, for fluorescence
 cdifxas:xasmeasurementmode	gsecars-athena	/DATA:NXdata/mode	0.9	free text (Transmission, Fluorescence), not the NXxas_* definition name; needs normalising before use as a mode term
-cdifxas:monochromatortype	gsecars-athena	/INSTRUMENT:NXinstrument/monochromator:NXmonochromator/crystal:NXcrystal/chemical_formula	0.8	crystal material rather than a monochromator type; the standard NXcrystal/type is absent
 cdifsas:scatteringintensity	aps-usaxs	/DATA:NXdata/frames	1.0	the definition puts the image at NXdetector/data; this writer stores a stack of frames in NXdata and leaves the detector group without data
 cdifsas:backgroundintensity	aps-usaxs	/DATA:NXdata/blank	1.0	beam-through-nothing image held beside the frames; the definition has no place for it
 cdifsas:detectorhorizontal	aps-usaxs	/DATA:NXdata/horizontal	1.0	detector column coordinate; NXsas names no axes at all, since position is meant to be reconstructed from the geometry scalars
