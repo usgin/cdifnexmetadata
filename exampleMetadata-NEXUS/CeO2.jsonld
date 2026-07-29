@@ -458,7 +458,6 @@
           "@id": "xas:incidentintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/CeO2/rv/incidentintensity"
@@ -477,7 +476,6 @@
           "@id": "xas:monochromatorenergy"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/CeO2/rv/monochromatorenergy"
@@ -496,7 +494,6 @@
           "@id": "xas:transmittedintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/CeO2/rv/transmittedintensity"

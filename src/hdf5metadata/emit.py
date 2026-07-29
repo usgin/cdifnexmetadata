@@ -425,7 +425,7 @@ def _variables(
             local = _slug(cv.label) if unmapped else concept.split(":", 1)[-1]
             rv_id = f"{base}/rv/{local}"
             iv_id = f"ex:DV/{entry_slug}/iv/{local}"
-            variables.append({
+            iv = {
                 "@id": iv_id,
                 "@type": ["cdi:InstanceVariable", "schema:PropertyValue"],
                 "schema:name": cv.label or Path(cv.source_path).name,
@@ -436,10 +436,17 @@ def _variables(
                 "schema:propertyID": [{"@id": OGC_NIL_MISSING}]
                 if unmapped else
                 [{"@id": concept.replace("cdifxas:", "xas:")}],
-                "schema:unitText": cv.units or "",
                 "cdif:physicalDataType": _xsd_for(cv.dtype),
                 "cdif:uses": [rv_id],
-            })
+            }
+            # Only when the source says so. An empty string asserts that
+            # the unit IS the empty string; leaving the key out says the
+            # file did not record one, which is the true statement and
+            # the one a consumer can act on. The profile does not require
+            # unitText on a variable, so absence is legal.
+            if cv.units:
+                iv["schema:unitText"] = cv.units
+            variables.append(iv)
             # A NeXus path locates an array inside a container; it is not
             # a column index, so LocatorMapping is the right mapping
             # subclass. TextMapping + cdif:index is the tabular analog.

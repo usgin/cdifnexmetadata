@@ -511,11 +511,11 @@
           "@id": "cdifsas:backgroundintensity"
         }
       ],
-      "schema:unitText": "counts",
       "cdif:physicalDataType": "xsd:integer",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS/rv/backgroundintensity"
-      ]
+      ],
+      "schema:unitText": "counts"
     },
     {
       "@id": "ex:DV/APS-USAXS-pinSAXS/1/iv/detectorhorizontal",
@@ -530,11 +530,11 @@
           "@id": "cdifsas:detectorhorizontal"
         }
       ],
-      "schema:unitText": "pixels",
       "cdif:physicalDataType": "xsd:integer",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS/rv/detectorhorizontal"
-      ]
+      ],
+      "schema:unitText": "pixels"
     },
     {
       "@id": "ex:DV/APS-USAXS-pinSAXS/1/iv/detectorvertical",
@@ -549,11 +549,11 @@
           "@id": "cdifsas:detectorvertical"
         }
       ],
-      "schema:unitText": "pixels",
       "cdif:physicalDataType": "xsd:integer",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS/rv/detectorvertical"
-      ]
+      ],
+      "schema:unitText": "pixels"
     },
     {
       "@id": "ex:DV/APS-USAXS-pinSAXS/1/iv/scatteringintensity",
@@ -568,11 +568,11 @@
           "@id": "cdifsas:scatteringintensity"
         }
       ],
-      "schema:unitText": "counts",
       "cdif:physicalDataType": "xsd:integer",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/APS-USAXS-pinSAXS/rv/scatteringintensity"
-      ]
+      ],
+      "schema:unitText": "counts"
     }
   ],
   "schema:subjectOf": {

@@ -455,7 +455,6 @@
           "@id": "xas:absorptioncoefficient"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/pt_metal_rt/rv/absorptioncoefficient"
@@ -474,7 +473,6 @@
           "@id": "xas:incidentintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/pt_metal_rt/rv/incidentintensity"
@@ -493,11 +491,11 @@
           "@id": "xas:monochromatorenergy"
         }
       ],
-      "schema:unitText": "eV",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/pt_metal_rt/rv/monochromatorenergy"
-      ]
+      ],
+      "schema:unitText": "eV"
     },
     {
       "@id": "ex:DV/pt_metal_rt/1/iv/transmittedintensity",
@@ -512,7 +510,6 @@
           "@id": "xas:transmittedintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/pt_metal_rt/rv/transmittedintensity"

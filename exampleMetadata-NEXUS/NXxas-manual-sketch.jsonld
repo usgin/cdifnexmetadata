@@ -315,11 +315,11 @@
           "@id": "xas:incidentintensity"
         }
       ],
-      "schema:unitText": "counts",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/NXxas-manual-sketch/rv/incidentintensity"
-      ]
+      ],
+      "schema:unitText": "counts"
     }
   ],
   "schema:subjectOf": {
