@@ -374,18 +374,47 @@ def _emit_entry(
     entry: NXEntry,
     record: ConceptRecord,
     base: str,
-    struct_id: str,
+    structure: dict[str, Any],
+    inherited: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """One NXentry as a part: what varies between entries, plus a
-    reference to the structure it shares with its siblings."""
+    """One NXentry as a part: what varies between entries, plus the
+    structure it has.
+
+    Typed as both a MediaObject and a Dataset. The manifest profile calls
+    a distribution part a MediaObject, which is right about the bytes --
+    an entry is a addressable chunk of one HDF5 file -- but an NXentry is
+    also a dataset in its own right, with its own variables, its own
+    acquisition and its own structure. Asserting only MediaObject loses
+    that; asserting both says what it is at each level.
+
+    `structure` is the full structure object on the first part that has
+    it and an @id reference on later parts that share it, so a layout is
+    stated once and referenced thereafter.
+
+    `inherited` carries what CDIF requires of anything typed
+    schema:Dataset -- an identifier, a modification date, licence
+    information, and a url. Typing a part as a Dataset without them
+    trades one SHACL violation for four per part, and they are all
+    genuinely properties of the file that each part sits in, so they are
+    inherited rather than invented.
+    """
     eid = _slug(record.entry_name)
     part: dict[str, Any] = {
         "@id": f"{base}/{eid}",
-        "@type": ["schema:MediaObject"],
+        "@type": ["schema:MediaObject", "schema:Dataset"],
         "schema:name": _text(entry.title or record.entry_name),
         "schema:contentUrl": f"{base}#{record.entry_path}",
-        "cdi:isStructuredBy": {"@id": struct_id},
+        "cdi:isStructuredBy": structure,
     }
+    # An identifier of its own: the entry is what distinguishes it, and a
+    # consumer that harvests parts as datasets needs to be able to name
+    # this one.
+    part["schema:identifier"] = f"{base}#{record.entry_path}"
+    part["schema:url"] = f"{base}#{record.entry_path}"
+    for key in ("schema:dateModified", "schema:license",
+                "schema:conditionsOfAccess", "schema:creator"):
+        if inherited and key in inherited:
+            part[key] = inherited[key]
     # `.title`, `.start_time` and `.end_time` are properties on both
     # NXEntry and XDIEntry. Going through them rather than a NeXus-only
     # field lookup is what lets this function serve either binding.
@@ -403,7 +432,7 @@ def _emit_entry(
 
 
 def _variables(
-    record: ConceptRecord, base: str, entry_slug: str
+    record: ConceptRecord, base: str, entry_slug: str, doc_slug: str
 ) -> tuple[list[dict], list[dict]]:
     """Array concepts as InstanceVariables, and the DataStructure
     components that define them.
@@ -425,7 +454,13 @@ def _variables(
             unmapped = concept == OGC_NIL_MISSING
             local = _slug(cv.label) if unmapped else concept.split(":", 1)[-1]
             rv_id = f"{base}/rv/{local}"
-            iv_id = f"ex:DV/{entry_slug}/iv/{local}"
+            # Document-scoped, not structure-scoped. Two structures
+            # that both measure monochromator energy measure the SAME
+            # variable -- same concept, same datatype, same unit -- and
+            # differ only in where it sits, which is what the physical
+            # mapping records. Scoping the id by structure produced
+            # byte-identical InstanceVariables differing only in @id.
+            iv_id = f"ex:DV/{doc_slug}/iv/{local}"
             iv = {
                 "@id": iv_id,
                 "@type": ["cdi:InstanceVariable", "schema:PropertyValue"],
@@ -750,27 +785,43 @@ def emit_document(
     variables: list[dict[str, Any]] = []
     seen_variables: set[str] = set()
 
+    # What a part inherits by being a Dataset in this file. Same
+    # sources as the document's own values below, so the two cannot drift.
+    part_defaults: dict[str, Any] = {
+        "schema:dateModified": _modified(inspection),
+        "schema:license": [OGC_NIL_MISSING],
+    }
+
     for n, (_sig, group) in enumerate(mapping.structure_groups().items(), 1):
         struct_id = f"ex:DV/{slug}/structure/{n}"
-        vars_, components = _variables(group[0], base, f"{slug}/{n}")
+        vars_, components = _variables(group[0], base, f"{slug}/{n}", slug)
+        structure: dict[str, Any] = {"@id": struct_id}
         if components:
-            structures.append({
+            structure = {
                 "@id": struct_id,
                 "@type": ["cdi:DimensionalDataStructure"],
                 "schema:name": f"{stem} structure {n}",
                 "schema:description":
                     f"shared by {len(group)} of {len(records)} entries",
                 "cdi:has_DataStructureComponent": components,
-            })
+            }
+            structures.append(structure)
         for v in vars_:
             if v["@id"] not in seen_variables:
                 seen_variables.add(v["@id"])
                 variables.append(v)
-        for rec in group:
+        for i, rec in enumerate(group):
             entry = next(
                 (e for e in nexus.entries if e.path == rec.entry_path), None)
-            if entry is not None:
-                parts.append(_emit_entry(entry, rec, base, struct_id))
+            if entry is None:
+                continue
+            # Inline on the first part that has this structure, an @id
+            # reference on the rest. The reference denotes the same node,
+            # so a consumer resolving it finds the components.
+            parts.append(_emit_entry(
+                entry, rec, base,
+                structure if i == 0 else {"@id": struct_id},
+                inherited=part_defaults))
 
     # -- distribution -------------------------------------------------------
     distribution: dict[str, Any] = {
@@ -797,21 +848,20 @@ def emit_document(
         conforms.insert(0, {"@id": format_specification})
     if conforms:
         distribution["dcterms:conformsTo"] = conforms
-    # Every distinct structure, inline with its components, on the
-    # distribution. That is the one place the profile allows it -- the
-    # JSON Schema admits cdi:isStructuredBy only on a distribution item,
-    # and the SHACL rule reaches it as schema:distribution/isStructuredBy
-    # -- and it is also the only place from which one structure can be
-    # shared by several parts. Each part then references the one it uses
-    # by @id, which says which layout that part has without repeating it.
+    # Structures sit on the parts, not here. A part is one NXentry, and
+    # the structure describes that entry's layout -- with 26 entries over
+    # two layouts, a structure on the distribution says something about
+    # the file that is only true of some of its parts. Where there are no
+    # parts the structure goes on the distribution, which is then the
+    # whole of the data.
     #
     # An @id reference is not a "bare" reference in RDF: it denotes the
-    # same node the distribution defines inline, so the SHACL check that
-    # the target carries cdi:has_DataStructureComponent is satisfied.
-    if structures:
-        distribution["cdi:isStructuredBy"] = structures
+    # same node another part defines inline, so the SHACL check that the
+    # target carries cdi:has_DataStructureComponent is satisfied.
     if parts:
         distribution["schema:hasPart"] = parts
+    elif structures:
+        distribution["cdi:isStructuredBy"] = structures
 
     # -- the dataset --------------------------------------------------------
     #

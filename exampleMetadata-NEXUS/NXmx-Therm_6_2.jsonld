@@ -46,13 +46,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/NXmx-Therm_6_2/entry",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "entry",
           "schema:contentUrl": "https://w3id.org/cdif/testing/NXmx-Therm_6_2#/entry",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/NXmx-Therm_6_2/structure/1"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/NXmx-Therm_6_2#/entry",
+          "schema:url": "https://w3id.org/cdif/testing/NXmx-Therm_6_2#/entry",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2019-02-14T14:25:57/2019-02-14T14:26:24",
           "dcterms:conformsTo": [
             {

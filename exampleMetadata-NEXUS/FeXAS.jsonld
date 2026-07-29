@@ -42,339 +42,211 @@
           "@id": "nxs:applications/NXxas.html"
         }
       ],
-      "cdi:isStructuredBy": [
-        {
-          "@id": "ex:DV/FeXAS/structure/1",
-          "@type": [
-            "cdi:DimensionalDataStructure"
-          ],
-          "schema:name": "FeXAS structure 1",
-          "schema:description": "shared by 1 of 26 entries",
-          "cdi:has_DataStructureComponent": [
-            {
-              "@id": "ex:DV/FeXAS/1/dsc/absorptioncoefficient",
-              "@type": [
-                "cdi:MeasureComponent"
-              ],
-              "cdif:isDefinedBy_RepresentedVariable": {
-                "@id": "https://w3id.org/cdif/testing/FeXAS/rv/absorptioncoefficient",
-                "@type": [
-                  "cdi:RepresentedVariable"
-                ],
-                "schema:name": "absorptioncoefficient",
-                "cdif:name": {
-                  "@type": [
-                    "cdi:ObjectName"
-                  ],
-                  "cdif:name": "absorptioncoefficient"
-                }
-              },
-              "cdif:hasPhysicalMapping": {
-                "@id": "ex:DV/FeXAS/1/pm/absorptioncoefficient",
-                "@type": [
-                  "cdif:LocatorMapping"
-                ],
-                "cdif:locator": "/FeFoil.001/data/mutrans",
-                "cdif:physicalDataType": "xsd:decimal",
-                "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/FeXAS/1/iv/absorptioncoefficient"
-                }
-              }
-            },
-            {
-              "@id": "ex:DV/FeXAS/1/dsc/fluorescenceabsorptioncoefficient",
-              "@type": [
-                "cdi:MeasureComponent"
-              ],
-              "cdif:isDefinedBy_RepresentedVariable": {
-                "@id": "https://w3id.org/cdif/testing/FeXAS/rv/fluorescenceabsorptioncoefficient",
-                "@type": [
-                  "cdi:RepresentedVariable"
-                ],
-                "schema:name": "fluorescence absorptioncoefficient",
-                "cdif:name": {
-                  "@type": [
-                    "cdi:ObjectName"
-                  ],
-                  "cdif:name": "fluorescence absorptioncoefficient"
-                }
-              },
-              "cdif:hasPhysicalMapping": {
-                "@id": "ex:DV/FeXAS/1/pm/fluorescenceabsorptioncoefficient",
-                "@type": [
-                  "cdif:LocatorMapping"
-                ],
-                "cdif:locator": "/FeFoil.001/data/mufluor",
-                "cdif:physicalDataType": "xsd:decimal",
-                "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/FeXAS/1/iv/fluorescenceabsorptioncoefficient"
-                }
-              }
-            },
-            {
-              "@id": "ex:DV/FeXAS/1/dsc/fluorescenceintensity",
-              "@type": [
-                "cdi:MeasureComponent"
-              ],
-              "cdif:isDefinedBy_RepresentedVariable": {
-                "@id": "https://w3id.org/cdif/testing/FeXAS/rv/fluorescenceintensity",
-                "@type": [
-                  "cdi:RepresentedVariable"
-                ],
-                "schema:name": "fluorescence intensity",
-                "cdif:name": {
-                  "@type": [
-                    "cdi:ObjectName"
-                  ],
-                  "cdif:name": "fluorescence intensity"
-                }
-              },
-              "cdif:hasPhysicalMapping": {
-                "@id": "ex:DV/FeXAS/1/pm/fluorescenceintensity",
-                "@type": [
-                  "cdif:LocatorMapping"
-                ],
-                "cdif:locator": "/FeFoil.001/instrument/ifluor/data",
-                "cdif:physicalDataType": "xsd:decimal",
-                "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/FeXAS/1/iv/fluorescenceintensity"
-                }
-              }
-            },
-            {
-              "@id": "ex:DV/FeXAS/1/dsc/incidentintensity",
-              "@type": [
-                "cdi:MeasureComponent"
-              ],
-              "cdif:isDefinedBy_RepresentedVariable": {
-                "@id": "https://w3id.org/cdif/testing/FeXAS/rv/incidentintensity",
-                "@type": [
-                  "cdi:RepresentedVariable"
-                ],
-                "schema:name": "incident intensity",
-                "cdif:name": {
-                  "@type": [
-                    "cdi:ObjectName"
-                  ],
-                  "cdif:name": "incident intensity"
-                }
-              },
-              "cdif:hasPhysicalMapping": {
-                "@id": "ex:DV/FeXAS/1/pm/incidentintensity",
-                "@type": [
-                  "cdif:LocatorMapping"
-                ],
-                "cdif:locator": "/FeFoil.001/instrument/i0/data",
-                "cdif:physicalDataType": "xsd:decimal",
-                "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/FeXAS/1/iv/incidentintensity"
-                }
-              }
-            },
-            {
-              "@id": "ex:DV/FeXAS/1/dsc/monochromatorenergy",
-              "@type": [
-                "cdi:DimensionComponent"
-              ],
-              "cdif:isDefinedBy_RepresentedVariable": {
-                "@id": "https://w3id.org/cdif/testing/FeXAS/rv/monochromatorenergy",
-                "@type": [
-                  "cdi:RepresentedVariable"
-                ],
-                "schema:name": "monochromator energy",
-                "cdif:name": {
-                  "@type": [
-                    "cdi:ObjectName"
-                  ],
-                  "cdif:name": "monochromator energy"
-                }
-              },
-              "cdif:hasPhysicalMapping": {
-                "@id": "ex:DV/FeXAS/1/pm/monochromatorenergy",
-                "@type": [
-                  "cdif:LocatorMapping"
-                ],
-                "cdif:locator": "/FeFoil.001/instrument/monochromator/energy",
-                "cdif:physicalDataType": "xsd:decimal",
-                "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/FeXAS/1/iv/monochromatorenergy"
-                }
-              }
-            },
-            {
-              "@id": "ex:DV/FeXAS/1/dsc/transmittedintensity",
-              "@type": [
-                "cdi:MeasureComponent"
-              ],
-              "cdif:isDefinedBy_RepresentedVariable": {
-                "@id": "https://w3id.org/cdif/testing/FeXAS/rv/transmittedintensity",
-                "@type": [
-                  "cdi:RepresentedVariable"
-                ],
-                "schema:name": "transmitted intensity",
-                "cdif:name": {
-                  "@type": [
-                    "cdi:ObjectName"
-                  ],
-                  "cdif:name": "transmitted intensity"
-                }
-              },
-              "cdif:hasPhysicalMapping": {
-                "@id": "ex:DV/FeXAS/1/pm/transmittedintensity",
-                "@type": [
-                  "cdif:LocatorMapping"
-                ],
-                "cdif:locator": "/FeFoil.001/instrument/itrans/data",
-                "cdif:physicalDataType": "xsd:decimal",
-                "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/FeXAS/1/iv/transmittedintensity"
-                }
-              }
-            }
-          ]
-        },
-        {
-          "@id": "ex:DV/FeXAS/structure/2",
-          "@type": [
-            "cdi:DimensionalDataStructure"
-          ],
-          "schema:name": "FeXAS structure 2",
-          "schema:description": "shared by 25 of 26 entries",
-          "cdi:has_DataStructureComponent": [
-            {
-              "@id": "ex:DV/FeXAS/2/dsc/fluorescenceabsorptioncoefficient",
-              "@type": [
-                "cdi:MeasureComponent"
-              ],
-              "cdif:isDefinedBy_RepresentedVariable": {
-                "@id": "https://w3id.org/cdif/testing/FeXAS/rv/fluorescenceabsorptioncoefficient",
-                "@type": [
-                  "cdi:RepresentedVariable"
-                ],
-                "schema:name": "fluorescence absorptioncoefficient",
-                "cdif:name": {
-                  "@type": [
-                    "cdi:ObjectName"
-                  ],
-                  "cdif:name": "fluorescence absorptioncoefficient"
-                }
-              },
-              "cdif:hasPhysicalMapping": {
-                "@id": "ex:DV/FeXAS/2/pm/fluorescenceabsorptioncoefficient",
-                "@type": [
-                  "cdif:LocatorMapping"
-                ],
-                "cdif:locator": "/Fe_a2n.001/data/mufluor",
-                "cdif:physicalDataType": "xsd:decimal",
-                "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/FeXAS/2/iv/fluorescenceabsorptioncoefficient"
-                }
-              }
-            },
-            {
-              "@id": "ex:DV/FeXAS/2/dsc/fluorescenceintensity",
-              "@type": [
-                "cdi:MeasureComponent"
-              ],
-              "cdif:isDefinedBy_RepresentedVariable": {
-                "@id": "https://w3id.org/cdif/testing/FeXAS/rv/fluorescenceintensity",
-                "@type": [
-                  "cdi:RepresentedVariable"
-                ],
-                "schema:name": "fluorescence intensity",
-                "cdif:name": {
-                  "@type": [
-                    "cdi:ObjectName"
-                  ],
-                  "cdif:name": "fluorescence intensity"
-                }
-              },
-              "cdif:hasPhysicalMapping": {
-                "@id": "ex:DV/FeXAS/2/pm/fluorescenceintensity",
-                "@type": [
-                  "cdif:LocatorMapping"
-                ],
-                "cdif:locator": "/Fe_a2n.001/instrument/ifluor/data",
-                "cdif:physicalDataType": "xsd:decimal",
-                "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/FeXAS/2/iv/fluorescenceintensity"
-                }
-              }
-            },
-            {
-              "@id": "ex:DV/FeXAS/2/dsc/incidentintensity",
-              "@type": [
-                "cdi:MeasureComponent"
-              ],
-              "cdif:isDefinedBy_RepresentedVariable": {
-                "@id": "https://w3id.org/cdif/testing/FeXAS/rv/incidentintensity",
-                "@type": [
-                  "cdi:RepresentedVariable"
-                ],
-                "schema:name": "incident intensity",
-                "cdif:name": {
-                  "@type": [
-                    "cdi:ObjectName"
-                  ],
-                  "cdif:name": "incident intensity"
-                }
-              },
-              "cdif:hasPhysicalMapping": {
-                "@id": "ex:DV/FeXAS/2/pm/incidentintensity",
-                "@type": [
-                  "cdif:LocatorMapping"
-                ],
-                "cdif:locator": "/Fe_a2n.001/instrument/i0/data",
-                "cdif:physicalDataType": "xsd:decimal",
-                "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/FeXAS/2/iv/incidentintensity"
-                }
-              }
-            },
-            {
-              "@id": "ex:DV/FeXAS/2/dsc/monochromatorenergy",
-              "@type": [
-                "cdi:DimensionComponent"
-              ],
-              "cdif:isDefinedBy_RepresentedVariable": {
-                "@id": "https://w3id.org/cdif/testing/FeXAS/rv/monochromatorenergy",
-                "@type": [
-                  "cdi:RepresentedVariable"
-                ],
-                "schema:name": "monochromator energy",
-                "cdif:name": {
-                  "@type": [
-                    "cdi:ObjectName"
-                  ],
-                  "cdif:name": "monochromator energy"
-                }
-              },
-              "cdif:hasPhysicalMapping": {
-                "@id": "ex:DV/FeXAS/2/pm/monochromatorenergy",
-                "@type": [
-                  "cdif:LocatorMapping"
-                ],
-                "cdif:locator": "/Fe_a2n.001/instrument/monochromator/energy",
-                "cdif:physicalDataType": "xsd:decimal",
-                "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/FeXAS/2/iv/monochromatorenergy"
-                }
-              }
-            }
-          ]
-        }
-      ],
       "schema:hasPart": [
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/FeFoil.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "FeFoil.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/FeFoil.001",
           "cdi:isStructuredBy": {
-            "@id": "ex:DV/FeXAS/structure/1"
+            "@id": "ex:DV/FeXAS/structure/1",
+            "@type": [
+              "cdi:DimensionalDataStructure"
+            ],
+            "schema:name": "FeXAS structure 1",
+            "schema:description": "shared by 1 of 26 entries",
+            "cdi:has_DataStructureComponent": [
+              {
+                "@id": "ex:DV/FeXAS/1/dsc/absorptioncoefficient",
+                "@type": [
+                  "cdi:MeasureComponent"
+                ],
+                "cdif:isDefinedBy_RepresentedVariable": {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/rv/absorptioncoefficient",
+                  "@type": [
+                    "cdi:RepresentedVariable"
+                  ],
+                  "schema:name": "absorptioncoefficient",
+                  "cdif:name": {
+                    "@type": [
+                      "cdi:ObjectName"
+                    ],
+                    "cdif:name": "absorptioncoefficient"
+                  }
+                },
+                "cdif:hasPhysicalMapping": {
+                  "@id": "ex:DV/FeXAS/1/pm/absorptioncoefficient",
+                  "@type": [
+                    "cdif:LocatorMapping"
+                  ],
+                  "cdif:locator": "/FeFoil.001/data/mutrans",
+                  "cdif:physicalDataType": "xsd:decimal",
+                  "cdif:formats_InstanceVariable": {
+                    "@id": "ex:DV/FeXAS/iv/absorptioncoefficient"
+                  }
+                }
+              },
+              {
+                "@id": "ex:DV/FeXAS/1/dsc/fluorescenceabsorptioncoefficient",
+                "@type": [
+                  "cdi:MeasureComponent"
+                ],
+                "cdif:isDefinedBy_RepresentedVariable": {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/rv/fluorescenceabsorptioncoefficient",
+                  "@type": [
+                    "cdi:RepresentedVariable"
+                  ],
+                  "schema:name": "fluorescence absorptioncoefficient",
+                  "cdif:name": {
+                    "@type": [
+                      "cdi:ObjectName"
+                    ],
+                    "cdif:name": "fluorescence absorptioncoefficient"
+                  }
+                },
+                "cdif:hasPhysicalMapping": {
+                  "@id": "ex:DV/FeXAS/1/pm/fluorescenceabsorptioncoefficient",
+                  "@type": [
+                    "cdif:LocatorMapping"
+                  ],
+                  "cdif:locator": "/FeFoil.001/data/mufluor",
+                  "cdif:physicalDataType": "xsd:decimal",
+                  "cdif:formats_InstanceVariable": {
+                    "@id": "ex:DV/FeXAS/iv/fluorescenceabsorptioncoefficient"
+                  }
+                }
+              },
+              {
+                "@id": "ex:DV/FeXAS/1/dsc/fluorescenceintensity",
+                "@type": [
+                  "cdi:MeasureComponent"
+                ],
+                "cdif:isDefinedBy_RepresentedVariable": {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/rv/fluorescenceintensity",
+                  "@type": [
+                    "cdi:RepresentedVariable"
+                  ],
+                  "schema:name": "fluorescence intensity",
+                  "cdif:name": {
+                    "@type": [
+                      "cdi:ObjectName"
+                    ],
+                    "cdif:name": "fluorescence intensity"
+                  }
+                },
+                "cdif:hasPhysicalMapping": {
+                  "@id": "ex:DV/FeXAS/1/pm/fluorescenceintensity",
+                  "@type": [
+                    "cdif:LocatorMapping"
+                  ],
+                  "cdif:locator": "/FeFoil.001/instrument/ifluor/data",
+                  "cdif:physicalDataType": "xsd:decimal",
+                  "cdif:formats_InstanceVariable": {
+                    "@id": "ex:DV/FeXAS/iv/fluorescenceintensity"
+                  }
+                }
+              },
+              {
+                "@id": "ex:DV/FeXAS/1/dsc/incidentintensity",
+                "@type": [
+                  "cdi:MeasureComponent"
+                ],
+                "cdif:isDefinedBy_RepresentedVariable": {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/rv/incidentintensity",
+                  "@type": [
+                    "cdi:RepresentedVariable"
+                  ],
+                  "schema:name": "incident intensity",
+                  "cdif:name": {
+                    "@type": [
+                      "cdi:ObjectName"
+                    ],
+                    "cdif:name": "incident intensity"
+                  }
+                },
+                "cdif:hasPhysicalMapping": {
+                  "@id": "ex:DV/FeXAS/1/pm/incidentintensity",
+                  "@type": [
+                    "cdif:LocatorMapping"
+                  ],
+                  "cdif:locator": "/FeFoil.001/instrument/i0/data",
+                  "cdif:physicalDataType": "xsd:decimal",
+                  "cdif:formats_InstanceVariable": {
+                    "@id": "ex:DV/FeXAS/iv/incidentintensity"
+                  }
+                }
+              },
+              {
+                "@id": "ex:DV/FeXAS/1/dsc/monochromatorenergy",
+                "@type": [
+                  "cdi:DimensionComponent"
+                ],
+                "cdif:isDefinedBy_RepresentedVariable": {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/rv/monochromatorenergy",
+                  "@type": [
+                    "cdi:RepresentedVariable"
+                  ],
+                  "schema:name": "monochromator energy",
+                  "cdif:name": {
+                    "@type": [
+                      "cdi:ObjectName"
+                    ],
+                    "cdif:name": "monochromator energy"
+                  }
+                },
+                "cdif:hasPhysicalMapping": {
+                  "@id": "ex:DV/FeXAS/1/pm/monochromatorenergy",
+                  "@type": [
+                    "cdif:LocatorMapping"
+                  ],
+                  "cdif:locator": "/FeFoil.001/instrument/monochromator/energy",
+                  "cdif:physicalDataType": "xsd:decimal",
+                  "cdif:formats_InstanceVariable": {
+                    "@id": "ex:DV/FeXAS/iv/monochromatorenergy"
+                  }
+                }
+              },
+              {
+                "@id": "ex:DV/FeXAS/1/dsc/transmittedintensity",
+                "@type": [
+                  "cdi:MeasureComponent"
+                ],
+                "cdif:isDefinedBy_RepresentedVariable": {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/rv/transmittedintensity",
+                  "@type": [
+                    "cdi:RepresentedVariable"
+                  ],
+                  "schema:name": "transmitted intensity",
+                  "cdif:name": {
+                    "@type": [
+                      "cdi:ObjectName"
+                    ],
+                    "cdif:name": "transmitted intensity"
+                  }
+                },
+                "cdif:hasPhysicalMapping": {
+                  "@id": "ex:DV/FeXAS/1/pm/transmittedintensity",
+                  "@type": [
+                    "cdif:LocatorMapping"
+                  ],
+                  "cdif:locator": "/FeFoil.001/instrument/itrans/data",
+                  "cdif:physicalDataType": "xsd:decimal",
+                  "cdif:formats_InstanceVariable": {
+                    "@id": "ex:DV/FeXAS/iv/transmittedintensity"
+                  }
+                }
+              }
+            ]
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/FeFoil.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/FeFoil.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-10 09:18:48/2020-08-10 09:22:32",
           "dcterms:conformsTo": [
             {
@@ -385,13 +257,147 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_a2n.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_a2n.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_a2n.001",
           "cdi:isStructuredBy": {
-            "@id": "ex:DV/FeXAS/structure/2"
+            "@id": "ex:DV/FeXAS/structure/2",
+            "@type": [
+              "cdi:DimensionalDataStructure"
+            ],
+            "schema:name": "FeXAS structure 2",
+            "schema:description": "shared by 25 of 26 entries",
+            "cdi:has_DataStructureComponent": [
+              {
+                "@id": "ex:DV/FeXAS/2/dsc/fluorescenceabsorptioncoefficient",
+                "@type": [
+                  "cdi:MeasureComponent"
+                ],
+                "cdif:isDefinedBy_RepresentedVariable": {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/rv/fluorescenceabsorptioncoefficient",
+                  "@type": [
+                    "cdi:RepresentedVariable"
+                  ],
+                  "schema:name": "fluorescence absorptioncoefficient",
+                  "cdif:name": {
+                    "@type": [
+                      "cdi:ObjectName"
+                    ],
+                    "cdif:name": "fluorescence absorptioncoefficient"
+                  }
+                },
+                "cdif:hasPhysicalMapping": {
+                  "@id": "ex:DV/FeXAS/2/pm/fluorescenceabsorptioncoefficient",
+                  "@type": [
+                    "cdif:LocatorMapping"
+                  ],
+                  "cdif:locator": "/Fe_a2n.001/data/mufluor",
+                  "cdif:physicalDataType": "xsd:decimal",
+                  "cdif:formats_InstanceVariable": {
+                    "@id": "ex:DV/FeXAS/iv/fluorescenceabsorptioncoefficient"
+                  }
+                }
+              },
+              {
+                "@id": "ex:DV/FeXAS/2/dsc/fluorescenceintensity",
+                "@type": [
+                  "cdi:MeasureComponent"
+                ],
+                "cdif:isDefinedBy_RepresentedVariable": {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/rv/fluorescenceintensity",
+                  "@type": [
+                    "cdi:RepresentedVariable"
+                  ],
+                  "schema:name": "fluorescence intensity",
+                  "cdif:name": {
+                    "@type": [
+                      "cdi:ObjectName"
+                    ],
+                    "cdif:name": "fluorescence intensity"
+                  }
+                },
+                "cdif:hasPhysicalMapping": {
+                  "@id": "ex:DV/FeXAS/2/pm/fluorescenceintensity",
+                  "@type": [
+                    "cdif:LocatorMapping"
+                  ],
+                  "cdif:locator": "/Fe_a2n.001/instrument/ifluor/data",
+                  "cdif:physicalDataType": "xsd:decimal",
+                  "cdif:formats_InstanceVariable": {
+                    "@id": "ex:DV/FeXAS/iv/fluorescenceintensity"
+                  }
+                }
+              },
+              {
+                "@id": "ex:DV/FeXAS/2/dsc/incidentintensity",
+                "@type": [
+                  "cdi:MeasureComponent"
+                ],
+                "cdif:isDefinedBy_RepresentedVariable": {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/rv/incidentintensity",
+                  "@type": [
+                    "cdi:RepresentedVariable"
+                  ],
+                  "schema:name": "incident intensity",
+                  "cdif:name": {
+                    "@type": [
+                      "cdi:ObjectName"
+                    ],
+                    "cdif:name": "incident intensity"
+                  }
+                },
+                "cdif:hasPhysicalMapping": {
+                  "@id": "ex:DV/FeXAS/2/pm/incidentintensity",
+                  "@type": [
+                    "cdif:LocatorMapping"
+                  ],
+                  "cdif:locator": "/Fe_a2n.001/instrument/i0/data",
+                  "cdif:physicalDataType": "xsd:decimal",
+                  "cdif:formats_InstanceVariable": {
+                    "@id": "ex:DV/FeXAS/iv/incidentintensity"
+                  }
+                }
+              },
+              {
+                "@id": "ex:DV/FeXAS/2/dsc/monochromatorenergy",
+                "@type": [
+                  "cdi:DimensionComponent"
+                ],
+                "cdif:isDefinedBy_RepresentedVariable": {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/rv/monochromatorenergy",
+                  "@type": [
+                    "cdi:RepresentedVariable"
+                  ],
+                  "schema:name": "monochromator energy",
+                  "cdif:name": {
+                    "@type": [
+                      "cdi:ObjectName"
+                    ],
+                    "cdif:name": "monochromator energy"
+                  }
+                },
+                "cdif:hasPhysicalMapping": {
+                  "@id": "ex:DV/FeXAS/2/pm/monochromatorenergy",
+                  "@type": [
+                    "cdif:LocatorMapping"
+                  ],
+                  "cdif:locator": "/Fe_a2n.001/instrument/monochromator/energy",
+                  "cdif:physicalDataType": "xsd:decimal",
+                  "cdif:formats_InstanceVariable": {
+                    "@id": "ex:DV/FeXAS/iv/monochromatorenergy"
+                  }
+                }
+              }
+            ]
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_a2n.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_a2n.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-10 21:14:18/2020-08-10 21:29:09",
           "dcterms:conformsTo": [
             {
@@ -402,13 +408,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_a2n.002",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_a2n.002  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_a2n.002",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_a2n.002",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_a2n.002",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-10 22:15:06/2020-08-10 22:29:57",
           "dcterms:conformsTo": [
             {
@@ -419,13 +432,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_a41.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_a41.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_a41.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_a41.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_a41.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-12 02:17:59/2020-08-12 02:32:50",
           "dcterms:conformsTo": [
             {
@@ -436,13 +456,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_a41.001_01",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_a41.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_a41.001_01",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_a41.001_01",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_a41.001_01",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-12 02:17:59/2020-08-12 02:32:50",
           "dcterms:conformsTo": [
             {
@@ -453,13 +480,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_b88.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_b88.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_b88.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_b88.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_b88.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-10 17:26:19/2020-08-10 17:41:10",
           "dcterms:conformsTo": [
             {
@@ -470,13 +504,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_b88.001_01",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_b88.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_b88.001_01",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_b88.001_01",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_b88.001_01",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-10 17:26:19/2020-08-10 17:41:10",
           "dcterms:conformsTo": [
             {
@@ -487,13 +528,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_c3d.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_c3d.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_c3d.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_c3d.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_c3d.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-12 04:34:49/2020-08-12 04:49:40",
           "dcterms:conformsTo": [
             {
@@ -504,13 +552,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_c3d.002",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_c3d.002  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_c3d.002",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_c3d.002",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_c3d.002",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-12 03:34:00/2020-08-12 03:48:52",
           "dcterms:conformsTo": [
             {
@@ -521,13 +576,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_c75.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_c75.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_c75.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_c75.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_c75.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-11 03:14:31/2020-08-11 03:29:23",
           "dcterms:conformsTo": [
             {
@@ -538,13 +600,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_d22.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_d22.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_d22.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_d22.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_d22.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-11 17:41:11/2020-08-11 17:56:02",
           "dcterms:conformsTo": [
             {
@@ -555,13 +624,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_g1a.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_g1a.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_g1a.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_g1a.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_g1a.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-10 14:52:00/2020-08-10 15:06:51",
           "dcterms:conformsTo": [
             {
@@ -572,13 +648,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_g4x.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_g4x.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_g4x.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_g4x.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_g4x.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-10 11:19:21/2020-08-10 11:34:12",
           "dcterms:conformsTo": [
             {
@@ -589,13 +672,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_h02.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_h02.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_h02.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_h02.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_h02.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-12 14:34:55/2020-08-12 14:49:46",
           "dcterms:conformsTo": [
             {
@@ -606,13 +696,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_j72.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_j72.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_j72.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_j72.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_j72.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-11 06:16:55/2020-08-11 06:31:46",
           "dcterms:conformsTo": [
             {
@@ -623,13 +720,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_ju8.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_ju8.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_ju8.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_ju8.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_ju8.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-10 12:50:32/2020-08-10 13:05:23",
           "dcterms:conformsTo": [
             {
@@ -640,13 +744,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_k66.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_k66.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_k66.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_k66.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_k66.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-11 20:13:10/2020-08-11 20:28:02",
           "dcterms:conformsTo": [
             {
@@ -657,13 +768,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_n19.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_n19.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_n19.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_n19.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_n19.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-12 16:21:30/2020-08-12 16:36:21",
           "dcterms:conformsTo": [
             {
@@ -674,13 +792,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_r93.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_r93.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_r93.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_r93.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_r93.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-11 18:57:10/2020-08-11 19:12:01",
           "dcterms:conformsTo": [
             {
@@ -691,13 +816,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_s33.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_s33.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_s33.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_s33.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_s33.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-12 14:04:30/2020-08-12 14:19:21",
           "dcterms:conformsTo": [
             {
@@ -708,13 +840,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_s38.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_s38.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_s38.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_s38.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_s38.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-12 00:01:11/2020-08-12 00:16:03",
           "dcterms:conformsTo": [
             {
@@ -725,13 +864,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_u71.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_u71.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_u71.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_u71.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_u71.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-12 11:17:05/2020-08-12 11:31:56",
           "dcterms:conformsTo": [
             {
@@ -742,13 +888,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_v47.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_v47.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_v47.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_v47.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_v47.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-11 22:29:59/2020-08-11 22:44:50",
           "dcterms:conformsTo": [
             {
@@ -759,13 +912,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_w23.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_w23.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_w23.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_w23.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_w23.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-10 20:13:30/2020-08-10 20:28:21",
           "dcterms:conformsTo": [
             {
@@ -776,13 +936,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_w37.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_w37.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_w37.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_w37.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_w37.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-11 05:00:54/2020-08-11 05:15:45",
           "dcterms:conformsTo": [
             {
@@ -793,13 +960,20 @@
         {
           "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_x56.001",
           "@type": [
-            "schema:MediaObject"
+            "schema:MediaObject",
+            "schema:Dataset"
           ],
           "schema:name": "Fe_x56.001  [Fe K edge]",
           "schema:contentUrl": "https://w3id.org/cdif/testing/FeXAS#/Fe_x56.001",
           "cdi:isStructuredBy": {
             "@id": "ex:DV/FeXAS/structure/2"
           },
+          "schema:identifier": "https://w3id.org/cdif/testing/FeXAS#/Fe_x56.001",
+          "schema:url": "https://w3id.org/cdif/testing/FeXAS#/Fe_x56.001",
+          "schema:dateModified": "2026-07-28",
+          "schema:license": [
+            "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
           "schema:temporalCoverage": "2020-08-12 21:57:17/2020-08-12 22:12:09",
           "dcterms:conformsTo": [
             {
@@ -1065,7 +1239,7 @@
   "schema:temporalCoverage": "2020-08-10 09:18:48/2020-08-12 22:12:09",
   "schema:variableMeasured": [
     {
-      "@id": "ex:DV/FeXAS/1/iv/absorptioncoefficient",
+      "@id": "ex:DV/FeXAS/iv/absorptioncoefficient",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -1083,7 +1257,7 @@
       ]
     },
     {
-      "@id": "ex:DV/FeXAS/1/iv/fluorescenceabsorptioncoefficient",
+      "@id": "ex:DV/FeXAS/iv/fluorescenceabsorptioncoefficient",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -1104,7 +1278,7 @@
       }
     },
     {
-      "@id": "ex:DV/FeXAS/1/iv/fluorescenceintensity",
+      "@id": "ex:DV/FeXAS/iv/fluorescenceintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -1122,7 +1296,7 @@
       ]
     },
     {
-      "@id": "ex:DV/FeXAS/1/iv/incidentintensity",
+      "@id": "ex:DV/FeXAS/iv/incidentintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -1140,7 +1314,7 @@
       ]
     },
     {
-      "@id": "ex:DV/FeXAS/1/iv/monochromatorenergy",
+      "@id": "ex:DV/FeXAS/iv/monochromatorenergy",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -1159,7 +1333,7 @@
       "schema:unitText": "eV"
     },
     {
-      "@id": "ex:DV/FeXAS/1/iv/transmittedintensity",
+      "@id": "ex:DV/FeXAS/iv/transmittedintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -1175,82 +1349,6 @@
       "cdif:uses": [
         "https://w3id.org/cdif/testing/FeXAS/rv/transmittedintensity"
       ]
-    },
-    {
-      "@id": "ex:DV/FeXAS/2/iv/fluorescenceabsorptioncoefficient",
-      "@type": [
-        "cdi:InstanceVariable",
-        "schema:PropertyValue"
-      ],
-      "schema:name": "mufluor",
-      "schema:description": "fluorescence absorptioncoefficient",
-      "schema:propertyID": [
-        {
-          "@id": "xas:fluorescenceabsorptioncoefficient"
-        }
-      ],
-      "cdif:physicalDataType": "xsd:decimal",
-      "cdif:uses": [
-        "https://w3id.org/cdif/testing/FeXAS/rv/fluorescenceabsorptioncoefficient"
-      ],
-      "schema:unitCode": {
-        "@id": "http://qudt.org/vocab/unit/UNITLESS"
-      }
-    },
-    {
-      "@id": "ex:DV/FeXAS/2/iv/fluorescenceintensity",
-      "@type": [
-        "cdi:InstanceVariable",
-        "schema:PropertyValue"
-      ],
-      "schema:name": "data",
-      "schema:description": "fluorescence intensity",
-      "schema:propertyID": [
-        {
-          "@id": "xas:fluorescenceintensity"
-        }
-      ],
-      "cdif:physicalDataType": "xsd:decimal",
-      "cdif:uses": [
-        "https://w3id.org/cdif/testing/FeXAS/rv/fluorescenceintensity"
-      ]
-    },
-    {
-      "@id": "ex:DV/FeXAS/2/iv/incidentintensity",
-      "@type": [
-        "cdi:InstanceVariable",
-        "schema:PropertyValue"
-      ],
-      "schema:name": "data",
-      "schema:description": "incident intensity",
-      "schema:propertyID": [
-        {
-          "@id": "xas:incidentintensity"
-        }
-      ],
-      "cdif:physicalDataType": "xsd:decimal",
-      "cdif:uses": [
-        "https://w3id.org/cdif/testing/FeXAS/rv/incidentintensity"
-      ]
-    },
-    {
-      "@id": "ex:DV/FeXAS/2/iv/monochromatorenergy",
-      "@type": [
-        "cdi:InstanceVariable",
-        "schema:PropertyValue"
-      ],
-      "schema:name": "energy",
-      "schema:description": "monochromator energy",
-      "schema:propertyID": [
-        {
-          "@id": "xas:monochromatorenergy"
-        }
-      ],
-      "cdif:physicalDataType": "xsd:decimal",
-      "cdif:uses": [
-        "https://w3id.org/cdif/testing/FeXAS/rv/monochromatorenergy"
-      ],
-      "schema:unitText": "eV"
     }
   ],
   "schema:subjectOf": {

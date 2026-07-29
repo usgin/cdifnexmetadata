@@ -67,6 +67,26 @@ def _scan(f, name, dets=("i0", "itrans"), facility="APS", title=None,
 # structure of the document
 # ---------------------------------------------------------------------------
 
+
+def _structures(doc):
+    """Every distinct structure in a document, wherever it is stated.
+
+    Structures sit on the parts that have them, inline on the first part
+    and by @id reference on the rest, so collecting them means walking
+    the parts and keeping the ones defined rather than referenced. A file
+    with no parts states its structure on the distribution instead.
+    """
+    dist = doc["schema:distribution"][0]
+    found = {}
+    for part in dist.get("schema:hasPart", []):
+        s = part.get("cdi:isStructuredBy")
+        if isinstance(s, dict) and "cdi:has_DataStructureComponent" in s:
+            found[s["@id"]] = s
+    if not found:
+        for s in dist.get("cdi:isStructuredBy", []):
+            found[s["@id"]] = s
+    return list(found.values())
+
 def test_arrays_become_variables_and_scalars_become_context(tmp_path):
     """The distinction that drives the layout: a measured array is a
     variable, a scalar describes the conditions it was measured under."""
@@ -95,7 +115,7 @@ def test_every_variable_round_trips_to_a_structure_component(tmp_path):
     used = {u for v in doc["schema:variableMeasured"] for u in v["cdif:uses"]}
     defined = {
         c["cdif:isDefinedBy_RepresentedVariable"]["@id"]
-        for s in doc["schema:distribution"][0]["cdi:isStructuredBy"]
+        for s in _structures(doc)
         for c in s["cdi:has_DataStructureComponent"]
     }
     assert used and used == defined
@@ -107,7 +127,7 @@ def test_hdf5_paths_are_locators_not_indices(tmp_path):
         _scan(f, "scan1")
 
     doc = _emit(p, _xas_crosswalk(tmp_path)).document
-    mapping = doc["schema:distribution"][0]["cdi:isStructuredBy"][0][
+    mapping = _structures(doc)[0][
         "cdi:has_DataStructureComponent"][0]["cdif:hasPhysicalMapping"]
     assert mapping["@type"] == ["cdif:LocatorMapping"]
     assert mapping["cdif:locator"].startswith("/scan1/")
@@ -122,7 +142,7 @@ def test_the_energy_axis_is_a_dimension_not_a_measure(tmp_path):
     doc = _emit(p, _xas_crosswalk(tmp_path)).document
     by_concept = {
         c["@id"].rsplit("/", 1)[-1]: c["@type"][0]
-        for s in doc["schema:distribution"][0]["cdi:isStructuredBy"]
+        for s in _structures(doc)
         for c in s["cdi:has_DataStructureComponent"]
     }
     assert by_concept["monochromatorenergy"] == "cdi:DimensionComponent"
@@ -145,10 +165,19 @@ def test_entries_become_parts_sharing_one_structure_by_reference(tmp_path):
     doc = _emit(p, _xas_crosswalk(tmp_path)).document
     parts = doc["schema:distribution"][0]["schema:hasPart"]
     assert len(parts) == 3
-    assert len(doc["schema:distribution"][0]["cdi:isStructuredBy"]) == 1
-    referenced = {p_["cdi:isStructuredBy"]["@id"] for p_ in parts}
-    assert referenced == {doc["schema:distribution"][0]["cdi:isStructuredBy"][0]["@id"]}
-    assert all(p_["@type"] == ["schema:MediaObject"] for p_ in parts)
+    # One structure, stated once.
+    structures = _structures(doc)
+    assert len(structures) == 1
+    # Every part names it, and only the first states it.
+    assert {p_["cdi:isStructuredBy"]["@id"] for p_ in parts} == {
+        structures[0]["@id"]}
+    inline = [p_ for p_ in parts
+              if "cdi:has_DataStructureComponent" in p_["cdi:isStructuredBy"]]
+    assert len(inline) == 1
+    # A part is the bytes AND a dataset: an NXentry has its own
+    # variables and its own structure, which MediaObject alone cannot say.
+    assert all(p_["@type"] == ["schema:MediaObject", "schema:Dataset"]
+               for p_ in parts)
 
 
 def test_a_structurally_different_entry_gets_its_own_structure(tmp_path):
@@ -159,7 +188,7 @@ def test_a_structurally_different_entry_gets_its_own_structure(tmp_path):
         _scan(f, "reference", dets=("i0", "itrans"))
 
     doc = _emit(p, _xas_crosswalk(tmp_path)).document
-    assert len(doc["schema:distribution"][0]["cdi:isStructuredBy"]) == 2
+    assert len(_structures(doc)) == 2
     assert len(doc["schema:distribution"][0]["schema:hasPart"]) == 3
 
 
@@ -418,7 +447,7 @@ def test_physical_mapping_points_back_at_the_variable_it_formats(tmp_path):
     ivs = {v["@id"] for v in doc["schema:variableMeasured"]}
     formatted = {
         c["cdif:hasPhysicalMapping"]["cdif:formats_InstanceVariable"]["@id"]
-        for s in doc["schema:distribution"][0]["cdi:isStructuredBy"]
+        for s in _structures(doc)
         for c in s["cdi:has_DataStructureComponent"]
     }
     assert formatted and formatted <= ivs
@@ -602,13 +631,11 @@ def test_a_non_xas_source_type_that_is_required_uses_the_nil_uri(tmp_path):
     assert by_id["xas:xraysourcetype"] == OGC_NIL_MISSING
 
 
-def test_structures_sit_on_the_distribution_where_the_profile_allows_them(
-    tmp_path,
-):
-    """The JSON Schema admits cdi:isStructuredBy only on a distribution
-    item, and the SHACL rule reaches it as
-    schema:distribution/isStructuredBy. It is also the only place from
-    which one structure can be shared by several parts."""
+def test_structures_sit_on_the_parts_they_describe(tmp_path):
+    """A structure describes one entry's layout, so it belongs to the part
+    that is that entry. On the distribution it would assert of the whole
+    file something true of only some of its parts -- which is wrong the
+    moment two entries differ, as they do here."""
     p = tmp_path / "f.nxs"
     with h5py.File(p, "w") as f:
         _scan(f, "sample1", dets=("i0",))
@@ -618,7 +645,10 @@ def test_structures_sit_on_the_distribution_where_the_profile_allows_them(
     doc = _emit(p, _xas_crosswalk(tmp_path)).document
     assert "cdi:isStructuredBy" not in doc          # not at dataset level
     dist = doc["schema:distribution"][0]
-    structures = dist["cdi:isStructuredBy"]
+    # Not on the distribution either, once there are parts to carry it.
+    assert "cdi:isStructuredBy" not in dist
+
+    structures = _structures(doc)
     assert len(structures) == 2
 
     # Each is defined inline with its components, which is what the
@@ -626,8 +656,8 @@ def test_structures_sit_on_the_distribution_where_the_profile_allows_them(
     # components is the violation.
     assert all(s["cdi:has_DataStructureComponent"] for s in structures)
 
-    # Each part points at the one it uses, so which layout belongs to
-    # which part is expressible even though they share a distribution.
+    # Every part names the structure it has, and the two layouts here are
+    # distinguished rather than merged.
     defined = {s["@id"] for s in structures}
     referenced = {p_["cdi:isStructuredBy"]["@id"]
                   for p_ in dist["schema:hasPart"]}
