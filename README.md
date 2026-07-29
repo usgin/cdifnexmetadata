@@ -291,6 +291,29 @@ only for concepts the standards crosswalk did not find, and never
 overriding a standards-based value. Recovered values carry a
 `convention` marker. Pass `--no-legacy` to use standard paths only.
 
+### Where concepts actually sit in real files
+
+The crosswalk states NeXus locations in NXDL terms
+(`/ENTRY:NXentry/INSTRUMENT:NXinstrument/monochromator:NXmonochromator/energy`)
+because it is a statement about the standard, checked against the live
+NXDL. No file on disk looks like that: `resolve_mapping` matches each
+`name:NXclass` segment against groups by their `NX_class` attribute, so
+one crosswalk row lands on `/FeFoil.001/instrument/...` in one file and
+`/entry/instrument/...` in another.
+
+So the question "what path does this concept have in real data?" can
+only be answered by reading real data:
+
+    python tools/observed_paths.py
+
+writes `docs/observed-nexus-paths.tsv` — every concept found in
+`exampleData/`, the entry-relative path it was found at, whether that
+path came from the crosswalk or a legacy convention, and the NXDL path
+stated for it. Currently 40 concepts over 47 concept/path pairs, of
+which **7 concepts appear at more than one path** — `beamline` is at
+`/instrument/name` in standards-conforming files and at
+`/instrument/source/beamline_name` in Athena/GSECARS ones.
+
 ## Worked examples
 
 Two sets, kept apart because they answer different questions.
