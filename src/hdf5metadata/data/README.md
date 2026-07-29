@@ -8,6 +8,7 @@ Two kinds of file live here, maintained differently.
 | `xdi-to-cdifxas.sssom.tsv` | copy of an upstream file — **do not edit here** |
 | `cdifsas-to-nexus.sssom.tsv` | authored in this repo — edit here |
 | `legacy-paths.tsv` | authored in this repo — edit here |
+| `cdifxas-units.tsv` | copy of an upstream file — **do not edit here** |
 
 ## Crosswalks copied from upstream
 
@@ -21,8 +22,8 @@ the production RML mapping actually reads.
 
 They are copied in rather than fetched, so this package works offline
 and so a given release is pinned to a known crosswalk revision. The cost
-is that these copies fall behind when the originals change. Refresh both
-with:
+is that these copies fall behind when the originals change. Refresh all
+three with:
 
     python -m hdf5metadata.map.crosswalk --refresh
 
@@ -33,10 +34,11 @@ upstream, which curates the rows as Python tables and validates them
 against the glossary, the live NXDL, and the concept keys the RML
 converter reads. Changing a mapping means editing that script and
 re-running it. To pick up an upstream edit that has not been pushed
-yet, copy the two files across directly rather than refreshing.
+yet, copy them across directly rather than refreshing.
 
 | File | Direction |
 |------|-----------|
+| `cdifxas-units.tsv` | CDIF XAS concept -> QUDT unit. Not a mapping between vocabularies but a fact the glossary asserts about a concept, so not SSSOM. Read where a file records no unit. |
 | `cdifxas-to-nexus.sssom.tsv` | CDIF XAS concept -> NeXus path. Used by the mapper. |
 | `xdi-to-cdifxas.sssom.tsv` | XDI token -> CDIF XAS concept. The other binding; here for reference. |
 

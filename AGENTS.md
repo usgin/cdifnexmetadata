@@ -84,6 +84,23 @@ Carried forward deliberately from the prior codebases surveyed in docs/DESIGN-20
   per-field report of what could *not* be populated. For an extraction tool
   that is the most useful output.
 
+## Units: two properties, two claims
+
+`schema:unitText` is what **the file** recorded. `schema:unitCode` is
+what **the concept** is, from the glossary, and is written only where the
+file is silent. Never write an empty `unitText` -- that asserts the unit
+IS the empty string, and a consumer cannot tell it from a unit nobody
+recorded.
+
+The split is what lets a machine agent distinguish three states it must
+act on differently: the file says eV; the concept is dimensionless
+(`unit:UNITLESS`, no format records this because to a physicist it goes
+without saying); nobody knows. Detector intensities are the third case --
+arbitrary counts, not dimensionless -- so they get nothing, deliberately.
+
+The glossary's claims arrive as `data/cdifxas-units.tsv`, generated
+upstream by `build_crosswalk.py`. Its absence is not an error.
+
 ## Sentinel values
 
 Aligned with the CDIF-XAS pipeline (`smrgeoinfo/cdif-xas`), so documents from
@@ -113,6 +130,19 @@ came from.
 
 None of these appears as a field in any of the 272 files in the XAS Data
 Library. A crosswalk row for one would map something that does not exist.
+
+## Locators belong to the mapping, not the variable
+
+The path a value came from is emitted as `cdif:locator` inside
+`cdif:hasPhysicalMapping` on the DataStructureComponent, typed
+`cdif:LocatorMapping`, with `cdif:formats_InstanceVariable` pointing back
+at the variable. Do not move it onto the InstanceVariable: in DDI-CDI
+physical position is a property of the mapping from bytes to meaning, and
+the variable carries `propertyID` and `physicalDataType` instead.
+
+Every variable in the corpus has one. If a count says otherwise, check
+the test -- grepping for `"/entry/` misses files whose entry is named
+something else, which is most of them.
 
 ## Gotchas already known
 

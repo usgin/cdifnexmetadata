@@ -291,6 +291,29 @@ only for concepts the standards crosswalk did not find, and never
 overriding a standards-based value. Recovered values carry a
 `convention` marker. Pass `--no-legacy` to use standard paths only.
 
+### Units
+
+Two properties carry two different claims, and the difference matters to
+anything trying to load the numbers:
+
+| property | means | comes from |
+|---|---|---|
+| `schema:unitText` | what this file recorded | the `units` attribute on the dataset |
+| `schema:unitCode` | what the concept is, as a QUDT IRI | `data/cdifxas-units.tsv`, generated from the glossary |
+
+`unitCode` is written only where the file is silent, so a file-recorded
+unit is never overridden by a vocabulary claim. Neither is written when
+neither source knows -- an empty `unitText` would assert that the unit is
+the empty string.
+
+Over the examples: 11 variables get a unit from their file, 2 from their
+concept, and 18 from neither. Thirteen of those 18 are detector
+intensities, which are arbitrary counts rather than dimensionless and
+should not be given a unit. Four are `absorptioncoefficient`, which
+cannot be given one until the glossary settles whether that concept is
+mu (inverse length, as its definition says) or mu*t (dimensionless, as
+every file stores).
+
 ### Where concepts actually sit in real files
 
 The crosswalk states NeXus locations in NXDL terms

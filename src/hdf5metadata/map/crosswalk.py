@@ -46,7 +46,8 @@ UPSTREAM_BASE = (
     "https://raw.githubusercontent.com/smrgeoinfo/XAS-CDIF/"
     "cdifxasRelease/crosswalk/"
 )
-UPSTREAM_FILES = ("cdifxas-to-nexus.sssom.tsv", "xdi-to-cdifxas.sssom.tsv")
+UPSTREAM_FILES = ("cdifxas-to-nexus.sssom.tsv", "xdi-to-cdifxas.sssom.tsv",
+                  "cdifxas-units.tsv")
 
 #: Predicates we treat as "this concept is this field". closeMatch is
 #: included because a close match still identifies the right field; the
@@ -494,7 +495,16 @@ def _refresh(data_dir: Path = DATA_DIR) -> int:
             continue
         dest = data_dir / name
         dest.write_text(text, encoding="utf-8")
-        print(f"refreshed {name}: {len(load_crosswalk(dest).mappings)} mappings")
+        # cdifxas-units.tsv is not SSSOM, so it gets a row count rather
+        # than a mapping count -- parsing it as a mapping set would report
+        # a meaningless number.
+        if name.endswith(".sssom.tsv"):
+            print(f"refreshed {name}: "
+                  f"{len(load_crosswalk(dest).mappings)} mappings")
+        else:
+            rows = sum(1 for ln in text.splitlines()
+                       if ln and not ln.startswith("#")) - 1
+            print(f"refreshed {name}: {rows} rows")
     return 1 if failed else 0
 
 
