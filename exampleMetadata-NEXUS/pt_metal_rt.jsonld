@@ -187,6 +187,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Pt L3-edge measurement in transmission recorded as entry /entry.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Platinum",
+              "schema:termCode": "Pt",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "L3-edge",
+              "schema:termCode": "L3",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2001-06-27T04:10:45",
           "dcterms:conformsTo": [
             {

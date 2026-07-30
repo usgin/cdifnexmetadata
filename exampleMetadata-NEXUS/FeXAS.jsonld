@@ -247,6 +247,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in transmission recorded as entry /FeFoil.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2020-08-10 09:18:48/2020-08-10 09:22:32",
           "dcterms:conformsTo": [
             {
@@ -398,6 +425,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_a2n.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2020-08-10 21:14:18/2020-08-10 21:29:09",
           "dcterms:conformsTo": [
             {
@@ -421,6 +475,33 @@
           "schema:dateModified": "2026-07-28",
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_a2n.002.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
           ],
           "schema:temporalCoverage": "2020-08-10 22:15:06/2020-08-10 22:29:57",
           "dcterms:conformsTo": [
@@ -446,6 +527,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_a41.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2020-08-12 02:17:59/2020-08-12 02:32:50",
           "dcterms:conformsTo": [
             {
@@ -469,6 +577,33 @@
           "schema:dateModified": "2026-07-28",
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_a41.001_01.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
           ],
           "schema:temporalCoverage": "2020-08-12 02:17:59/2020-08-12 02:32:50",
           "dcterms:conformsTo": [
@@ -494,6 +629,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_b88.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2020-08-10 17:26:19/2020-08-10 17:41:10",
           "dcterms:conformsTo": [
             {
@@ -517,6 +679,33 @@
           "schema:dateModified": "2026-07-28",
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_b88.001_01.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
           ],
           "schema:temporalCoverage": "2020-08-10 17:26:19/2020-08-10 17:41:10",
           "dcterms:conformsTo": [
@@ -542,6 +731,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_c3d.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2020-08-12 04:34:49/2020-08-12 04:49:40",
           "dcterms:conformsTo": [
             {
@@ -565,6 +781,33 @@
           "schema:dateModified": "2026-07-28",
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_c3d.002.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
           ],
           "schema:temporalCoverage": "2020-08-12 03:34:00/2020-08-12 03:48:52",
           "dcterms:conformsTo": [
@@ -590,6 +833,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_c75.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2020-08-11 03:14:31/2020-08-11 03:29:23",
           "dcterms:conformsTo": [
             {
@@ -613,6 +883,33 @@
           "schema:dateModified": "2026-07-28",
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_d22.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
           ],
           "schema:temporalCoverage": "2020-08-11 17:41:11/2020-08-11 17:56:02",
           "dcterms:conformsTo": [
@@ -638,6 +935,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_g1a.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2020-08-10 14:52:00/2020-08-10 15:06:51",
           "dcterms:conformsTo": [
             {
@@ -661,6 +985,33 @@
           "schema:dateModified": "2026-07-28",
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_g4x.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
           ],
           "schema:temporalCoverage": "2020-08-10 11:19:21/2020-08-10 11:34:12",
           "dcterms:conformsTo": [
@@ -686,6 +1037,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_h02.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2020-08-12 14:34:55/2020-08-12 14:49:46",
           "dcterms:conformsTo": [
             {
@@ -709,6 +1087,33 @@
           "schema:dateModified": "2026-07-28",
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_j72.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
           ],
           "schema:temporalCoverage": "2020-08-11 06:16:55/2020-08-11 06:31:46",
           "dcterms:conformsTo": [
@@ -734,6 +1139,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_ju8.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2020-08-10 12:50:32/2020-08-10 13:05:23",
           "dcterms:conformsTo": [
             {
@@ -757,6 +1189,33 @@
           "schema:dateModified": "2026-07-28",
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_k66.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
           ],
           "schema:temporalCoverage": "2020-08-11 20:13:10/2020-08-11 20:28:02",
           "dcterms:conformsTo": [
@@ -782,6 +1241,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_n19.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2020-08-12 16:21:30/2020-08-12 16:36:21",
           "dcterms:conformsTo": [
             {
@@ -805,6 +1291,33 @@
           "schema:dateModified": "2026-07-28",
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_r93.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
           ],
           "schema:temporalCoverage": "2020-08-11 18:57:10/2020-08-11 19:12:01",
           "dcterms:conformsTo": [
@@ -830,6 +1343,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_s33.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2020-08-12 14:04:30/2020-08-12 14:19:21",
           "dcterms:conformsTo": [
             {
@@ -853,6 +1393,33 @@
           "schema:dateModified": "2026-07-28",
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_s38.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
           ],
           "schema:temporalCoverage": "2020-08-12 00:01:11/2020-08-12 00:16:03",
           "dcterms:conformsTo": [
@@ -878,6 +1445,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_u71.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2020-08-12 11:17:05/2020-08-12 11:31:56",
           "dcterms:conformsTo": [
             {
@@ -901,6 +1495,33 @@
           "schema:dateModified": "2026-07-28",
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_v47.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
           ],
           "schema:temporalCoverage": "2020-08-11 22:29:59/2020-08-11 22:44:50",
           "dcterms:conformsTo": [
@@ -926,6 +1547,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_w23.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2020-08-10 20:13:30/2020-08-10 20:28:21",
           "dcterms:conformsTo": [
             {
@@ -950,6 +1598,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_w37.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2020-08-11 05:00:54/2020-08-11 05:15:45",
           "dcterms:conformsTo": [
             {
@@ -973,6 +1648,33 @@
           "schema:dateModified": "2026-07-28",
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
+          ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in fluorescence recorded as entry /Fe_x56.001.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
           ],
           "schema:temporalCoverage": "2020-08-12 21:57:17/2020-08-12 22:12:09",
           "dcterms:conformsTo": [

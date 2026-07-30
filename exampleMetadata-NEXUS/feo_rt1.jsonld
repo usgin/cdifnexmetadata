@@ -187,6 +187,33 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Fe K-edge measurement in transmission recorded as entry /entry.",
+          "schema:keywords": [
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "Iron",
+              "schema:termCode": "Fe",
+              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
+              "schema:about": "element.symbol"
+            },
+            {
+              "@type": [
+                "schema:DefinedTerm"
+              ],
+              "schema:name": "K-edge",
+              "schema:termCode": "K",
+              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
+              "schema:about": "element.edge"
+            }
+          ],
           "schema:temporalCoverage": "2001-08-10T11:10:00",
           "dcterms:conformsTo": [
             {

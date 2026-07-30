@@ -415,6 +415,32 @@ def _emit_entry(
                 "schema:conditionsOfAccess", "schema:creator"):
         if inherited and key in inherited:
             part[key] = inherited[key]
+
+    # CDIF recommends a description and keywords for anything discoverable,
+    # and a part typed as a Dataset is exactly that. Built from what this
+    # entry measured rather than from the file's aggregate, so the 26
+    # spectra in one container are told apart rather than described 26
+    # times identically.
+    subject = _entry_subject(record)
+    element, edge, mode = (subject.get("element"), subject.get("edge"),
+                           subject.get("mode"))
+    sentence = []
+    if element and edge:
+        sentence.append(f"{element} {edge}-edge measurement")
+    elif element:
+        sentence.append(f"{element} measurement")
+    else:
+        sentence.append("Measurement")
+    if mode:
+        sentence.append(f"in {mode.lower()}")
+    sentence.append(f"recorded as entry {record.entry_path}")
+    part["schema:description"] = " ".join(sentence) + "."
+
+    pairs = [("element", element)] if element else []
+    if edge:
+        pairs.append(("edge", edge))
+    if pairs:
+        part["schema:keywords"] = _keywords(pairs)
     # `.title`, `.start_time` and `.end_time` are properties on both
     # NXEntry and XDIEntry. Going through them rather than a NeXus-only
     # field lookup is what lets this function serve either binding.
@@ -595,6 +621,25 @@ def _place_scalars(
             buckets[slot.target].append(
                 _property_value(slot.prop, cv, base, slot.label))
     return buckets
+
+
+def _entry_subject(record: ConceptRecord) -> dict[str, str]:
+    """The element, edge and detection mode this one entry measured.
+
+    The document aggregates these across every entry, which is right for
+    the file as a whole and useless for telling one part from another. A
+    catalogue harvesting 26 spectra needs to know that this one is the Fe
+    K edge and that one is not.
+    """
+    out: dict[str, str] = {}
+    for concept, key in (("cdifxas:elementanalyzed", "element"),
+                         ("cdifxas:edgeanalyzed", "edge"),
+                         ("cdifxas:xasmeasurementmode", "mode")):
+        for cv in record.values.get(concept, []):
+            if cv.value is not None and not cv.is_array:
+                out[key] = _text(cv.value)
+                break
+    return out
 
 
 def _keywords(pairs: list[tuple[str, str]]) -> list[dict[str, Any]]:
@@ -790,6 +835,13 @@ def emit_document(
     part_defaults: dict[str, Any] = {
         "schema:dateModified": _modified(inspection),
         "schema:license": [OGC_NIL_MISSING],
+        # Neither format records a depositor. The sentinel says "looked,
+        # absent" for a part exactly as it does for the file; a deployment
+        # with real depositor information overlays both.
+        "schema:creator": {
+            "@type": ["schema:Person"],
+            "schema:name": MISSING_TEXT,
+        },
     }
 
     for n, (_sig, group) in enumerate(mapping.structure_groups().items(), 1):

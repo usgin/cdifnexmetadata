@@ -187,6 +187,13 @@
           "schema:license": [
             "http://www.opengis.net/def/nil/OGC/0/missing"
           ],
+          "schema:creator": {
+            "@type": [
+              "schema:Person"
+            ],
+            "schema:name": "Missing"
+          },
+          "schema:description": "Measurement recorded as entry /entry.",
           "schema:temporalCoverage": "['2016-06-23T12:02:31-06:00']/['2016-06-23T16:00:20-06:00']",
           "dcterms:conformsTo": [
             {
