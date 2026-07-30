@@ -461,7 +461,8 @@
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_Sr_slawsonite_15K_01/rv/monochromatorenergy"
-      ]
+      ],
+      "schema:unitText": "eV"
     },
     {
       "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/iv/referenceabsorptioncoefficient",

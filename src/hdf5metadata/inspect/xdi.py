@@ -105,6 +105,11 @@ class XDIResult:
     headers: dict[str, str] = field(default_factory=dict)
     #: Column number -> label, from the `Column.N` headers.
     columns: dict[int, str] = field(default_factory=dict)
+    #: Column number -> unit, where the label carried one. The XDI
+    #: dictionary allows `Column.1: energy eV`, and 33 of the 55 files in
+    #: the reference corpus use it, so the unit is recorded rather than
+    #: discarded with the rest of the label.
+    column_units: dict[int, str] = field(default_factory=dict)
     #: Labels from the line after the header-end, when present. Files
     #: routinely give these instead of `Column.N` headers.
     array_labels: list[str] = field(default_factory=list)
@@ -138,6 +143,31 @@ class XDIResult:
         if self.columns:
             return [self.columns[n] for n in sorted(self.columns)]
         return list(self.array_labels)
+
+
+
+def _split_column_label(value: str) -> tuple[str, str | None]:
+    """`Column.N` value -> (name, unit).
+
+    The XDI dictionary writes a column label as a name optionally
+    followed by a unit: `energy eV`. Beamline software sometimes appends
+    its own provenance after a `||` separator --
+    `itrans counts || 13BMD:scaler1_calc3.VAL` -- which is neither name
+    nor unit, so anything from the separator on is dropped first.
+
+    Only a second token is taken as a unit. A third would mean the label
+    is prose rather than `name unit`, and guessing which word is the unit
+    would be worse than recording none.
+    """
+    if not value:
+        return "", None
+    head = value.split("||", 1)[0].strip()
+    parts = head.split()
+    if not parts:
+        return "", None
+    if len(parts) == 2:
+        return parts[0], parts[1]
+    return parts[0], None
 
 
 def inspect_xdi(
@@ -222,7 +252,10 @@ def inspect_xdi(
     for key, value in result.headers.items():
         head, _, tag = key.partition(".")
         if head.lower() == "column" and tag.isdigit():
-            result.columns[int(tag)] = value.split()[0] if value else ""
+            name, unit = _split_column_label(value)
+            result.columns[int(tag)] = name
+            if unit:
+                result.column_units[int(tag)] = unit
 
     if not in_header and result.row_count == 0:
         result.warnings.append("header parsed but no data rows were found")

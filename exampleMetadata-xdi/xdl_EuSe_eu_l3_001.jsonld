@@ -437,7 +437,8 @@
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_EuSe_eu_l3_001/rv/monochromatorenergy"
-      ]
+      ],
+      "schema:unitText": "eV"
     },
     {
       "@id": "ex:DV/xdl_EuSe_eu_l3_001/iv/transmittedintensity",

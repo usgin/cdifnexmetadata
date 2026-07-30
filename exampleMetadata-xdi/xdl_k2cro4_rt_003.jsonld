@@ -469,7 +469,8 @@
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_k2cro4_rt_003/rv/monochromatorenergy"
-      ]
+      ],
+      "schema:unitText": "eV"
     },
     {
       "@id": "ex:DV/xdl_k2cro4_rt_003/iv/referenceintensity",

@@ -421,7 +421,8 @@
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/valid_angle_dspacing/rv/angle"
-      ]
+      ],
+      "schema:unitText": "deg"
     }
   ],
   "schema:subjectOf": {

@@ -455,7 +455,8 @@
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_pyrite2_rt_01/rv/monochromatorenergy"
-      ]
+      ],
+      "schema:unitText": "eV"
     }
   ],
   "schema:subjectOf": {

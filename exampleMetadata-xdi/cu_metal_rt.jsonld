@@ -511,7 +511,8 @@
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/cu_metal_rt/rv/monochromatorenergy"
-      ]
+      ],
+      "schema:unitText": "eV"
     },
     {
       "@id": "ex:DV/cu_metal_rt/iv/transmittedintensity",

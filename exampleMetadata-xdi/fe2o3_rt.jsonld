@@ -481,7 +481,8 @@
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/fe2o3_rt/rv/monochromatorenergy"
-      ]
+      ],
+      "schema:unitText": "eV"
     }
   ],
   "schema:subjectOf": {

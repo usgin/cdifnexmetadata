@@ -228,6 +228,27 @@ def test_the_same_emitter_serves_both_bindings(tmp_path):
     assert structures[0]["cdi:has_DataStructureComponent"]
 
 
+
+def test_a_column_label_carrying_a_unit_keeps_it():
+    """The XDI dictionary writes a column label as a name optionally
+    followed by a unit -- `energy eV` -- and 33 of the 55 reference files
+    use it. Taking only the first token threw the unit away, which is the
+    one place the RML pipeline carried more information than this one.
+
+    Beamline software sometimes appends its own provenance after `||`;
+    that is neither name nor unit."""
+    from hdf5metadata.inspect.xdi import _split_column_label as split
+
+    assert split("energy eV") == ("energy", "eV")
+    assert split("itrans counts || 13BMD:scaler1_calc3.VAL") == (
+        "itrans", "counts")
+    # No unit stated, and none invented.
+    assert split("i0") == ("i0", None)
+    assert split("") == ("", None)
+    # Three tokens is prose, not `name unit` -- guessing would be worse
+    # than recording nothing.
+    assert split("energy in eV") == ("energy", None)
+
 @pytest.mark.parametrize("text", [SPACED, CLOSED_UP])
 def test_both_separator_styles_produce_the_same_document(tmp_path, text):
     result = _emit(tmp_path, text)

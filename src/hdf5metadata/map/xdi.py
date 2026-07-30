@@ -247,6 +247,10 @@ def map_xdi(
     # mapper treats a dataset it declines to load: the shape is what the
     # data-structure profile needs, and the numbers are data.
     for position, label in enumerate(xdi.labels, start=1):
+        # The label may have carried a unit -- `Column.1: energy eV`.
+        # It is the file's own statement about the column, so it goes on
+        # the value as units, the same as a NeXus `units` attribute.
+        units = xdi.column_units.get(position)
         canonical = _LABEL_ALIASES.get(label.lower(), label.lower())
         hit = lookup.get(f"column.{canonical}")
         if hit is None:
@@ -260,6 +264,7 @@ def map_xdi(
             unmapped.append(f"Column.{label}")
             record.add(ConceptValue(
                 concept=OGC_NIL_MISSING,
+                units=units,
                 source_path=f"#column:{position}",
                 confidence=0.0,
                 is_array=True,
@@ -276,6 +281,7 @@ def map_xdi(
         concept, predicate, confidence, comment = hit
         record.add(ConceptValue(
             concept=concept,
+            units=units,
             source_path=f"#column:{position}",
             predicate=predicate,
             confidence=confidence,

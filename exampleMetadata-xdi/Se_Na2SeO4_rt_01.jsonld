@@ -437,7 +437,8 @@
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/Se_Na2SeO4_rt_01/rv/monochromatorenergy"
-      ]
+      ],
+      "schema:unitText": "eV"
     },
     {
       "@id": "ex:DV/Se_Na2SeO4_rt_01/iv/transmittedintensity",

@@ -437,7 +437,8 @@
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_V_foil/rv/incidentintensity"
-      ]
+      ],
+      "schema:unitText": "counts"
     },
     {
       "@id": "ex:DV/xdl_V_foil/iv/monochromatorenergy",
@@ -455,7 +456,8 @@
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_V_foil/rv/monochromatorenergy"
-      ]
+      ],
+      "schema:unitText": "eV"
     },
     {
       "@id": "ex:DV/xdl_V_foil/iv/transmittedintensity",
@@ -473,7 +475,8 @@
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_V_foil/rv/transmittedintensity"
-      ]
+      ],
+      "schema:unitText": "counts"
     },
     {
       "@id": "ex:DV/xdl_V_foil/iv/counttime",
@@ -491,7 +494,8 @@
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_V_foil/rv/counttime"
-      ]
+      ],
+      "schema:unitText": "counts"
     }
   ],
   "schema:subjectOf": {
