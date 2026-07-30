@@ -72,10 +72,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/co_metal_rt/1/pm/absorptioncoefficient",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:2",
+                "cdif:index": 2,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 17,
+                "cdi:maximumLength": 21,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/co_metal_rt/iv/absorptioncoefficient"
                 }
@@ -102,10 +104,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/co_metal_rt/1/pm/incidentintensity",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:3",
+                "cdif:index": 3,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 13,
+                "cdi:maximumLength": 17,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/co_metal_rt/iv/incidentintensity"
                 }
@@ -132,10 +136,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/co_metal_rt/1/pm/monochromatorenergy",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:1",
+                "cdif:index": 1,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 11,
+                "cdi:maximumLength": 11,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/co_metal_rt/iv/monochromatorenergy"
                 }

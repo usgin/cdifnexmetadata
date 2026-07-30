@@ -72,10 +72,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/cu_metal_10K/1/pm/absorptioncoefficient",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:2",
+                "cdif:index": 2,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 16,
+                "cdi:maximumLength": 16,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/cu_metal_10K/iv/absorptioncoefficient"
                 }
@@ -102,10 +104,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/cu_metal_10K/1/pm/monochromatorenergy",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:1",
+                "cdif:index": 1,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 15,
+                "cdi:maximumLength": 15,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/cu_metal_10K/iv/monochromatorenergy"
                 }

@@ -249,6 +249,34 @@ def test_a_column_label_carrying_a_unit_keeps_it():
     # than recording nothing.
     assert split("energy in eV") == ("energy", None)
 
+
+def test_a_text_column_gets_a_text_mapping_with_its_field_width(tmp_path):
+    """The physical mapping says how to find the values, and that differs
+    by source. A column index means a text table, so TextMapping with the
+    column and the width a reader slices on; a NeXus path means a
+    container only a bespoke reader opens, so LocatorMapping.
+
+    Width is measured to the end of the field, not the length of the
+    token: a fixed-width layout pads on the left, so in
+    `       12508.00` the value is 8 characters and the field is 15.
+    """
+    p = tmp_path / "f.xdi"
+    p.write_text(SPACED, encoding="utf-8")
+    doc = _emit(tmp_path).document
+    structure = doc["schema:distribution"][0]["cdi:isStructuredBy"][0]
+    mappings = [c["cdif:hasPhysicalMapping"]
+                for c in structure["cdi:has_DataStructureComponent"]]
+    assert mappings, "no physical mappings emitted"
+    assert all(m["@type"] == ["cdif:TextMapping"] for m in mappings)
+    assert all("cdif:index" in m for m in mappings)
+    # No locator: a column position is not a path, and claiming one
+    # would send a reader looking for something that is not there.
+    assert not any("cdif:locator" in m for m in mappings)
+    widths = [(m.get("cdi:minimumLength"), m.get("cdi:maximumLength"))
+              for m in mappings]
+    assert all(w[0] is not None and w[1] is not None for w in widths)
+    assert all(w[0] <= w[1] for w in widths)
+
 @pytest.mark.parametrize("text", [SPACED, CLOSED_UP])
 def test_both_separator_styles_produce_the_same_document(tmp_path, text):
     result = _emit(tmp_path, text)

@@ -251,6 +251,7 @@ def map_xdi(
         # It is the file's own statement about the column, so it goes on
         # the value as units, the same as a NeXus `units` attribute.
         units = xdi.column_units.get(position)
+        width = xdi.column_widths.get(position)
         canonical = _LABEL_ALIASES.get(label.lower(), label.lower())
         hit = lookup.get(f"column.{canonical}")
         if hit is None:
@@ -265,6 +266,8 @@ def map_xdi(
             record.add(ConceptValue(
                 concept=OGC_NIL_MISSING,
                 units=units,
+                index=position,
+                width=width,
                 source_path=f"#column:{position}",
                 confidence=0.0,
                 is_array=True,
@@ -282,6 +285,8 @@ def map_xdi(
         record.add(ConceptValue(
             concept=concept,
             units=units,
+            index=position,
+            width=width,
             source_path=f"#column:{position}",
             predicate=predicate,
             confidence=confidence,

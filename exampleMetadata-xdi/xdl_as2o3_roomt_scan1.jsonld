@@ -72,10 +72,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/xdl_as2o3_roomt_scan1/1/pm/incidentintensity",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:2",
+                "cdif:index": 2,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 15,
+                "cdi:maximumLength": 15,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/xdl_as2o3_roomt_scan1/iv/incidentintensity"
                 }
@@ -102,10 +104,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/xdl_as2o3_roomt_scan1/1/pm/monochromatorenergy",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:1",
+                "cdif:index": 1,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 13,
+                "cdi:maximumLength": 13,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/xdl_as2o3_roomt_scan1/iv/monochromatorenergy"
                 }
@@ -132,10 +136,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/xdl_as2o3_roomt_scan1/1/pm/referenceintensity",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:4",
+                "cdif:index": 4,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 14,
+                "cdi:maximumLength": 15,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/xdl_as2o3_roomt_scan1/iv/referenceintensity"
                 }
@@ -162,10 +168,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/xdl_as2o3_roomt_scan1/1/pm/transmittedintensity",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:3",
+                "cdif:index": 3,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 15,
+                "cdi:maximumLength": 15,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/xdl_as2o3_roomt_scan1/iv/transmittedintensity"
                 }

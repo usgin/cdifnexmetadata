@@ -118,6 +118,16 @@ class XDIResult:
     xdi_version: str | None = None
     application: str | None = None
     row_count: int = 0
+    #: Column number (1-based) -> (min, max) field width in characters,
+    #: measured over the data rows. A field is taken to run from the end
+    #: of the previous field to the end of this one, so the width
+    #: includes the padding in front of the value -- which is what a
+    #: fixed-width reader slices on.
+    #:
+    #: min == max for every column means the file really is fixed-width;
+    #: 21 of the 55 files in the reference corpus are. Where they differ
+    #: the file is whitespace-separated and a reader must tokenise.
+    column_widths: dict[int, tuple[int, int]] = field(default_factory=dict)
     entries: list[XDIEntry] = field(default_factory=list)
     definitions: list[str] = field(default_factory=list)
     default_entry: str | None = None
@@ -144,6 +154,23 @@ class XDIResult:
             return [self.columns[n] for n in sorted(self.columns)]
         return list(self.array_labels)
 
+
+
+
+def _measure_fields(result: "XDIResult", line: str) -> None:
+    """Widen each column's observed field extent by one data row.
+
+    Width is measured to the end of the field rather than the length of
+    the token, because a fixed-width layout pads on the left: in
+    `       12508.00       2.000000`, the value is 8 characters and the
+    field is 15. Slicing needs the 15.
+    """
+    previous_end = 0
+    for position, match in enumerate(re.finditer(r"\S+", line), start=1):
+        width = match.end() - previous_end
+        previous_end = match.end()
+        low, high = result.column_widths.get(position, (width, width))
+        result.column_widths[position] = (min(low, width), max(high, width))
 
 
 def _split_column_label(value: str) -> tuple[str, str | None]:
@@ -241,6 +268,7 @@ def inspect_xdi(
                 result.array_labels = stripped.lstrip("#").split()
             continue
         result.row_count += 1
+        _measure_fields(result, line.rstrip("\n"))
 
     if not in_header and pending_labels and not result.array_labels:
         # Label line written as the last header comment rather than after

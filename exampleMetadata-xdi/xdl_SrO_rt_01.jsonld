@@ -72,10 +72,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/xdl_SrO_rt_01/1/pm/absorptioncoefficient",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:2",
+                "cdif:index": 2,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 12,
+                "cdi:maximumLength": 12,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/xdl_SrO_rt_01/iv/absorptioncoefficient"
                 }
@@ -102,10 +104,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/xdl_SrO_rt_01/1/pm/fluorescenceabsorptioncoefficient",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:3",
+                "cdif:index": 3,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 12,
+                "cdi:maximumLength": 12,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/xdl_SrO_rt_01/iv/fluorescenceabsorptioncoefficient"
                 }
@@ -132,10 +136,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/xdl_SrO_rt_01/1/pm/incidentintensity",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:5",
+                "cdif:index": 5,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 12,
+                "cdi:maximumLength": 12,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/xdl_SrO_rt_01/iv/incidentintensity"
                 }
@@ -162,10 +168,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/xdl_SrO_rt_01/1/pm/monochromatorenergy",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:1",
+                "cdif:index": 1,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 11,
+                "cdi:maximumLength": 11,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/xdl_SrO_rt_01/iv/monochromatorenergy"
                 }
@@ -192,10 +200,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/xdl_SrO_rt_01/1/pm/referenceabsorptioncoefficient",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:4",
+                "cdif:index": 4,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 12,
+                "cdi:maximumLength": 12,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/xdl_SrO_rt_01/iv/referenceabsorptioncoefficient"
                 }

@@ -72,10 +72,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/b18_nxs/1/pm/absorptioncoefficient",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:5",
+                "cdif:index": 5,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 16,
+                "cdi:maximumLength": 20,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/b18_nxs/iv/absorptioncoefficient"
                 }
@@ -102,10 +104,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/b18_nxs/1/pm/incidentintensity",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:2",
+                "cdif:index": 2,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 9,
+                "cdi:maximumLength": 10,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/b18_nxs/iv/incidentintensity"
                 }
@@ -132,10 +136,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/b18_nxs/1/pm/monochromatorenergy",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:1",
+                "cdif:index": 1,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 15,
+                "cdi:maximumLength": 20,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/b18_nxs/iv/monochromatorenergy"
                 }
@@ -162,10 +168,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/b18_nxs/1/pm/referenceintensity",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:4",
+                "cdif:index": 4,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 9,
+                "cdi:maximumLength": 10,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/b18_nxs/iv/referenceintensity"
                 }
@@ -192,10 +200,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/b18_nxs/1/pm/transmittedintensity",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:3",
+                "cdif:index": 3,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 9,
+                "cdi:maximumLength": 10,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/b18_nxs/iv/transmittedintensity"
                 }
@@ -222,10 +232,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/b18_nxs/1/pm/lnitiref",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:6",
+                "cdif:index": 6,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 17,
+                "cdi:maximumLength": 22,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/b18_nxs/iv/lnitiref"
                 }
@@ -252,10 +264,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/b18_nxs/1/pm/time",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:7",
+                "cdif:index": 7,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 8,
+                "cdi:maximumLength": 11,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/b18_nxs/iv/time"
                 }

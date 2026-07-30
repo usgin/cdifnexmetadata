@@ -86,6 +86,13 @@ class ConceptValue:
     #: having to read `note`.
     convention: str = ""
 
+    #: Where the value sits when the source is tabular: the 1-based
+    #: column, and the observed field width in characters. Set by the XDI
+    #: binding; a NeXus value has a path instead, and the emitter picks
+    #: the physical-mapping subclass from which of the two it finds.
+    index: int | None = None
+    width: tuple[int, int] | None = None
+
     @property
     def has_value(self) -> bool:
         return self.value is not None

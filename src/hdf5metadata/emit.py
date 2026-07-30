@@ -521,9 +521,40 @@ def _variables(
                 if stated:
                     iv["schema:unitCode"] = {"@id": stated}
             variables.append(iv)
-            # A NeXus path locates an array inside a container; it is not
-            # a column index, so LocatorMapping is the right mapping
-            # subclass. TextMapping + cdif:index is the tabular analog.
+            # The physical mapping says how to find the values, and
+            # that differs by what the source is, so the subclass follows
+            # the facts the value carries rather than the input format.
+            #
+            # A column index means a text table: TextMapping, with the
+            # column and the field width a reader slices on. Where the
+            # observed minimum and maximum widths are equal the file is
+            # genuinely fixed-width and the number is exact; where they
+            # differ the reader must tokenise, and the range says so.
+            #
+            # A path means a container that only a bespoke reader can
+            # open -- h5py for NeXus -- so LocatorMapping, whose locator
+            # is that path.
+            if cv.index is not None:
+                mapping: dict[str, Any] = {
+                    "@id": f"ex:DV/{entry_slug}/pm/{local}",
+                    "@type": ["cdif:TextMapping"],
+                    "cdif:index": cv.index,
+                    "cdif:physicalDataType": _xsd_for(cv.dtype),
+                }
+                if cv.width:
+                    mapping["cdi:minimumLength"] = cv.width[0]
+                    mapping["cdi:maximumLength"] = cv.width[1]
+            else:
+                mapping = {
+                    "@id": f"ex:DV/{entry_slug}/pm/{local}",
+                    "@type": ["cdif:LocatorMapping"],
+                    "cdif:locator": cv.source_path,
+                    "cdif:physicalDataType": _xsd_for(cv.dtype),
+                }
+            # The back-reference closes the loop CDIF expects: the
+            # mapping says which variable it formats, so a consumer can
+            # go from bytes to meaning either way.
+            mapping["cdif:formats_InstanceVariable"] = {"@id": iv_id}
             components.append({
                 "@id": f"ex:DV/{entry_slug}/dsc/{local}",
                 "@type": ["cdi:MeasureComponent"]
@@ -538,16 +569,7 @@ def _variables(
                         "cdif:name": _readable(local),
                     },
                 },
-                "cdif:hasPhysicalMapping": {
-                    "@id": f"ex:DV/{entry_slug}/pm/{local}",
-                    "@type": ["cdif:LocatorMapping"],
-                    "cdif:locator": cv.source_path,
-                    "cdif:physicalDataType": _xsd_for(cv.dtype),
-                    # The back-reference closes the loop CDIF expects:
-                    # the mapping says which variable it formats, so a
-                    # consumer can go from bytes to meaning either way.
-                    "cdif:formats_InstanceVariable": {"@id": iv_id},
-                },
+                "cdif:hasPhysicalMapping": mapping,
             })
     return variables, components
 

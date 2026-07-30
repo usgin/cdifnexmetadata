@@ -72,10 +72,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/cu_metal_rt/1/pm/absorptioncoefficient",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:4",
+                "cdif:index": 4,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 9,
+                "cdi:maximumLength": 14,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/cu_metal_rt/iv/absorptioncoefficient"
                 }
@@ -102,10 +104,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/cu_metal_rt/1/pm/incidentintensity",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:2",
+                "cdif:index": 2,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 9,
+                "cdi:maximumLength": 10,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/cu_metal_rt/iv/incidentintensity"
                 }
@@ -132,10 +136,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/cu_metal_rt/1/pm/monochromatorenergy",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:1",
+                "cdif:index": 1,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 8,
+                "cdi:maximumLength": 10,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/cu_metal_rt/iv/monochromatorenergy"
                 }
@@ -162,10 +168,12 @@
               "cdif:hasPhysicalMapping": {
                 "@id": "ex:DV/cu_metal_rt/1/pm/transmittedintensity",
                 "@type": [
-                  "cdif:LocatorMapping"
+                  "cdif:TextMapping"
                 ],
-                "cdif:locator": "#column:3",
+                "cdif:index": 3,
                 "cdif:physicalDataType": "xsd:decimal",
+                "cdi:minimumLength": 12,
+                "cdi:maximumLength": 15,
                 "cdif:formats_InstanceVariable": {
                   "@id": "ex:DV/cu_metal_rt/iv/transmittedintensity"
                 }
