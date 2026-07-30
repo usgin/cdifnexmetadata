@@ -15,3 +15,11 @@ tests/data/exampledata/
 
 # Generated output
 *.out.jsonld
+
+# uv's lockfile. Not tracked: this is a library rather than a deployed
+# application, so pinning a resolved dependency set for everyone who
+# clones would constrain them without cause. `uv sync --all-extras`
+# resolves afresh -- note the extras, since a bare sync leaves out
+# pytest and the validation dependencies.
+uv.lock
+
