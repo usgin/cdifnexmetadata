@@ -77,7 +77,7 @@
                 "cdif:locator": "#column:3",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/se_na2so4_rt/1/iv/incidentintensity"
+                  "@id": "ex:DV/se_na2so4_rt/iv/incidentintensity"
                 }
               }
             },
@@ -107,7 +107,7 @@
                 "cdif:locator": "#column:1",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/se_na2so4_rt/1/iv/monochromatorenergy"
+                  "@id": "ex:DV/se_na2so4_rt/iv/monochromatorenergy"
                 }
               }
             },
@@ -137,7 +137,7 @@
                 "cdif:locator": "#column:4",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/se_na2so4_rt/1/iv/transmittedintensity"
+                  "@id": "ex:DV/se_na2so4_rt/iv/transmittedintensity"
                 }
               }
             },
@@ -167,25 +167,11 @@
                 "cdif:locator": "#column:2",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/se_na2so4_rt/1/iv/time"
+                  "@id": "ex:DV/se_na2so4_rt/iv/time"
                 }
               }
             }
           ]
-        }
-      ],
-      "schema:hasPart": [
-        {
-          "@id": "https://w3id.org/cdif/testing/se_na2so4_rt/se_na2so4_rt",
-          "@type": [
-            "schema:MediaObject"
-          ],
-          "schema:name": "Na2SeO4",
-          "schema:contentUrl": "https://w3id.org/cdif/testing/se_na2so4_rt#/",
-          "cdi:isStructuredBy": {
-            "@id": "ex:DV/se_na2so4_rt/structure/1"
-          },
-          "schema:temporalCoverage": "2008-04-10T21:58:50"
         }
       ]
     }
@@ -469,14 +455,12 @@
           "schema:name": "transmittedintensity",
           "schema:value": "10cm  N2 (?)"
         }
-      ],
-      "schema:startDate": "2008-04-10T21:58:50"
+      ]
     }
   ],
-  "schema:temporalCoverage": "2008-04-10T21:58:50",
   "schema:variableMeasured": [
     {
-      "@id": "ex:DV/se_na2so4_rt/1/iv/incidentintensity",
+      "@id": "ex:DV/se_na2so4_rt/iv/incidentintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -488,14 +472,13 @@
           "@id": "xas:incidentintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/se_na2so4_rt/rv/incidentintensity"
       ]
     },
     {
-      "@id": "ex:DV/se_na2so4_rt/1/iv/monochromatorenergy",
+      "@id": "ex:DV/se_na2so4_rt/iv/monochromatorenergy",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -507,14 +490,13 @@
           "@id": "xas:monochromatorenergy"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/se_na2so4_rt/rv/monochromatorenergy"
       ]
     },
     {
-      "@id": "ex:DV/se_na2so4_rt/1/iv/transmittedintensity",
+      "@id": "ex:DV/se_na2so4_rt/iv/transmittedintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -526,14 +508,13 @@
           "@id": "xas:transmittedintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/se_na2so4_rt/rv/transmittedintensity"
       ]
     },
     {
-      "@id": "ex:DV/se_na2so4_rt/1/iv/time",
+      "@id": "ex:DV/se_na2so4_rt/iv/time",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -545,7 +526,6 @@
           "@id": "http://www.opengis.net/def/nil/OGC/0/missing"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/se_na2so4_rt/rv/time"

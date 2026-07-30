@@ -77,7 +77,7 @@
                 "cdif:locator": "#column:2",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/co_metal_rt/1/iv/absorptioncoefficient"
+                  "@id": "ex:DV/co_metal_rt/iv/absorptioncoefficient"
                 }
               }
             },
@@ -107,7 +107,7 @@
                 "cdif:locator": "#column:3",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/co_metal_rt/1/iv/incidentintensity"
+                  "@id": "ex:DV/co_metal_rt/iv/incidentintensity"
                 }
               }
             },
@@ -137,25 +137,11 @@
                 "cdif:locator": "#column:1",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/co_metal_rt/1/iv/monochromatorenergy"
+                  "@id": "ex:DV/co_metal_rt/iv/monochromatorenergy"
                 }
               }
             }
           ]
-        }
-      ],
-      "schema:hasPart": [
-        {
-          "@id": "https://w3id.org/cdif/testing/co_metal_rt/co_metal_rt",
-          "@type": [
-            "schema:MediaObject"
-          ],
-          "schema:name": "Co metal foil",
-          "schema:contentUrl": "https://w3id.org/cdif/testing/co_metal_rt#/",
-          "cdi:isStructuredBy": {
-            "@id": "ex:DV/co_metal_rt/structure/1"
-          },
-          "schema:temporalCoverage": "2001-06-26T21:21:20"
         }
       ]
     }
@@ -439,14 +425,12 @@
           "schema:name": "transmittedintensity",
           "schema:value": "10cm  N2"
         }
-      ],
-      "schema:startDate": "2001-06-26T21:21:20"
+      ]
     }
   ],
-  "schema:temporalCoverage": "2001-06-26T21:21:20",
   "schema:variableMeasured": [
     {
-      "@id": "ex:DV/co_metal_rt/1/iv/absorptioncoefficient",
+      "@id": "ex:DV/co_metal_rt/iv/absorptioncoefficient",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -458,14 +442,13 @@
           "@id": "xas:absorptioncoefficient"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/co_metal_rt/rv/absorptioncoefficient"
       ]
     },
     {
-      "@id": "ex:DV/co_metal_rt/1/iv/incidentintensity",
+      "@id": "ex:DV/co_metal_rt/iv/incidentintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -477,14 +460,13 @@
           "@id": "xas:incidentintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/co_metal_rt/rv/incidentintensity"
       ]
     },
     {
-      "@id": "ex:DV/co_metal_rt/1/iv/monochromatorenergy",
+      "@id": "ex:DV/co_metal_rt/iv/monochromatorenergy",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -496,7 +478,6 @@
           "@id": "xas:monochromatorenergy"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/co_metal_rt/rv/monochromatorenergy"

@@ -77,7 +77,7 @@
                 "cdif:locator": "#column:2",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/valid/1/iv/absorptioncoefficient"
+                  "@id": "ex:DV/valid/iv/absorptioncoefficient"
                 }
               }
             },
@@ -107,25 +107,11 @@
                 "cdif:locator": "#column:1",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/valid/1/iv/monochromatorenergy"
+                  "@id": "ex:DV/valid/iv/monochromatorenergy"
                 }
               }
             }
           ]
-        }
-      ],
-      "schema:hasPart": [
-        {
-          "@id": "https://w3id.org/cdif/testing/valid/valid",
-          "@type": [
-            "schema:MediaObject"
-          ],
-          "schema:name": "Cu",
-          "schema:contentUrl": "https://w3id.org/cdif/testing/valid#/",
-          "cdi:isStructuredBy": {
-            "@id": "ex:DV/valid/structure/1"
-          },
-          "schema:temporalCoverage": "1992-09-15T01:52:53"
         }
       ]
     }
@@ -397,14 +383,12 @@
           "schema:name": "edge energy",
           "schema:value": "8980.0 eV"
         }
-      ],
-      "schema:startDate": "1992-09-15T01:52:53"
+      ]
     }
   ],
-  "schema:temporalCoverage": "1992-09-15T01:52:53",
   "schema:variableMeasured": [
     {
-      "@id": "ex:DV/valid/1/iv/absorptioncoefficient",
+      "@id": "ex:DV/valid/iv/absorptioncoefficient",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -416,14 +400,13 @@
           "@id": "xas:absorptioncoefficient"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/valid/rv/absorptioncoefficient"
       ]
     },
     {
-      "@id": "ex:DV/valid/1/iv/monochromatorenergy",
+      "@id": "ex:DV/valid/iv/monochromatorenergy",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -435,7 +418,6 @@
           "@id": "xas:monochromatorenergy"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/valid/rv/monochromatorenergy"

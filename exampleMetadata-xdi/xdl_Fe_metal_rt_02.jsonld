@@ -77,7 +77,7 @@
                 "cdif:locator": "#column:2",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_Fe_metal_rt_02/1/iv/incidentintensity"
+                  "@id": "ex:DV/xdl_Fe_metal_rt_02/iv/incidentintensity"
                 }
               }
             },
@@ -107,7 +107,7 @@
                 "cdif:locator": "#column:1",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_Fe_metal_rt_02/1/iv/monochromatorenergy"
+                  "@id": "ex:DV/xdl_Fe_metal_rt_02/iv/monochromatorenergy"
                 }
               }
             },
@@ -137,25 +137,11 @@
                 "cdif:locator": "#column:3",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_Fe_metal_rt_02/1/iv/transmittedintensity"
+                  "@id": "ex:DV/xdl_Fe_metal_rt_02/iv/transmittedintensity"
                 }
               }
             }
           ]
-        }
-      ],
-      "schema:hasPart": [
-        {
-          "@id": "https://w3id.org/cdif/testing/xdl_Fe_metal_rt_02/xdl_Fe_metal_rt_02",
-          "@type": [
-            "schema:MediaObject"
-          ],
-          "schema:name": "Fe foil  Room Temperature",
-          "schema:contentUrl": "https://w3id.org/cdif/testing/xdl_Fe_metal_rt_02#/",
-          "cdi:isStructuredBy": {
-            "@id": "ex:DV/xdl_Fe_metal_rt_02/structure/1"
-          },
-          "schema:temporalCoverage": "2001-08-09 14:04:00"
         }
       ]
     }
@@ -415,14 +401,12 @@
           "schema:name": "transmittedintensity",
           "schema:value": "N2 15cm"
         }
-      ],
-      "schema:startDate": "2001-08-09 14:04:00"
+      ]
     }
   ],
-  "schema:temporalCoverage": "2001-08-09 14:04:00",
   "schema:variableMeasured": [
     {
-      "@id": "ex:DV/xdl_Fe_metal_rt_02/1/iv/incidentintensity",
+      "@id": "ex:DV/xdl_Fe_metal_rt_02/iv/incidentintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -434,14 +418,13 @@
           "@id": "xas:incidentintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_Fe_metal_rt_02/rv/incidentintensity"
       ]
     },
     {
-      "@id": "ex:DV/xdl_Fe_metal_rt_02/1/iv/monochromatorenergy",
+      "@id": "ex:DV/xdl_Fe_metal_rt_02/iv/monochromatorenergy",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -453,14 +436,13 @@
           "@id": "xas:monochromatorenergy"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_Fe_metal_rt_02/rv/monochromatorenergy"
       ]
     },
     {
-      "@id": "ex:DV/xdl_Fe_metal_rt_02/1/iv/transmittedintensity",
+      "@id": "ex:DV/xdl_Fe_metal_rt_02/iv/transmittedintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -472,7 +454,6 @@
           "@id": "xas:transmittedintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_Fe_metal_rt_02/rv/transmittedintensity"

@@ -77,7 +77,7 @@
                 "cdif:locator": "#column:4",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/nonxafs_1d/1/iv/absorptioncoefficient"
+                  "@id": "ex:DV/nonxafs_1d/iv/absorptioncoefficient"
                 }
               }
             },
@@ -107,7 +107,7 @@
                 "cdif:locator": "#column:2",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/nonxafs_1d/1/iv/incidentintensity"
+                  "@id": "ex:DV/nonxafs_1d/iv/incidentintensity"
                 }
               }
             },
@@ -137,7 +137,7 @@
                 "cdif:locator": "#column:1",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/nonxafs_1d/1/iv/monochromatorenergy"
+                  "@id": "ex:DV/nonxafs_1d/iv/monochromatorenergy"
                 }
               }
             },
@@ -167,25 +167,11 @@
                 "cdif:locator": "#column:3",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/nonxafs_1d/1/iv/transmittedintensity"
+                  "@id": "ex:DV/nonxafs_1d/iv/transmittedintensity"
                 }
               }
             }
           ]
-        }
-      ],
-      "schema:hasPart": [
-        {
-          "@id": "https://w3id.org/cdif/testing/nonxafs_1d/nonxafs_1d",
-          "@type": [
-            "schema:MediaObject"
-          ],
-          "schema:name": "Cu",
-          "schema:contentUrl": "https://w3id.org/cdif/testing/nonxafs_1d#/",
-          "cdi:isStructuredBy": {
-            "@id": "ex:DV/nonxafs_1d/structure/1"
-          },
-          "schema:temporalCoverage": "2001-06-26T22:27:31"
         }
       ]
     }
@@ -449,14 +435,12 @@
           "schema:name": "transmittedintensity",
           "schema:value": "10cm  N2"
         }
-      ],
-      "schema:startDate": "2001-06-26T22:27:31"
+      ]
     }
   ],
-  "schema:temporalCoverage": "2001-06-26T22:27:31",
   "schema:variableMeasured": [
     {
-      "@id": "ex:DV/nonxafs_1d/1/iv/absorptioncoefficient",
+      "@id": "ex:DV/nonxafs_1d/iv/absorptioncoefficient",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -468,14 +452,13 @@
           "@id": "xas:absorptioncoefficient"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/nonxafs_1d/rv/absorptioncoefficient"
       ]
     },
     {
-      "@id": "ex:DV/nonxafs_1d/1/iv/incidentintensity",
+      "@id": "ex:DV/nonxafs_1d/iv/incidentintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -487,14 +470,13 @@
           "@id": "xas:incidentintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/nonxafs_1d/rv/incidentintensity"
       ]
     },
     {
-      "@id": "ex:DV/nonxafs_1d/1/iv/monochromatorenergy",
+      "@id": "ex:DV/nonxafs_1d/iv/monochromatorenergy",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -506,14 +488,13 @@
           "@id": "xas:monochromatorenergy"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/nonxafs_1d/rv/monochromatorenergy"
       ]
     },
     {
-      "@id": "ex:DV/nonxafs_1d/1/iv/transmittedintensity",
+      "@id": "ex:DV/nonxafs_1d/iv/transmittedintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -525,7 +506,6 @@
           "@id": "xas:transmittedintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/nonxafs_1d/rv/transmittedintensity"

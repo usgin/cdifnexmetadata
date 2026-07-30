@@ -77,7 +77,7 @@
                 "cdif:locator": "#column:2",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_CeO2/1/iv/incidentintensity"
+                  "@id": "ex:DV/xdl_CeO2/iv/incidentintensity"
                 }
               }
             },
@@ -107,7 +107,7 @@
                 "cdif:locator": "#column:1",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_CeO2/1/iv/monochromatorenergy"
+                  "@id": "ex:DV/xdl_CeO2/iv/monochromatorenergy"
                 }
               }
             },
@@ -137,25 +137,11 @@
                 "cdif:locator": "#column:3",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_CeO2/1/iv/transmittedintensity"
+                  "@id": "ex:DV/xdl_CeO2/iv/transmittedintensity"
                 }
               }
             }
           ]
-        }
-      ],
-      "schema:hasPart": [
-        {
-          "@id": "https://w3id.org/cdif/testing/xdl_CeO2/xdl_CeO2",
-          "@type": [
-            "schema:MediaObject"
-          ],
-          "schema:name": "CeO2",
-          "schema:contentUrl": "https://w3id.org/cdif/testing/xdl_CeO2#/",
-          "cdi:isStructuredBy": {
-            "@id": "ex:DV/xdl_CeO2/structure/1"
-          },
-          "schema:temporalCoverage": "2017-02-08 10:14:16"
         }
       ]
     }
@@ -394,6 +380,18 @@
             ],
             "schema:propertyID": [
               {
+                "@id": "xas:samplepreparation"
+              }
+            ],
+            "schema:name": "sample preparation",
+            "schema:value": "powder on tape"
+          },
+          {
+            "@type": [
+              "schema:PropertyValue"
+            ],
+            "schema:propertyID": [
+              {
                 "@id": "xas:temperature"
               }
             ],
@@ -427,14 +425,12 @@
           "schema:name": "transmittedintensity",
           "schema:value": "50 nA/V  100 mm N2"
         }
-      ],
-      "schema:startDate": "2017-02-08 10:14:16"
+      ]
     }
   ],
-  "schema:temporalCoverage": "2017-02-08 10:14:16",
   "schema:variableMeasured": [
     {
-      "@id": "ex:DV/xdl_CeO2/1/iv/incidentintensity",
+      "@id": "ex:DV/xdl_CeO2/iv/incidentintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -446,14 +442,13 @@
           "@id": "xas:incidentintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_CeO2/rv/incidentintensity"
       ]
     },
     {
-      "@id": "ex:DV/xdl_CeO2/1/iv/monochromatorenergy",
+      "@id": "ex:DV/xdl_CeO2/iv/monochromatorenergy",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -465,14 +460,13 @@
           "@id": "xas:monochromatorenergy"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_CeO2/rv/monochromatorenergy"
       ]
     },
     {
-      "@id": "ex:DV/xdl_CeO2/1/iv/transmittedintensity",
+      "@id": "ex:DV/xdl_CeO2/iv/transmittedintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -484,7 +478,6 @@
           "@id": "xas:transmittedintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_CeO2/rv/transmittedintensity"

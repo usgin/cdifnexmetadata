@@ -77,7 +77,7 @@
                 "cdif:locator": "#column:3",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_V_foil/1/iv/incidentintensity"
+                  "@id": "ex:DV/xdl_V_foil/iv/incidentintensity"
                 }
               }
             },
@@ -107,7 +107,7 @@
                 "cdif:locator": "#column:1",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_V_foil/1/iv/monochromatorenergy"
+                  "@id": "ex:DV/xdl_V_foil/iv/monochromatorenergy"
                 }
               }
             },
@@ -137,7 +137,7 @@
                 "cdif:locator": "#column:4",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_V_foil/1/iv/transmittedintensity"
+                  "@id": "ex:DV/xdl_V_foil/iv/transmittedintensity"
                 }
               }
             },
@@ -167,25 +167,11 @@
                 "cdif:locator": "#column:2",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_V_foil/1/iv/counttime"
+                  "@id": "ex:DV/xdl_V_foil/iv/counttime"
                 }
               }
             }
           ]
-        }
-      ],
-      "schema:hasPart": [
-        {
-          "@id": "https://w3id.org/cdif/testing/xdl_V_foil/xdl_V_foil",
-          "@type": [
-            "schema:MediaObject"
-          ],
-          "schema:name": "V foil",
-          "schema:contentUrl": "https://w3id.org/cdif/testing/xdl_V_foil#/",
-          "cdi:isStructuredBy": {
-            "@id": "ex:DV/xdl_V_foil/structure/1"
-          },
-          "schema:temporalCoverage": "2005-07-23 16:45:48/2005-07-23 17:02:30"
         }
       ]
     }
@@ -431,14 +417,12 @@
             "schema:value": "metal foil, Joe Wong box set"
           }
         ]
-      },
-      "schema:startDate": "2005-07-23 16:45:48"
+      }
     }
   ],
-  "schema:temporalCoverage": "2005-07-23 16:45:48/2005-07-23 17:02:30",
   "schema:variableMeasured": [
     {
-      "@id": "ex:DV/xdl_V_foil/1/iv/incidentintensity",
+      "@id": "ex:DV/xdl_V_foil/iv/incidentintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -450,14 +434,13 @@
           "@id": "xas:incidentintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_V_foil/rv/incidentintensity"
       ]
     },
     {
-      "@id": "ex:DV/xdl_V_foil/1/iv/monochromatorenergy",
+      "@id": "ex:DV/xdl_V_foil/iv/monochromatorenergy",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -469,14 +452,13 @@
           "@id": "xas:monochromatorenergy"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_V_foil/rv/monochromatorenergy"
       ]
     },
     {
-      "@id": "ex:DV/xdl_V_foil/1/iv/transmittedintensity",
+      "@id": "ex:DV/xdl_V_foil/iv/transmittedintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -488,14 +470,13 @@
           "@id": "xas:transmittedintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_V_foil/rv/transmittedintensity"
       ]
     },
     {
-      "@id": "ex:DV/xdl_V_foil/1/iv/counttime",
+      "@id": "ex:DV/xdl_V_foil/iv/counttime",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -507,7 +488,6 @@
           "@id": "http://www.opengis.net/def/nil/OGC/0/missing"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_V_foil/rv/counttime"

@@ -77,7 +77,7 @@
                 "cdif:locator": "#column:2",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_co_metal_rt/1/iv/incidentintensity"
+                  "@id": "ex:DV/xdl_co_metal_rt/iv/incidentintensity"
                 }
               }
             },
@@ -107,7 +107,7 @@
                 "cdif:locator": "#column:1",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_co_metal_rt/1/iv/monochromatorenergy"
+                  "@id": "ex:DV/xdl_co_metal_rt/iv/monochromatorenergy"
                 }
               }
             },
@@ -137,25 +137,11 @@
                 "cdif:locator": "#column:3",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_co_metal_rt/1/iv/transmittedintensity"
+                  "@id": "ex:DV/xdl_co_metal_rt/iv/transmittedintensity"
                 }
               }
             }
           ]
-        }
-      ],
-      "schema:hasPart": [
-        {
-          "@id": "https://w3id.org/cdif/testing/xdl_co_metal_rt/xdl_co_metal_rt",
-          "@type": [
-            "schema:MediaObject"
-          ],
-          "schema:name": "Co foil  Room Temperature",
-          "schema:contentUrl": "https://w3id.org/cdif/testing/xdl_co_metal_rt#/",
-          "cdi:isStructuredBy": {
-            "@id": "ex:DV/xdl_co_metal_rt/structure/1"
-          },
-          "schema:temporalCoverage": "2001-06-26 21:21:20"
         }
       ]
     }
@@ -415,14 +401,12 @@
           "schema:name": "transmittedintensity",
           "schema:value": "N2 10cm"
         }
-      ],
-      "schema:startDate": "2001-06-26 21:21:20"
+      ]
     }
   ],
-  "schema:temporalCoverage": "2001-06-26 21:21:20",
   "schema:variableMeasured": [
     {
-      "@id": "ex:DV/xdl_co_metal_rt/1/iv/incidentintensity",
+      "@id": "ex:DV/xdl_co_metal_rt/iv/incidentintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -434,14 +418,13 @@
           "@id": "xas:incidentintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_co_metal_rt/rv/incidentintensity"
       ]
     },
     {
-      "@id": "ex:DV/xdl_co_metal_rt/1/iv/monochromatorenergy",
+      "@id": "ex:DV/xdl_co_metal_rt/iv/monochromatorenergy",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -453,14 +436,13 @@
           "@id": "xas:monochromatorenergy"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_co_metal_rt/rv/monochromatorenergy"
       ]
     },
     {
-      "@id": "ex:DV/xdl_co_metal_rt/1/iv/transmittedintensity",
+      "@id": "ex:DV/xdl_co_metal_rt/iv/transmittedintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -472,7 +454,6 @@
           "@id": "xas:transmittedintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_co_metal_rt/rv/transmittedintensity"

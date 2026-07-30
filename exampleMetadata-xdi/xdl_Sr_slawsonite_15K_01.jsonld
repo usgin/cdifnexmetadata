@@ -77,7 +77,7 @@
                 "cdif:locator": "#column:2",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/1/iv/absorptioncoefficient"
+                  "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/iv/absorptioncoefficient"
                 }
               }
             },
@@ -107,7 +107,7 @@
                 "cdif:locator": "#column:4",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/1/iv/incidentintensity"
+                  "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/iv/incidentintensity"
                 }
               }
             },
@@ -137,7 +137,7 @@
                 "cdif:locator": "#column:1",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/1/iv/monochromatorenergy"
+                  "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/iv/monochromatorenergy"
                 }
               }
             },
@@ -167,25 +167,11 @@
                 "cdif:locator": "#column:3",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/1/iv/referenceabsorptioncoefficient"
+                  "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/iv/referenceabsorptioncoefficient"
                 }
               }
             }
           ]
-        }
-      ],
-      "schema:hasPart": [
-        {
-          "@id": "https://w3id.org/cdif/testing/xdl_Sr_slawsonite_15K_01/xdl_Sr_slawsonite_15K_01",
-          "@type": [
-            "schema:MediaObject"
-          ],
-          "schema:name": "slawsonite",
-          "schema:contentUrl": "https://w3id.org/cdif/testing/xdl_Sr_slawsonite_15K_01#/",
-          "cdi:isStructuredBy": {
-            "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/structure/1"
-          },
-          "schema:temporalCoverage": "1997-03-18 12:50:19"
         }
       ]
     }
@@ -419,14 +405,12 @@
             "schema:value": "15K"
           }
         ]
-      },
-      "schema:startDate": "1997-03-18 12:50:19"
+      }
     }
   ],
-  "schema:temporalCoverage": "1997-03-18 12:50:19",
   "schema:variableMeasured": [
     {
-      "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/1/iv/absorptioncoefficient",
+      "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/iv/absorptioncoefficient",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -438,14 +422,13 @@
           "@id": "xas:absorptioncoefficient"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_Sr_slawsonite_15K_01/rv/absorptioncoefficient"
       ]
     },
     {
-      "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/1/iv/incidentintensity",
+      "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/iv/incidentintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -457,14 +440,13 @@
           "@id": "xas:incidentintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_Sr_slawsonite_15K_01/rv/incidentintensity"
       ]
     },
     {
-      "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/1/iv/monochromatorenergy",
+      "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/iv/monochromatorenergy",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -476,14 +458,13 @@
           "@id": "xas:monochromatorenergy"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_Sr_slawsonite_15K_01/rv/monochromatorenergy"
       ]
     },
     {
-      "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/1/iv/referenceabsorptioncoefficient",
+      "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/iv/referenceabsorptioncoefficient",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -495,11 +476,13 @@
           "@id": "xas:referenceabsorptioncoefficient"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_Sr_slawsonite_15K_01/rv/referenceabsorptioncoefficient"
-      ]
+      ],
+      "schema:unitCode": {
+        "@id": "http://qudt.org/vocab/unit/UNITLESS"
+      }
     }
   ],
   "schema:subjectOf": {

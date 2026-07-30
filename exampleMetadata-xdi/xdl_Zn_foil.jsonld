@@ -77,7 +77,7 @@
                 "cdif:locator": "#column:4",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_Zn_foil/1/iv/incidentintensity"
+                  "@id": "ex:DV/xdl_Zn_foil/iv/incidentintensity"
                 }
               }
             },
@@ -107,7 +107,7 @@
                 "cdif:locator": "#column:1",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_Zn_foil/1/iv/monochromatorenergy"
+                  "@id": "ex:DV/xdl_Zn_foil/iv/monochromatorenergy"
                 }
               }
             },
@@ -137,7 +137,7 @@
                 "cdif:locator": "#column:5",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_Zn_foil/1/iv/transmittedintensity"
+                  "@id": "ex:DV/xdl_Zn_foil/iv/transmittedintensity"
                 }
               }
             },
@@ -167,7 +167,7 @@
                 "cdif:locator": "#column:2",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_Zn_foil/1/iv/energy_readback"
+                  "@id": "ex:DV/xdl_Zn_foil/iv/energy_readback"
                 }
               }
             },
@@ -197,25 +197,11 @@
                 "cdif:locator": "#column:3",
                 "cdif:physicalDataType": "xsd:decimal",
                 "cdif:formats_InstanceVariable": {
-                  "@id": "ex:DV/xdl_Zn_foil/1/iv/counttime"
+                  "@id": "ex:DV/xdl_Zn_foil/iv/counttime"
                 }
               }
             }
           ]
-        }
-      ],
-      "schema:hasPart": [
-        {
-          "@id": "https://w3id.org/cdif/testing/xdl_Zn_foil/xdl_Zn_foil",
-          "@type": [
-            "schema:MediaObject"
-          ],
-          "schema:name": "Zn foil",
-          "schema:contentUrl": "https://w3id.org/cdif/testing/xdl_Zn_foil#/",
-          "cdi:isStructuredBy": {
-            "@id": "ex:DV/xdl_Zn_foil/structure/1"
-          },
-          "schema:temporalCoverage": "2016-03-21 11:36:21/2016-03-21 11:46:36"
         }
       ]
     }
@@ -461,14 +447,12 @@
             "schema:value": "metal foil"
           }
         ]
-      },
-      "schema:startDate": "2016-03-21 11:36:21"
+      }
     }
   ],
-  "schema:temporalCoverage": "2016-03-21 11:36:21/2016-03-21 11:46:36",
   "schema:variableMeasured": [
     {
-      "@id": "ex:DV/xdl_Zn_foil/1/iv/incidentintensity",
+      "@id": "ex:DV/xdl_Zn_foil/iv/incidentintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -480,14 +464,13 @@
           "@id": "xas:incidentintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_Zn_foil/rv/incidentintensity"
       ]
     },
     {
-      "@id": "ex:DV/xdl_Zn_foil/1/iv/monochromatorenergy",
+      "@id": "ex:DV/xdl_Zn_foil/iv/monochromatorenergy",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -499,14 +482,13 @@
           "@id": "xas:monochromatorenergy"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_Zn_foil/rv/monochromatorenergy"
       ]
     },
     {
-      "@id": "ex:DV/xdl_Zn_foil/1/iv/transmittedintensity",
+      "@id": "ex:DV/xdl_Zn_foil/iv/transmittedintensity",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -518,14 +500,13 @@
           "@id": "xas:transmittedintensity"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_Zn_foil/rv/transmittedintensity"
       ]
     },
     {
-      "@id": "ex:DV/xdl_Zn_foil/1/iv/energy_readback",
+      "@id": "ex:DV/xdl_Zn_foil/iv/energy_readback",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -537,14 +518,13 @@
           "@id": "http://www.opengis.net/def/nil/OGC/0/missing"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_Zn_foil/rv/energy_readback"
       ]
     },
     {
-      "@id": "ex:DV/xdl_Zn_foil/1/iv/counttime",
+      "@id": "ex:DV/xdl_Zn_foil/iv/counttime",
       "@type": [
         "cdi:InstanceVariable",
         "schema:PropertyValue"
@@ -556,7 +536,6 @@
           "@id": "http://www.opengis.net/def/nil/OGC/0/missing"
         }
       ],
-      "schema:unitText": "",
       "cdif:physicalDataType": "xsd:decimal",
       "cdif:uses": [
         "https://w3id.org/cdif/testing/xdl_Zn_foil/rv/counttime"
