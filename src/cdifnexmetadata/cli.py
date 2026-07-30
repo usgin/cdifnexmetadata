@@ -1,6 +1,6 @@
 """Command line entry point.
 
-    hdf5metadata FILE [FILE ...] [-o OUT] [--validate --profile-dir DIR]
+    cdifnexmetadata FILE [FILE ...] [-o OUT] [--validate --profile-dir DIR]
 
 Exit codes are meant to be usable in a pipeline: 0 when everything asked
 for succeeded, 1 when a document failed validation, 2 when a file could
@@ -16,21 +16,21 @@ import os
 import sys
 from pathlib import Path
 
-from hdf5metadata.emit import (
+from cdifnexmetadata.emit import (
     DEFAULT_BASE,
     HDF5_MEDIA_TYPE,
     XDI_MEDIA_TYPE,
     XDI_SPECIFICATION,
     emit_document,
 )
-from hdf5metadata.inspect import inspect_file, read_nexus
-from hdf5metadata.inspect.xdi import inspect_xdi, is_xdi
-from hdf5metadata.map import map_nexus
-from hdf5metadata.map.concepts import MappingResult
-from hdf5metadata.map.crosswalk import load_crosswalk
-from hdf5metadata.map.legacy import LegacyTable, load_legacy
-from hdf5metadata.map.xdi import load_xdi_crosswalk, map_xdi
-from hdf5metadata.validate import Profile, find_profile, validate_document
+from cdifnexmetadata.inspect import inspect_file, read_nexus
+from cdifnexmetadata.inspect.xdi import inspect_xdi, is_xdi
+from cdifnexmetadata.map import map_nexus
+from cdifnexmetadata.map.concepts import MappingResult
+from cdifnexmetadata.map.crosswalk import load_crosswalk
+from cdifnexmetadata.map.legacy import LegacyTable, load_legacy
+from cdifnexmetadata.map.xdi import load_xdi_crosswalk, map_xdi
+from cdifnexmetadata.validate import Profile, find_profile, validate_document
 
 #: Lets a working environment be configured once rather than passed on
 #: every invocation.
@@ -39,14 +39,14 @@ PROFILE_DIR_ENV = "HDF5METADATA_PROFILE_DIR"
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
-        prog="hdf5metadata",
+        prog="cdifnexmetadata",
         description="Extract CDIF metadata from NeXus-formatted HDF5 files.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""examples:
-  hdf5metadata scan.nxs
-  hdf5metadata scan.nxs -o scan.jsonld
-  hdf5metadata *.nxs -o out/ --validate --profile-dir ../XAS-CDIF/release
-  hdf5metadata scan.nxs --report        # what was found, and what was not
+  cdifnexmetadata scan.nxs
+  cdifnexmetadata scan.nxs -o scan.jsonld
+  cdifnexmetadata *.nxs -o out/ --validate --profile-dir ../XAS-CDIF/release
+  cdifnexmetadata scan.nxs --report        # what was found, and what was not
 """)
     p.add_argument("files", nargs="+", type=Path,
                    help="HDF5/NeXus files to describe")

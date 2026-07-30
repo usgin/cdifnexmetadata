@@ -25,7 +25,7 @@ and so a given release is pinned to a known crosswalk revision. The cost
 is that these copies fall behind when the originals change. Refresh all
 three with:
 
-    python -m hdf5metadata.map.crosswalk --refresh
+    python -m cdifnexmetadata.map.crosswalk --refresh
 
 That downloads from the `cdifxasRelease` branch on GitHub, so it sees
 only what has been pushed there. **Neither file is edited by hand at

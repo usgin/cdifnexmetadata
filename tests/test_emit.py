@@ -11,14 +11,14 @@ import pytest
 h5py = pytest.importorskip("h5py")
 import numpy as np  # noqa: E402
 
-from hdf5metadata.emit import (  # noqa: E402
+from cdifnexmetadata.emit import (  # noqa: E402
     NXXAS_MODE_TERMSET,
     OGC_NIL_MISSING,
     XDI_DICTIONARY,
     emit_document,
 )
-from hdf5metadata.inspect import inspect_file, read_nexus  # noqa: E402
-from hdf5metadata.map import map_nexus  # noqa: E402
+from cdifnexmetadata.inspect import inspect_file, read_nexus  # noqa: E402
+from cdifnexmetadata.map import map_nexus  # noqa: E402
 
 from tests.test_map import _crosswalk, _entry, _group, _row  # noqa: E402
 
@@ -360,7 +360,7 @@ def test_a_concept_with_no_binding_is_kept_and_flagged(tmp_path):
 def test_legacy_provenance_survives_into_the_document(tmp_path):
     """A consumer should be able to see a value came from a non-standard
     layout without re-running the extractor."""
-    from hdf5metadata.map.legacy import load_legacy
+    from cdifnexmetadata.map.legacy import load_legacy
 
     p = tmp_path / "f.nxs"
     with h5py.File(p, "w") as f:
@@ -540,7 +540,7 @@ def test_property_ids_are_the_concept_locals_the_profile_enumerates(tmp_path):
     """The profile enumerates the very same tokens, so a tidier spelling
     here -- an earlier version had xas:xray_source_type -- produces a
     document that cannot satisfy it."""
-    from hdf5metadata.emit import CONCEPT_SLOTS
+    from cdifnexmetadata.emit import CONCEPT_SLOTS
 
     for concept, slot in CONCEPT_SLOTS.items():
         if slot.target in ("keyword", "technique", "facility", "instrument"):
@@ -587,7 +587,7 @@ def test_a_missing_source_type_depends_on_the_declared_technique(tmp_path):
     technique requires -- so naming one reads the technique rather than
     guessing about the instrument. An NXtomo file may well have been
     measured at a synchrotron too, but nothing in it says so."""
-    from hdf5metadata.emit import OGC_NIL_MISSING, SYNCHROTRON_SOURCE
+    from cdifnexmetadata.emit import OGC_NIL_MISSING, SYNCHROTRON_SOURCE
 
     def source_type(definition):
         f = tmp_path / f"{definition}.nxs"
@@ -617,7 +617,7 @@ def test_a_non_xas_source_type_that_is_required_uses_the_nil_uri(tmp_path):
     """Where a source peer does exist for a non-XAS file -- because the
     file said something about the source -- a missing type is the OGC nil
     URI, not a supposition about someone else's instrument."""
-    from hdf5metadata.emit import OGC_NIL_MISSING
+    from cdifnexmetadata.emit import OGC_NIL_MISSING
 
     f = tmp_path / "tomo.nxs"
     with h5py.File(f, "w") as h:

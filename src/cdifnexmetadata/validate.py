@@ -243,7 +243,7 @@ def frame_document(
     try:
         from pyld import jsonld
     except ImportError:
-        return None, "pyld not installed (pip install hdf5metadata[validate])"
+        return None, "pyld not installed (pip install cdifnexmetadata[validate])"
     import json
 
     try:
@@ -348,7 +348,7 @@ def check_schema(
         import jsonschema
     except ImportError:
         raise RuntimeError(
-            "jsonschema not installed (pip install hdf5metadata[validate])")
+            "jsonschema not installed (pip install cdifnexmetadata[validate])")
     import json
 
     s = schema if isinstance(schema, dict) else json.loads(
@@ -377,7 +377,7 @@ def check_shacl(document: dict[str, Any], shapes: Path) -> list[Issue]:
     except ImportError:
         raise RuntimeError(
             "pyshacl/rdflib not installed "
-            "(pip install hdf5metadata[validate])")
+            "(pip install cdifnexmetadata[validate])")
     import json
 
     data = rdflib.Graph().parse(

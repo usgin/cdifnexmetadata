@@ -29,9 +29,9 @@ import csv
 import sys
 from pathlib import Path
 
-from hdf5metadata.inspect import inspect_file, read_nexus
-from hdf5metadata.map import map_nexus
-from hdf5metadata.map.crosswalk import bundled_crosswalks, load_crosswalk
+from cdifnexmetadata.inspect import inspect_file, read_nexus
+from cdifnexmetadata.map import map_nexus
+from cdifnexmetadata.map.crosswalk import bundled_crosswalks, load_crosswalk
 
 SUFFIXES = (".nxs", ".hdf5", ".h5")
 

@@ -5,7 +5,7 @@ are actively being revised -- see `repository.DEFAULT_REF` and the
 resilience notes in README.md.
 """
 
-from hdf5metadata.nxdl.definition import (
+from cdifnexmetadata.nxdl.definition import (
     NXDLDefinition,
     NXDLField,
     NXDLGroup,
@@ -13,7 +13,7 @@ from hdf5metadata.nxdl.definition import (
     make_resolver,
     parse,
 )
-from hdf5metadata.nxdl.repository import (
+from cdifnexmetadata.nxdl.repository import (
     DEFAULT_REF,
     DEFAULT_REPO,
     DEFINITION_DIRS,

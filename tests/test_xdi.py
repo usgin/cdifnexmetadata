@@ -9,13 +9,13 @@ from __future__ import annotations
 
 import pytest
 
-from hdf5metadata.emit import (  # noqa: E402
+from cdifnexmetadata.emit import (  # noqa: E402
     XDI_MEDIA_TYPE,
     XDI_SPECIFICATION,
     emit_document,
 )
-from hdf5metadata.inspect.xdi import inspect_xdi, is_xdi  # noqa: E402
-from hdf5metadata.map.xdi import load_xdi_crosswalk, map_xdi  # noqa: E402
+from cdifnexmetadata.inspect.xdi import inspect_xdi, is_xdi  # noqa: E402
+from cdifnexmetadata.map.xdi import load_xdi_crosswalk, map_xdi  # noqa: E402
 
 SPACED = """\
 # XDI/1.0 test/1.0
@@ -237,7 +237,7 @@ def test_a_column_label_carrying_a_unit_keeps_it():
 
     Beamline software sometimes appends its own provenance after `||`;
     that is neither name nor unit."""
-    from hdf5metadata.inspect.xdi import _split_column_label as split
+    from cdifnexmetadata.inspect.xdi import _split_column_label as split
 
     assert split("energy eV") == ("energy", "eV")
     assert split("itrans counts || 13BMD:scaler1_calc3.VAL") == (
@@ -291,7 +291,7 @@ def test_the_sample_is_typed_as_a_material_sample(tmp_path):
     both the bare "MaterialSample" string and the iSamples IRI on
     additionalType. No NeXus example exercised this, because none of them
     carried sample properties; the first XDI file through found it."""
-    from hdf5metadata.emit import MATERIAL_SAMPLE_IRI
+    from cdifnexmetadata.emit import MATERIAL_SAMPLE_IRI
 
     sample = _emit(tmp_path).document["prov:wasGeneratedBy"][0][
         "schema:object"]
@@ -353,7 +353,7 @@ def test_a_required_property_the_file_omits_becomes_a_sentinel(tmp_path):
     Diamond B18 series gives Mono.name and no Mono.d_spacing, so the
     property is emitted as unknown -- omitting it makes the instrument
     undescribable, and guessing asserts a number nobody measured."""
-    from hdf5metadata.emit import UNKNOWN
+    from cdifnexmetadata.emit import UNKNOWN
 
     text = SPACED.replace("# Mono.name: Si(111)", "# Mono.name: Si(111)")
     doc = _emit(tmp_path, text).document
@@ -394,7 +394,7 @@ def test_an_unmapped_column_is_still_described(tmp_path):
     whether or not anyone has named its concept. Dropping it loses the
     fact that the file has that many columns, which is what the
     data-structure profile exists to record."""
-    from hdf5metadata.emit import OGC_NIL_MISSING
+    from cdifnexmetadata.emit import OGC_NIL_MISSING
 
     text = SPACED.replace(
         "# Column.3: itrans",
@@ -424,7 +424,7 @@ def test_the_catalog_record_says_how_it_was_made(tmp_path):
     """A catalog record is machine output. It names the tool and the
     source format, and carries no creator -- naming a person as the
     author of a generated artifact misattributes it."""
-    from hdf5metadata.emit import APPLICATION
+    from cdifnexmetadata.emit import APPLICATION
 
     record = _emit(tmp_path).document["schema:subjectOf"]
     assert APPLICATION in record["schema:description"]

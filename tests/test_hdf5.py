@@ -13,7 +13,7 @@ import pytest
 h5py = pytest.importorskip("h5py")
 import numpy as np  # noqa: E402  (after importorskip)
 
-from hdf5metadata.inspect import HDF5Inspector, inspect_file  # noqa: E402
+from cdifnexmetadata.inspect import HDF5Inspector, inspect_file  # noqa: E402
 
 
 # ---------------------------------------------------------------------------

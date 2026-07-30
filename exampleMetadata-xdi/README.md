@@ -15,7 +15,7 @@ alongside; see the repository README.
 
 | | `exampleMetadata/` | this directory |
 |---|---|---|
-| Producer | `cdif-xas-UKDS` | `usgin/hdf5metadata` |
+| Producer | `cdif-xas-UKDS` | `usgin/cdifnexmetadata` |
 | Mapping | RML (`mapping_dds.ttl`) run by rmlmapper | SSSOM crosswalk + Python |
 | Runtime | FastAPI + Java + pyld | pure Python |
 | Validates against `xasDocument` | 55 / 55 | **55 / 55** |

@@ -42,8 +42,8 @@ import csv
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from hdf5metadata.inspect.nexus import NXEntry, NXField, NXGroup
-from hdf5metadata.map.crosswalk import DATA_DIR, parse_path, resolve_segments
+from cdifnexmetadata.inspect.nexus import NXEntry, NXField, NXGroup
+from cdifnexmetadata.map.crosswalk import DATA_DIR, parse_path, resolve_segments
 
 DEFAULT_LEGACY = DATA_DIR / "legacy-paths.tsv"
 

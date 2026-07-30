@@ -1,4 +1,4 @@
-# AGENTS.md — hdf5metadata
+# AGENTS.md — cdifnexmetadata
 
 Orientation for future Claude Code (or human) sessions.
 
@@ -20,7 +20,7 @@ All four stages implemented and tested: 189 tests, 2 skipped.
 
 - **Two input formats.** NeXus/HDF5 and XDI, dispatched on what the file
   declares.
-- **Three crosswalks bundled** in `src/hdf5metadata/data/`:
+- **Three crosswalks bundled** in `src/cdifnexmetadata/data/`:
   `cdifxas-to-nexus` and `xdi-to-cdifxas` (copies, mastered in XAS-CDIF),
   `cdifsas-to-nexus` (authored here). Plus `legacy-paths.tsv` for
   writers that diverge from the standard.

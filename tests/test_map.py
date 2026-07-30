@@ -12,10 +12,10 @@ import pytest
 h5py = pytest.importorskip("h5py")
 import numpy as np  # noqa: E402
 
-from hdf5metadata.inspect import inspect_file, read_nexus  # noqa: E402
-from hdf5metadata.map.concepts import map_entry, map_nexus  # noqa: E402
-from hdf5metadata.map.legacy import load_legacy  # noqa: E402
-from hdf5metadata.map.crosswalk import (  # noqa: E402
+from cdifnexmetadata.inspect import inspect_file, read_nexus  # noqa: E402
+from cdifnexmetadata.map.concepts import map_entry, map_nexus  # noqa: E402
+from cdifnexmetadata.map.legacy import load_legacy  # noqa: E402
+from cdifnexmetadata.map.crosswalk import (  # noqa: E402
     Mapping,
     load_crosswalk,
     parse_path,
@@ -530,7 +530,7 @@ def test_the_bundled_legacy_table_names_only_real_concepts():
     """A typo in legacy-paths.tsv would otherwise just never match, and
     silently mapping nothing is exactly the failure this suite exists to
     catch."""
-    from hdf5metadata.map.crosswalk import DATA_DIR
+    from cdifnexmetadata.map.crosswalk import DATA_DIR
 
     legacy = load_legacy()
     # Every bundled crosswalk, not just the XAS one: the legacy table is
@@ -596,7 +596,7 @@ def test_the_crosswalk_is_chosen_from_what_the_file_declares():
     """An ingest handed a folder of mixed techniques must not need to be
     told which is which. Being told is how every SAS file in a mixed
     folder silently comes out thin."""
-    from hdf5metadata.map.crosswalk import select_crosswalk
+    from cdifnexmetadata.map.crosswalk import select_crosswalk
 
     xas, why = select_crosswalk(["NXxas"])
     assert "cdifxas" in why and "NXxas" in why
@@ -608,7 +608,7 @@ def test_the_crosswalk_is_chosen_from_what_the_file_declares():
 
 
 def test_a_mode_specific_definition_still_picks_the_family_crosswalk():
-    from hdf5metadata.map.crosswalk import select_crosswalk
+    from cdifnexmetadata.map.crosswalk import select_crosswalk
 
     cw, why = select_crosswalk(["NXxas_trans"])
     assert "cdifxas" in why
@@ -618,7 +618,7 @@ def test_a_mode_specific_definition_still_picks_the_family_crosswalk():
 def test_base_classes_never_decide_the_choice():
     """NXsource and NXsample appear in every crosswalk. Selecting on them
     would make each one look like a match for every file."""
-    from hdf5metadata.map.crosswalk import bundled_crosswalks, load_crosswalk
+    from cdifnexmetadata.map.crosswalk import bundled_crosswalks, load_crosswalk
 
     for path in bundled_crosswalks():
         apps = load_crosswalk(path).application_definitions()
@@ -631,7 +631,7 @@ def test_an_uncovered_technique_falls_back_and_says_so(tmp_path):
     """Still worth running: base-class mappings apply to any definition,
     so facility and beamline are found even for a technique nobody has
     written a crosswalk for. The reason has to make that clear."""
-    from hdf5metadata.map.crosswalk import select_crosswalk
+    from cdifnexmetadata.map.crosswalk import select_crosswalk
 
     cw, why = select_crosswalk(["NXtomo"])
     assert cw.mappings
@@ -650,7 +650,7 @@ def test_an_uncovered_technique_falls_back_and_says_so(tmp_path):
 
 
 def test_an_undeclared_file_falls_back_and_says_so():
-    from hdf5metadata.map.crosswalk import select_crosswalk
+    from cdifnexmetadata.map.crosswalk import select_crosswalk
 
     _cw, why = select_crosswalk([])
     assert "declares no application definition" in why

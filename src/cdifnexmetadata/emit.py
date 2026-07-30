@@ -53,10 +53,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from hdf5metadata.inspect.hdf5 import InspectionResult
-from hdf5metadata.inspect.nexus import NeXusResult, NXEntry
-from hdf5metadata.map.concepts import ConceptRecord, ConceptValue, MappingResult
-from hdf5metadata.map.crosswalk import load_concept_units
+from cdifnexmetadata.inspect.hdf5 import InspectionResult
+from cdifnexmetadata.inspect.nexus import NeXusResult, NXEntry
+from cdifnexmetadata.map.concepts import ConceptRecord, ConceptValue, MappingResult
+from cdifnexmetadata.map.crosswalk import load_concept_units
 
 CONTEXT = {
     "schema": "http://schema.org/",
@@ -76,7 +76,7 @@ PROFILE = "https://w3id.org/cdif/{}"
 
 #: This tool, named in the catalog record so a reader can tell how the
 #: metadata was produced and from what.
-APPLICATION = "hdf5metadata"
+APPLICATION = "cdifnexmetadata"
 
 #: Media types for the two input bindings.
 HDF5_MEDIA_TYPE = "application/x-hdf5"

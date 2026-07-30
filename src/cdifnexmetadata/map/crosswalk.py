@@ -34,7 +34,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
-from hdf5metadata.inspect.nexus import NXEntry, NXField, NXGroup
+from cdifnexmetadata.inspect.nexus import NXEntry, NXField, NXGroup
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 DEFAULT_CROSSWALK = DATA_DIR / "cdifxas-to-nexus.sssom.tsv"

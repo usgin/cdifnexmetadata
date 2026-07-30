@@ -6,14 +6,14 @@ actually put things; `concepts` produces the concept-keyed intermediate
 that is the hub of the architecture -- see README.md.
 """
 
-from hdf5metadata.map.concepts import (
+from cdifnexmetadata.map.concepts import (
     ConceptRecord,
     ConceptValue,
     MappingResult,
     map_entry,
     map_nexus,
 )
-from hdf5metadata.map.crosswalk import (
+from cdifnexmetadata.map.crosswalk import (
     Crosswalk,
     Mapping,
     Segment,
@@ -21,7 +21,7 @@ from hdf5metadata.map.crosswalk import (
     parse_path,
     resolve_path,
 )
-from hdf5metadata.map.legacy import LegacyPath, LegacyTable, load_legacy
+from cdifnexmetadata.map.legacy import LegacyPath, LegacyTable, load_legacy
 
 __all__ = [
     "ConceptRecord",

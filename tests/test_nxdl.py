@@ -10,7 +10,7 @@ import json
 
 import pytest
 
-from hdf5metadata.nxdl import (
+from cdifnexmetadata.nxdl import (
     DEFINITION_DIRS,
     NXDLDefinition,
     Repository,
@@ -327,8 +327,8 @@ def test_resolver_drives_tier3(tmp_path):
     h5py = pytest.importorskip("h5py")
     import numpy as np
 
-    from hdf5metadata.inspect import inspect_file, read_nexus
-    from hdf5metadata.inspect.nexus import TIER_NXDL
+    from cdifnexmetadata.inspect import inspect_file, read_nexus
+    from cdifnexmetadata.inspect.nexus import TIER_NXDL
 
     _seed(tmp_path / "cache", "REF", "applications", "NXdemo", _nxdl(
         '<group type="NXentry"><group type="NXdata">'

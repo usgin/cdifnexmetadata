@@ -10,7 +10,7 @@ import json
 
 import pytest
 
-from hdf5metadata.validate import (  # noqa: E402
+from cdifnexmetadata.validate import (  # noqa: E402
     Issue,
     Profile,
     ValidationResult,

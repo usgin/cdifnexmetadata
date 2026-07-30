@@ -1,7 +1,7 @@
 # mapping_set_id: https://w3id.org/cdif/sas/crosswalk/cdifsas-to-nexus
 # mapping_set_title: CDIF small-angle scattering concepts to NeXus NXsas
 # license: https://creativecommons.org/licenses/by/4.0/
-# mapping_provider: https://github.com/usgin/hdf5metadata
+# mapping_provider: https://github.com/usgin/cdifnexmetadata
 # subject_source: https://w3id.org/cdif/sas/
 # object_source: https://github.com/XraySpectroscopy/nexus_definitions
 # object_source_version: 89971f3922664b5c3fc5eb9929b2fbf5252dcefd

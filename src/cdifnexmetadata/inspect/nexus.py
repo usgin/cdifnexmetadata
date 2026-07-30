@@ -1,6 +1,6 @@
 """NeXus interpretation of an HDF5 structural report.
 
-Stage 1b. Takes the vocabulary-free result from :mod:`hdf5metadata.inspect.hdf5`
+Stage 1b. Takes the vocabulary-free result from :mod:`cdifnexmetadata.inspect.hdf5`
 and reads it as NeXus: which groups are `NXentry`, what application
 definition each declares, which array in an `NXdata` is the measurement
 and which are its coordinates.
@@ -44,7 +44,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Callable, Iterator
 
-from hdf5metadata.inspect.hdf5 import Dataset, Group, InspectionResult
+from cdifnexmetadata.inspect.hdf5 import Dataset, Group, InspectionResult
 
 #: Attribute naming a group's NeXus base class.
 NX_CLASS = "NX_class"

@@ -17,17 +17,17 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 sys.path.insert(0, str(REPO / "src"))
 
-from hdf5metadata.emit import (                                   # noqa: E402
+from cdifnexmetadata.emit import (                                   # noqa: E402
     HDF5_MEDIA_TYPE,
     XDI_MEDIA_TYPE,
     XDI_SPECIFICATION,
     emit_document,
 )
-from hdf5metadata.inspect import inspect_file, read_nexus         # noqa: E402
-from hdf5metadata.inspect.xdi import inspect_xdi, is_xdi          # noqa: E402
-from hdf5metadata.map import map_nexus                            # noqa: E402
-from hdf5metadata.map.xdi import map_xdi                          # noqa: E402
-from hdf5metadata.validate import (                               # noqa: E402
+from cdifnexmetadata.inspect import inspect_file, read_nexus         # noqa: E402
+from cdifnexmetadata.inspect.xdi import inspect_xdi, is_xdi          # noqa: E402
+from cdifnexmetadata.map import map_nexus                            # noqa: E402
+from cdifnexmetadata.map.xdi import map_xdi                          # noqa: E402
+from cdifnexmetadata.validate import (                               # noqa: E402
     find_profile,
     validate_document,
 )

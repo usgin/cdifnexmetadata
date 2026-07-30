@@ -54,7 +54,7 @@ def default_cache_dir() -> Path:
     env = os.environ.get("HDF5METADATA_CACHE")
     if env:
         return Path(env)
-    return Path.home() / ".cache" / "hdf5metadata" / "nxdl"
+    return Path.home() / ".cache" / "cdifnexmetadata" / "nxdl"
 
 
 @dataclass

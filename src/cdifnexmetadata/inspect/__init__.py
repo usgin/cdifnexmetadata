@@ -5,14 +5,14 @@
 anything about CDIF -- see the pipeline note in README.md.
 """
 
-from hdf5metadata.inspect.hdf5 import (
+from cdifnexmetadata.inspect.hdf5 import (
     Dataset,
     Group,
     HDF5Inspector,
     InspectionResult,
     inspect_file,
 )
-from hdf5metadata.inspect.nexus import (
+from cdifnexmetadata.inspect.nexus import (
     NeXusResult,
     NXAxis,
     NXData,

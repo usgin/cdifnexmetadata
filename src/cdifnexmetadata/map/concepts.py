@@ -38,19 +38,19 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from hdf5metadata.inspect.nexus import (
+from cdifnexmetadata.inspect.nexus import (
     NeXusResult,
     NXEntry,
     NXField,
     NXGroup,
 )
-from hdf5metadata.map.crosswalk import (
+from cdifnexmetadata.map.crosswalk import (
     Crosswalk,
     Mapping,
     resolve_mapping,
     select_crosswalk,
 )
-from hdf5metadata.map.legacy import LegacyTable, load_legacy, resolve_legacy
+from cdifnexmetadata.map.legacy import LegacyTable, load_legacy, resolve_legacy
 
 
 @dataclass

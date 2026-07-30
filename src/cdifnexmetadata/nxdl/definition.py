@@ -37,7 +37,7 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from typing import Iterator
 
-from hdf5metadata.nxdl.repository import DefinitionSource, Repository
+from cdifnexmetadata.nxdl.repository import DefinitionSource, Repository
 
 NXDL_NS = "http://definition.nexusformat.org/nxdl/3.1"
 _F = f"{{{NXDL_NS}}}field"
@@ -352,7 +352,7 @@ def make_resolver(repository: Repository | None = None):
     accepts, with a per-run memo so a multi-entry file resolves each
     definition once rather than once per entry.
 
-        >>> from hdf5metadata.nxdl import make_resolver
+        >>> from cdifnexmetadata.nxdl import make_resolver
         >>> nx = read_nexus(result, nxdl_resolver=make_resolver())
     """
     repo = repository or Repository()

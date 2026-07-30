@@ -8,7 +8,7 @@ import pytest
 h5py = pytest.importorskip("h5py")
 import numpy as np  # noqa: E402
 
-from hdf5metadata.cli import main  # noqa: E402
+from cdifnexmetadata.cli import main  # noqa: E402
 
 from tests.test_emit import _scan  # noqa: E402
 

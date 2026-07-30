@@ -7,9 +7,9 @@ claude.ai chat, a human — can pick up cold without re-deriving what has
 already been established. It is the canonical entry point.
 
 Stable URL:
-<https://github.com/usgin/hdf5metadata/blob/main/STATUS.md>
+<https://github.com/usgin/cdifnexmetadata/blob/main/STATUS.md>
 Raw:
-<https://raw.githubusercontent.com/usgin/hdf5metadata/main/STATUS.md>
+<https://raw.githubusercontent.com/usgin/cdifnexmetadata/main/STATUS.md>
 
 > **If you are an agent reading this:** the section
 > [Established — do not re-derive](#established--do-not-re-derive) is the
@@ -62,7 +62,7 @@ lookup table *is* the SSSOM alignment.
 | | Effort A | Effort B | Effort C |
 |---|---|---|---|
 | **Goal** | NeXus HDF5 → CDIF | Align CDIF XAS vocabulary with NeXus | XDI → CDIF (Dataverse workflow) |
-| **Repo** | `usgin/hdf5metadata` (`main`) | `smrgeoinfo/XAS-CDIF` (**`cdifxasRelease`**) | `smrgeoinfo/cdif-xas` (`main`) |
+| **Repo** | `usgin/cdifnexmetadata` (`main`) | `smrgeoinfo/XAS-CDIF` (**`cdifxasRelease`**) | `smrgeoinfo/cdif-xas` (`main`) |
 | **State** | Design phase, no code | Analysis + enumeration import done | **Working — 37/37 valid** |
 | **Head** | `0c02ebe` | `2fe64e1` | `b915c51` |
 | **Layer** | 4 (NeXus binding) | 1–2 (concepts + alignment) | 3–4 (serialization + XDI binding) |
@@ -237,18 +237,18 @@ Prefer *omitting* an optional field over filling it with a sentinel.
 
 ---
 
-## Effort A — `usgin/hdf5metadata`
+## Effort A — `usgin/cdifnexmetadata`
 
 Public, CC-BY-4.0, Python ≥3.11. **Stages 1, 1b and 2 implemented and
 tested (189 tests), and it now reads **two input formats**. **The
-pipeline runs end to end**: `hdf5metadata
+pipeline runs end to end**: `cdifnexmetadata
 FeXAS.nxs --validate --profile-dir ../XAS-CDIF/release` emits a CDIF
 document, validates it against the strict xasDocument composite, and
 reports `validation PASSED` with five advisories, exit 0.**
 
 Present: `inspect/hdf5.py`, `inspect/nexus.py`, `nxdl/`, `map/`,
 copied SSSOM crosswalks and the legacy path table under
-`src/hdf5metadata/data/`, `docs/DESIGN-2026-07-27.md`,
+`src/cdifnexmetadata/data/`, `docs/DESIGN-2026-07-27.md`,
 `AGENTS.md`, `README.md`, `pyproject.toml`, licence files, `.gitignore`.
 
 Planned pipeline, with a hard boundary between structure and semantics
@@ -571,9 +571,9 @@ are still in flux** than after they stabilise.
 
 | What | Where |
 |---|---|
-| This file | `usgin/hdf5metadata` → `STATUS.md` (`main`) |
-| Extractor design | `usgin/hdf5metadata` → `docs/DESIGN-2026-07-27.md` (`main`) |
-| Extractor conventions | `usgin/hdf5metadata` → `AGENTS.md` (`main`) |
+| This file | `usgin/cdifnexmetadata` → `STATUS.md` (`main`) |
+| Extractor design | `usgin/cdifnexmetadata` → `docs/DESIGN-2026-07-27.md` (`main`) |
+| Extractor conventions | `usgin/cdifnexmetadata` → `AGENTS.md` (`main`) |
 | XAS gap analysis | `smrgeoinfo/XAS-CDIF` → `XAS_Glossary_vs_NeXus_analysis.md` (**`cdifxasRelease`**) |
 | Enumeration importer | `smrgeoinfo/XAS-CDIF` → `tools/import_nexus_enumerations.py` (**`cdifxasRelease`**) |
 | XDI→CDIF pipeline | `smrgeoinfo/cdif-xas` (`main`) |

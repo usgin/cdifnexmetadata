@@ -12,8 +12,8 @@ import pytest
 h5py = pytest.importorskip("h5py")
 import numpy as np  # noqa: E402
 
-from hdf5metadata.inspect import inspect_file, is_nexus, read_nexus  # noqa: E402
-from hdf5metadata.inspect.nexus import (  # noqa: E402
+from cdifnexmetadata.inspect import inspect_file, is_nexus, read_nexus  # noqa: E402
+from cdifnexmetadata.inspect.nexus import (  # noqa: E402
     TIER_HEURISTIC,
     TIER_LINK,
     TIER_NXDL,

@@ -1,4 +1,4 @@
-# hdf5metadata
+# cdifnexmetadata
 
 Extracts [CDIF 1.1](https://cross-domain-interoperability-framework.github.io/)
 metadata from scientific data files and emits it as schema.org JSON-LD,
@@ -7,7 +7,7 @@ using the structure and conventions described inside the file itself.
 Reads **NeXus-formatted HDF5** and **XDI** text today.
 
 ```bash
-hdf5metadata scan.nxs spectrum.xdi -o metadata/
+cdifnexmetadata scan.nxs spectrum.xdi -o metadata/
 ```
 
 ## What it does, concretely
@@ -77,7 +77,7 @@ than that upstream revised a mapping row.
 
 ## Adding a technique is a crosswalk
 
-Drop an SSSOM TSV in `src/hdf5metadata/data/`. Selection reads the
+Drop an SSSOM TSV in `src/cdifnexmetadata/data/`. Selection reads the
 application definition each file declares and picks the crosswalk that
 covers it. No code change, no registration step.
 
@@ -97,7 +97,7 @@ The first two are copies. Their master versions live in
 by `crosswalk/build_crosswalk.py`; the copies exist so this package
 works offline and so a release is pinned to a known crosswalk revision.
 Re-download them with
-`python -m hdf5metadata.map.crosswalk --refresh`.
+`python -m cdifnexmetadata.map.crosswalk --refresh`.
 
 ## Adding an input format is a parser
 
@@ -252,8 +252,8 @@ pip install -e ".[validate]"
 One file to stdout, or many to a directory:
 
 ```bash
-hdf5metadata scan.nxs
-hdf5metadata data/*.nxs data/*.xdi -o metadata/
+cdifnexmetadata scan.nxs
+cdifnexmetadata data/*.nxs data/*.xdi -o metadata/
 ```
 
 Mixed techniques and formats need no per-file configuration.
@@ -262,7 +262,7 @@ See what was extracted, and what was looked for and not found. The
 report goes to stderr, so stdout stays pipeable:
 
 ```bash
-hdf5metadata scan.nxs --report
+cdifnexmetadata scan.nxs --report
 ```
 
 ### Validating
@@ -271,7 +271,7 @@ The profile's schema, frame and SHACL shapes are **not bundled** — they
 belong to the CDIF profile repositories and are versioned there.
 
 ```bash
-hdf5metadata scan.nxs --validate --profile-dir ../XAS-CDIF/release
+cdifnexmetadata scan.nxs --validate --profile-dir ../XAS-CDIF/release
 ```
 
 or set `HDF5METADATA_PROFILE_DIR`. Without either, validation reports

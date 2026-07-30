@@ -31,7 +31,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from hdf5metadata.inspect.hdf5 import InspectionResult
+from cdifnexmetadata.inspect.hdf5 import InspectionResult
 
 #: The first line of an XDI file. This is the whole sniff test: the spec
 #: makes the version line mandatory and first, so a file that starts any

@@ -30,14 +30,14 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from hdf5metadata.inspect.xdi import XDIResult
-from hdf5metadata.map.concepts import (
+from cdifnexmetadata.inspect.xdi import XDIResult
+from cdifnexmetadata.map.concepts import (
     ConceptRecord,
     ConceptValue,
     MappingResult,
 )
-from hdf5metadata.emit import OGC_NIL_MISSING
-from hdf5metadata.map.crosswalk import Crosswalk, DATA_DIR, load_crosswalk
+from cdifnexmetadata.emit import OGC_NIL_MISSING
+from cdifnexmetadata.map.crosswalk import Crosswalk, DATA_DIR, load_crosswalk
 
 DEFAULT_XDI_CROSSWALK = DATA_DIR / "xdi-to-cdifxas.sssom.tsv"
 
