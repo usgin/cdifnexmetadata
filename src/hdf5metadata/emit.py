@@ -862,6 +862,14 @@ def emit_document(
             if v["@id"] not in seen_variables:
                 seen_variables.add(v["@id"])
                 variables.append(v)
+        # A file with one entry needs no parts. The part would carry the
+        # entry's name, identifier, url, description, keywords, licence
+        # and dates -- all of which the dataset already states about
+        # itself, because with one entry the dataset IS the entry. The
+        # structure goes on the distribution instead, which is then the
+        # whole of the data rather than a share of it.
+        if len(records) < 2:
+            continue
         for i, rec in enumerate(group):
             entry = next(
                 (e for e in nexus.entries if e.path == rec.entry_path), None)
@@ -900,12 +908,15 @@ def emit_document(
         conforms.insert(0, {"@id": format_specification})
     if conforms:
         distribution["dcterms:conformsTo"] = conforms
-    # Structures sit on the parts, not here. A part is one NXentry, and
-    # the structure describes that entry's layout -- with 26 entries over
-    # two layouts, a structure on the distribution says something about
-    # the file that is only true of some of its parts. Where there are no
-    # parts the structure goes on the distribution, which is then the
-    # whole of the data.
+    # Where a file has several entries the structure sits on the part it
+    # describes: with 26 entries over two layouts, a structure on the
+    # distribution would assert of the whole file something true of only
+    # some of its parts.
+    #
+    # Where a file has one entry there are no parts, and the distribution
+    # is the whole of the data, so the structure belongs to it directly.
+    # Same rule either way -- the structure is stated about exactly what
+    # it describes.
     #
     # An @id reference is not a "bare" reference in RDF: it denotes the
     # same node another part defines inline, so the SHACL check that the

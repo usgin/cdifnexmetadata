@@ -42,182 +42,134 @@
           "@id": "nxs:applications/NXxas.html"
         }
       ],
-      "schema:hasPart": [
+      "cdi:isStructuredBy": [
         {
-          "@id": "https://w3id.org/cdif/testing/pt_metal_rt/entry",
+          "@id": "ex:DV/pt_metal_rt/structure/1",
           "@type": [
-            "schema:MediaObject",
-            "schema:Dataset"
+            "cdi:DimensionalDataStructure"
           ],
-          "schema:name": "Pt metal foil  [Pt L3 edge]",
-          "schema:contentUrl": "https://w3id.org/cdif/testing/pt_metal_rt#/entry",
-          "cdi:isStructuredBy": {
-            "@id": "ex:DV/pt_metal_rt/structure/1",
-            "@type": [
-              "cdi:DimensionalDataStructure"
-            ],
-            "schema:name": "pt_metal_rt structure 1",
-            "schema:description": "shared by 1 of 1 entries",
-            "cdi:has_DataStructureComponent": [
-              {
-                "@id": "ex:DV/pt_metal_rt/1/dsc/absorptioncoefficient",
+          "schema:name": "pt_metal_rt structure 1",
+          "schema:description": "shared by 1 of 1 entries",
+          "cdi:has_DataStructureComponent": [
+            {
+              "@id": "ex:DV/pt_metal_rt/1/dsc/absorptioncoefficient",
+              "@type": [
+                "cdi:MeasureComponent"
+              ],
+              "cdif:isDefinedBy_RepresentedVariable": {
+                "@id": "https://w3id.org/cdif/testing/pt_metal_rt/rv/absorptioncoefficient",
                 "@type": [
-                  "cdi:MeasureComponent"
+                  "cdi:RepresentedVariable"
                 ],
-                "cdif:isDefinedBy_RepresentedVariable": {
-                  "@id": "https://w3id.org/cdif/testing/pt_metal_rt/rv/absorptioncoefficient",
+                "schema:name": "absorptioncoefficient",
+                "cdif:name": {
                   "@type": [
-                    "cdi:RepresentedVariable"
+                    "cdi:ObjectName"
                   ],
-                  "schema:name": "absorptioncoefficient",
-                  "cdif:name": {
-                    "@type": [
-                      "cdi:ObjectName"
-                    ],
-                    "cdif:name": "absorptioncoefficient"
-                  }
-                },
-                "cdif:hasPhysicalMapping": {
-                  "@id": "ex:DV/pt_metal_rt/1/pm/absorptioncoefficient",
-                  "@type": [
-                    "cdif:LocatorMapping"
-                  ],
-                  "cdif:locator": "/entry/data/mutrans",
-                  "cdif:physicalDataType": "xsd:decimal",
-                  "cdif:formats_InstanceVariable": {
-                    "@id": "ex:DV/pt_metal_rt/iv/absorptioncoefficient"
-                  }
+                  "cdif:name": "absorptioncoefficient"
                 }
               },
-              {
-                "@id": "ex:DV/pt_metal_rt/1/dsc/incidentintensity",
+              "cdif:hasPhysicalMapping": {
+                "@id": "ex:DV/pt_metal_rt/1/pm/absorptioncoefficient",
                 "@type": [
-                  "cdi:MeasureComponent"
+                  "cdif:LocatorMapping"
                 ],
-                "cdif:isDefinedBy_RepresentedVariable": {
-                  "@id": "https://w3id.org/cdif/testing/pt_metal_rt/rv/incidentintensity",
-                  "@type": [
-                    "cdi:RepresentedVariable"
-                  ],
-                  "schema:name": "incident intensity",
-                  "cdif:name": {
-                    "@type": [
-                      "cdi:ObjectName"
-                    ],
-                    "cdif:name": "incident intensity"
-                  }
-                },
-                "cdif:hasPhysicalMapping": {
-                  "@id": "ex:DV/pt_metal_rt/1/pm/incidentintensity",
-                  "@type": [
-                    "cdif:LocatorMapping"
-                  ],
-                  "cdif:locator": "/entry/instrument/i0/data",
-                  "cdif:physicalDataType": "xsd:decimal",
-                  "cdif:formats_InstanceVariable": {
-                    "@id": "ex:DV/pt_metal_rt/iv/incidentintensity"
-                  }
-                }
-              },
-              {
-                "@id": "ex:DV/pt_metal_rt/1/dsc/monochromatorenergy",
-                "@type": [
-                  "cdi:DimensionComponent"
-                ],
-                "cdif:isDefinedBy_RepresentedVariable": {
-                  "@id": "https://w3id.org/cdif/testing/pt_metal_rt/rv/monochromatorenergy",
-                  "@type": [
-                    "cdi:RepresentedVariable"
-                  ],
-                  "schema:name": "monochromator energy",
-                  "cdif:name": {
-                    "@type": [
-                      "cdi:ObjectName"
-                    ],
-                    "cdif:name": "monochromator energy"
-                  }
-                },
-                "cdif:hasPhysicalMapping": {
-                  "@id": "ex:DV/pt_metal_rt/1/pm/monochromatorenergy",
-                  "@type": [
-                    "cdif:LocatorMapping"
-                  ],
-                  "cdif:locator": "/entry/instrument/monochromator/energy",
-                  "cdif:physicalDataType": "xsd:decimal",
-                  "cdif:formats_InstanceVariable": {
-                    "@id": "ex:DV/pt_metal_rt/iv/monochromatorenergy"
-                  }
-                }
-              },
-              {
-                "@id": "ex:DV/pt_metal_rt/1/dsc/transmittedintensity",
-                "@type": [
-                  "cdi:MeasureComponent"
-                ],
-                "cdif:isDefinedBy_RepresentedVariable": {
-                  "@id": "https://w3id.org/cdif/testing/pt_metal_rt/rv/transmittedintensity",
-                  "@type": [
-                    "cdi:RepresentedVariable"
-                  ],
-                  "schema:name": "transmitted intensity",
-                  "cdif:name": {
-                    "@type": [
-                      "cdi:ObjectName"
-                    ],
-                    "cdif:name": "transmitted intensity"
-                  }
-                },
-                "cdif:hasPhysicalMapping": {
-                  "@id": "ex:DV/pt_metal_rt/1/pm/transmittedintensity",
-                  "@type": [
-                    "cdif:LocatorMapping"
-                  ],
-                  "cdif:locator": "/entry/instrument/itrans/data",
-                  "cdif:physicalDataType": "xsd:decimal",
-                  "cdif:formats_InstanceVariable": {
-                    "@id": "ex:DV/pt_metal_rt/iv/transmittedintensity"
-                  }
+                "cdif:locator": "/entry/data/mutrans",
+                "cdif:physicalDataType": "xsd:decimal",
+                "cdif:formats_InstanceVariable": {
+                  "@id": "ex:DV/pt_metal_rt/iv/absorptioncoefficient"
                 }
               }
-            ]
-          },
-          "schema:identifier": "https://w3id.org/cdif/testing/pt_metal_rt#/entry",
-          "schema:url": "https://w3id.org/cdif/testing/pt_metal_rt#/entry",
-          "schema:dateModified": "2026-07-29",
-          "schema:license": [
-            "http://www.opengis.net/def/nil/OGC/0/missing"
-          ],
-          "schema:creator": {
-            "@type": [
-              "schema:Person"
-            ],
-            "schema:name": "Missing"
-          },
-          "schema:description": "Pt L3-edge measurement in transmission recorded as entry /entry.",
-          "schema:keywords": [
-            {
-              "@type": [
-                "schema:DefinedTerm"
-              ],
-              "schema:name": "Platinum",
-              "schema:termCode": "Pt",
-              "schema:inDefinedTermSet": "http://sweetontology.net/matrElement",
-              "schema:about": "element.symbol"
             },
             {
+              "@id": "ex:DV/pt_metal_rt/1/dsc/incidentintensity",
               "@type": [
-                "schema:DefinedTerm"
+                "cdi:MeasureComponent"
               ],
-              "schema:name": "L3-edge",
-              "schema:termCode": "L3",
-              "schema:inDefinedTermSet": "https://github.com/XraySpectroscopy/XAS-Data-Interchange/blob/master/specification/dictionary.md",
-              "schema:about": "element.edge"
-            }
-          ],
-          "schema:temporalCoverage": "2001-06-27T04:10:45",
-          "dcterms:conformsTo": [
+              "cdif:isDefinedBy_RepresentedVariable": {
+                "@id": "https://w3id.org/cdif/testing/pt_metal_rt/rv/incidentintensity",
+                "@type": [
+                  "cdi:RepresentedVariable"
+                ],
+                "schema:name": "incident intensity",
+                "cdif:name": {
+                  "@type": [
+                    "cdi:ObjectName"
+                  ],
+                  "cdif:name": "incident intensity"
+                }
+              },
+              "cdif:hasPhysicalMapping": {
+                "@id": "ex:DV/pt_metal_rt/1/pm/incidentintensity",
+                "@type": [
+                  "cdif:LocatorMapping"
+                ],
+                "cdif:locator": "/entry/instrument/i0/data",
+                "cdif:physicalDataType": "xsd:decimal",
+                "cdif:formats_InstanceVariable": {
+                  "@id": "ex:DV/pt_metal_rt/iv/incidentintensity"
+                }
+              }
+            },
             {
-              "@id": "nxs:applications/NXxas.html"
+              "@id": "ex:DV/pt_metal_rt/1/dsc/monochromatorenergy",
+              "@type": [
+                "cdi:DimensionComponent"
+              ],
+              "cdif:isDefinedBy_RepresentedVariable": {
+                "@id": "https://w3id.org/cdif/testing/pt_metal_rt/rv/monochromatorenergy",
+                "@type": [
+                  "cdi:RepresentedVariable"
+                ],
+                "schema:name": "monochromator energy",
+                "cdif:name": {
+                  "@type": [
+                    "cdi:ObjectName"
+                  ],
+                  "cdif:name": "monochromator energy"
+                }
+              },
+              "cdif:hasPhysicalMapping": {
+                "@id": "ex:DV/pt_metal_rt/1/pm/monochromatorenergy",
+                "@type": [
+                  "cdif:LocatorMapping"
+                ],
+                "cdif:locator": "/entry/instrument/monochromator/energy",
+                "cdif:physicalDataType": "xsd:decimal",
+                "cdif:formats_InstanceVariable": {
+                  "@id": "ex:DV/pt_metal_rt/iv/monochromatorenergy"
+                }
+              }
+            },
+            {
+              "@id": "ex:DV/pt_metal_rt/1/dsc/transmittedintensity",
+              "@type": [
+                "cdi:MeasureComponent"
+              ],
+              "cdif:isDefinedBy_RepresentedVariable": {
+                "@id": "https://w3id.org/cdif/testing/pt_metal_rt/rv/transmittedintensity",
+                "@type": [
+                  "cdi:RepresentedVariable"
+                ],
+                "schema:name": "transmitted intensity",
+                "cdif:name": {
+                  "@type": [
+                    "cdi:ObjectName"
+                  ],
+                  "cdif:name": "transmitted intensity"
+                }
+              },
+              "cdif:hasPhysicalMapping": {
+                "@id": "ex:DV/pt_metal_rt/1/pm/transmittedintensity",
+                "@type": [
+                  "cdif:LocatorMapping"
+                ],
+                "cdif:locator": "/entry/instrument/itrans/data",
+                "cdif:physicalDataType": "xsd:decimal",
+                "cdif:formats_InstanceVariable": {
+                  "@id": "ex:DV/pt_metal_rt/iv/transmittedintensity"
+                }
+              }
             }
           ]
         }
@@ -465,11 +417,9 @@
           "schema:name": "monochromatorchemicalformula",
           "schema:value": "Si"
         }
-      ],
-      "schema:startDate": "2001-06-27T04:10:45"
+      ]
     }
   ],
-  "schema:temporalCoverage": "2001-06-27T04:10:45",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/pt_metal_rt/iv/absorptioncoefficient",

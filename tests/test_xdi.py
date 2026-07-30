@@ -218,13 +218,14 @@ def test_the_same_emitter_serves_both_bindings(tmp_path):
                 "prov:wasGeneratedBy"):
         assert key in doc, f"{key} missing from the XDI document"
     dist = doc["schema:distribution"][0]
-    part = dist["schema:hasPart"][0]
-    # The structure is on the part, stated inline, for XDI exactly as for
-    # NeXus -- one emitter, one placement rule.
-    assert "cdi:isStructuredBy" not in dist
-    structure = part["cdi:isStructuredBy"]
-    assert structure["cdi:has_DataStructureComponent"]
-    assert part["@type"] == ["schema:MediaObject", "schema:Dataset"]
+    # An XDI file holds one spectrum, so it is the single-entry shape:
+    # no parts, and the structure on the distribution, which is the whole
+    # of the data. Same rule as a one-entry NeXus file -- one emitter,
+    # one placement rule.
+    assert "schema:hasPart" not in dist
+    structures = dist["cdi:isStructuredBy"]
+    assert len(structures) == 1
+    assert structures[0]["cdi:has_DataStructureComponent"]
 
 
 @pytest.mark.parametrize("text", [SPACED, CLOSED_UP])

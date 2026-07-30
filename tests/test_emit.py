@@ -192,13 +192,21 @@ def test_a_structurally_different_entry_gets_its_own_structure(tmp_path):
     assert len(doc["schema:distribution"][0]["schema:hasPart"]) == 3
 
 
-def test_a_single_entry_file_still_emits_one_part(tmp_path):
+def test_a_single_entry_file_has_no_parts(tmp_path):
+    """With one entry the dataset IS the entry, so a part would repeat
+    the dataset's own name, identifier, url, description and keywords
+    under a second @id. The structure goes on the distribution, which is
+    then the whole of the data."""
     p = tmp_path / "f.nxs"
     with h5py.File(p, "w") as f:
         _scan(f, "only")
 
     doc = _emit(p, _xas_crosswalk(tmp_path)).document
-    assert len(doc["schema:distribution"][0]["schema:hasPart"]) == 1
+    dist = doc["schema:distribution"][0]
+    assert "schema:hasPart" not in dist
+    structures = dist["cdi:isStructuredBy"]
+    assert len(structures) == 1
+    assert structures[0]["cdi:has_DataStructureComponent"]
     # A description is always written; a single-entry file gets the
     # single-measurement wording rather than the archive-of-parts note.
     assert "parts of one dataset" not in doc["schema:description"]
