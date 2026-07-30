@@ -10,6 +10,58 @@ Reads **NeXus-formatted HDF5** and **XDI** text today.
 cdifnexmetadata scan.nxs spectrum.xdi -o metadata/
 ```
 
+## Quickstart
+
+From nothing to validated CDIF metadata:
+
+```bash
+git clone https://github.com/usgin/cdifnexmetadata
+cd cdifnexmetadata
+uv sync --all-extras          # --all-extras matters: see below
+```
+
+Convert a bundled example and print it:
+
+```bash
+uv run cdifnexmetadata exampleData/cu_metal_rt.nxs
+```
+
+Convert everything to a directory, NeXus and XDI together — the format
+is detected from the file, not the extension:
+
+```bash
+uv run cdifnexmetadata exampleData/*.nxs exampleData/*.xdi -o metadata/
+```
+
+Validate against the CDIF XAS profile, which lives in another
+repository:
+
+```bash
+git clone https://github.com/CDIF-4-XAS/XAS-CDIF -b cdifxasRelease1.1 ../XAS-CDIF
+uv run cdifnexmetadata exampleData/cu_metal_rt.nxs --validate \
+    --profile-dir ../XAS-CDIF/release
+```
+
+**`--all-extras` is not optional.** `pytest` and the validation
+dependencies are declared as optional extras, so a bare `uv sync`
+leaves a working library that cannot test or validate itself.
+
+Run the tests with `uv run pytest`.
+
+### What you should see
+
+`exampleMetadata-NEXUS/` and `exampleMetadata-xdi/` hold the output this
+repository generates from `exampleData/` and from the XAS-CDIF XDI
+corpus respectively, so you can compare against them. Regenerate the
+first with `uv run python exampleMetadata-NEXUS/generate.py`.
+
+Not every example validates, on purpose. `cu_metal_10K.nxs` declares
+`NXxas` and carries almost none of it, and `NXxas-manual-sketch.hdf5`
+follows a layout from the NeXus manual that no real file uses. Both
+fail, and the failures are the point — an examples directory where
+everything passes tells you nothing about what happens when something
+is wrong.
+
 ## What it does, concretely
 
 Given `FeXAS.nxs` — a 2.6 MB HDF5 container holding 26 X-ray absorption
