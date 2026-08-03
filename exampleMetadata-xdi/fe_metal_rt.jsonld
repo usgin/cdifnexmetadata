@@ -432,10 +432,9 @@
           "schema:value": "15cm  N2"
         }
       ],
-      "schema:startDate": "2002-03-16T19:49:43"
+      "schema:startTime": "2002-03-16T19:49:43"
     }
   ],
-  "schema:temporalCoverage": "2002-03-16T19:49:43",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/fe_metal_rt/iv/absorptioncoefficient",

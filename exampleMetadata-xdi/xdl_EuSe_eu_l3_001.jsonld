@@ -406,10 +406,10 @@
           }
         ]
       },
-      "schema:startDate": "2009-07-06T11:05:39"
+      "schema:startTime": "2009-07-06T11:05:39",
+      "schema:endTime": "2009-07-06T11:23:38"
     }
   ],
-  "schema:temporalCoverage": "2009-07-06T11:05:39/2009-07-06T11:23:38",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_EuSe_eu_l3_001/iv/incidentintensity",

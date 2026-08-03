@@ -406,10 +406,10 @@
           }
         ]
       },
-      "schema:startDate": "2008-04-12T03:48:03"
+      "schema:startTime": "2008-04-12T03:48:03",
+      "schema:endTime": "2008-04-12T04:02:26"
     }
   ],
-  "schema:temporalCoverage": "2008-04-12T03:48:03/2008-04-12T04:02:26",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_WO2_rt_01/iv/incidentintensity",

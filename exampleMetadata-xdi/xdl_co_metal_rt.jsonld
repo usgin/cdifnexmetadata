@@ -408,10 +408,9 @@
           "schema:value": "N2 10cm"
         }
       ],
-      "schema:startDate": "2001-06-26T21:21:20"
+      "schema:startTime": "2001-06-26T21:21:20"
     }
   ],
-  "schema:temporalCoverage": "2001-06-26T21:21:20",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_co_metal_rt/iv/incidentintensity",

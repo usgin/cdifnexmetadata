@@ -440,10 +440,9 @@
           "schema:value": "N2 30cm"
         }
       ],
-      "schema:startDate": "1997-01-19T14:12:16"
+      "schema:startTime": "1997-01-19T14:12:16"
     }
   ],
-  "schema:temporalCoverage": "1997-01-19T14:12:16",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_as2o3_roomt_scan1/iv/incidentintensity",

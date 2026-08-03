@@ -458,10 +458,10 @@
           }
         ]
       },
-      "schema:startDate": "2016-03-21T11:36:21"
+      "schema:startTime": "2016-03-21T11:36:21",
+      "schema:endTime": "2016-03-21T11:46:36"
     }
   ],
-  "schema:temporalCoverage": "2016-03-21T11:36:21/2016-03-21T11:46:36",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_Zn_foil/iv/incidentintensity",

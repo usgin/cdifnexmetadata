@@ -432,10 +432,9 @@
           "schema:value": "50 nA/V  100 mm N2"
         }
       ],
-      "schema:startDate": "2017-02-08T10:14:16"
+      "schema:startTime": "2017-02-08T10:14:16"
     }
   ],
-  "schema:temporalCoverage": "2017-02-08T10:14:16",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/CeO2/iv/incidentintensity",

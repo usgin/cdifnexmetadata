@@ -432,10 +432,9 @@
           "schema:value": "10cm  N2"
         }
       ],
-      "schema:startDate": "2001-06-26T21:21:20"
+      "schema:startTime": "2001-06-26T21:21:20"
     }
   ],
-  "schema:temporalCoverage": "2001-06-26T21:21:20",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/co_metal_rt/iv/absorptioncoefficient",

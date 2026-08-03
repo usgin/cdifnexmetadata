@@ -440,10 +440,9 @@
           "schema:value": "N2 30cm"
         }
       ],
-      "schema:startDate": "1995-06-20T04:30:44"
+      "schema:startTime": "1995-06-20T04:30:44"
     }
   ],
-  "schema:temporalCoverage": "1995-06-20T04:30:44",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_Mn3O4_rt_01/iv/incidentintensity",

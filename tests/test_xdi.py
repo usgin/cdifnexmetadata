@@ -561,14 +561,46 @@ def test_an_unparseable_datetime_survives_into_the_document(tmp_path):
     doc = _emit(tmp_path, SPACED.replace(
         "# Element.edge: K",
         "# Element.edge: K\n# Scan.start_time: sometime last Tuesday")).document
-    assert doc["schema:temporalCoverage"] == "sometime last Tuesday"
+    assert doc["prov:wasGeneratedBy"][0]["schema:startTime"] == (
+        "sometime last Tuesday")
 
 
-def test_a_scan_datetime_reaches_the_document_as_iso_8601(tmp_path):
+def test_a_scan_datetime_reaches_the_activity_as_iso_8601(tmp_path):
     """The scan time travels through the entry rather than the crosswalk,
     so this is the check that the normaliser is wired into that path and
-    not only into the header loop."""
+    not only into the header loop.
+
+    It lands on the acquisition, not on the dataset: when a measurement
+    was made is a fact about the measuring, and schema:Action takes
+    startTime."""
     doc = _emit(tmp_path, SPACED.replace(
         "# Element.edge: K",
         "# Element.edge: K\n# Scan.start_time: 2016/07/05 18:29:20")).document
-    assert doc["schema:temporalCoverage"] == "2016-07-05T18:29:20"
+    event = doc["prov:wasGeneratedBy"][0]
+    assert event["schema:startTime"] == "2016-07-05T18:29:20"
+    assert "schema:endTime" not in event
+
+
+def test_a_scan_with_an_end_time_gets_both(tmp_path):
+    doc = _emit(tmp_path, SPACED.replace(
+        "# Element.edge: K",
+        "# Element.edge: K\n# Scan.start_time: 2016/07/05 18:29:20"
+        "\n# Scan.end_time: 2016/07/05 18:36:26")).document
+    event = doc["prov:wasGeneratedBy"][0]
+    assert event["schema:startTime"] == "2016-07-05T18:29:20"
+    assert event["schema:endTime"] == "2016-07-05T18:36:26"
+
+
+def test_the_dataset_claims_no_temporal_coverage(tmp_path):
+    """schema:temporalCoverage says what period the data is *about*. An
+    absorption edge is a property of a material, not a record of an
+    interval, so the answer is nothing -- and a spectrum tagged with its
+    acquisition date would be returned by a date-range search for data
+    covering that day, which is not what it is."""
+    doc = _emit(tmp_path, SPACED.replace(
+        "# Element.edge: K",
+        "# Element.edge: K\n# Scan.start_time: 2016/07/05 18:29:20")).document
+    assert "schema:temporalCoverage" not in doc
+    dist = doc["schema:distribution"][0]
+    for part in dist.get("schema:hasPart", []):
+        assert "schema:temporalCoverage" not in part

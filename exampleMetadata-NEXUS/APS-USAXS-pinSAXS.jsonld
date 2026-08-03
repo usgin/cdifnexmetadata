@@ -474,10 +474,10 @@
           "schema:unitText": "mm"
         }
       ],
-      "schema:startDate": "2016-06-23T12:02:31-06:00"
+      "schema:startTime": "2016-06-23T12:02:31-06:00",
+      "schema:endTime": "2016-06-23T16:00:20-06:00"
     }
   ],
-  "schema:temporalCoverage": "2016-06-23T12:02:31-06:00/2016-06-23T16:00:20-06:00",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/APS-USAXS-pinSAXS/iv/backgroundintensity",

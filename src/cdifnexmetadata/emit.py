@@ -463,9 +463,11 @@ def _emit_entry(
         pairs.append(("edge", edge))
     if pairs:
         part["schema:keywords"] = _keywords(pairs)
-    coverage = _coverage(entry)
-    if coverage:
-        part["schema:temporalCoverage"] = coverage
+    # No `schema:temporalCoverage` here either -- see the acquisition
+    # block in `emit_document`. A part's own acquisition time is
+    # currently represented only in the file-wide span on the single
+    # activity; giving each entry its own prov:wasGeneratedBy would keep
+    # it per-entry, and is the open question in README.md.
     if record.definition:
         part["dcterms:conformsTo"] = [
             {"@id": f"nxs:applications/{record.definition}.html"}
@@ -1120,16 +1122,24 @@ def emit_document(
     if buckets["activity"] or buckets["unbound"]:
         event["schema:additionalProperty"] = (
             buckets["activity"] + buckets["unbound"])
-    if times:
-        event["schema:startDate"] = sorted(times)[0].split("/")[0]
-    doc["prov:wasGeneratedBy"] = [event]
-
+    # When the scan ran, on the acquisition -- not as coverage on the
+    # dataset. `schema:temporalCoverage` says what period the data is
+    # *about*, which for a spectrum is nothing: an absorption edge is a
+    # property of a material, not a record of an interval. The time that
+    # matters is when the measurement was made, and that belongs to the
+    # activity that made it.
+    #
+    # `startTime`/`endTime`, not `startDate`: schema.org gives startDate
+    # to Event and CreativeWork, and Action -- which this is -- takes
+    # startTime. The profile's cdifProvActivity shape asks for both by
+    # name.
     if times:
         starts = sorted(t.split("/")[0] for t in times)
         ends = sorted(t.split("/")[-1] for t in times)
-        doc["schema:temporalCoverage"] = (
-            starts[0] if starts[0] == ends[-1] else f"{starts[0]}/{ends[-1]}"
-        )
+        event["schema:startTime"] = starts[0]
+        if ends[-1] != starts[0]:
+            event["schema:endTime"] = ends[-1]
+    doc["prov:wasGeneratedBy"] = [event]
 
     if variables:
         doc["schema:variableMeasured"] = variables

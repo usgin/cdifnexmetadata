@@ -406,10 +406,10 @@
           }
         ]
       },
-      "schema:startDate": "2008-04-10T21:58:50"
+      "schema:startTime": "2008-04-10T21:58:50",
+      "schema:endTime": "2008-04-10T22:16:32"
     }
   ],
-  "schema:temporalCoverage": "2008-04-10T21:58:50/2008-04-10T22:16:32",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/Se_Na2SeO4_rt_01/iv/incidentintensity",

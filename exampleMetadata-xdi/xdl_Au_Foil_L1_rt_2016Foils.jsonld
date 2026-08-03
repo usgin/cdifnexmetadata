@@ -406,10 +406,10 @@
           }
         ]
       },
-      "schema:startDate": "2016-07-05T18:29:20"
+      "schema:startTime": "2016-07-05T18:29:20",
+      "schema:endTime": "2016-07-05T18:36:26"
     }
   ],
-  "schema:temporalCoverage": "2016-07-05T18:29:20/2016-07-05T18:36:26",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_Au_Foil_L1_rt_2016Foils/iv/incidentintensity",

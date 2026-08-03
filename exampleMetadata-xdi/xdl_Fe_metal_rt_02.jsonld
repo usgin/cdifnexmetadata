@@ -408,10 +408,9 @@
           "schema:value": "N2 15cm"
         }
       ],
-      "schema:startDate": "2001-08-09T14:04:00"
+      "schema:startTime": "2001-08-09T14:04:00"
     }
   ],
-  "schema:temporalCoverage": "2001-08-09T14:04:00",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_Fe_metal_rt_02/iv/incidentintensity",

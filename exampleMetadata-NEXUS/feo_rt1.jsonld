@@ -405,10 +405,9 @@
           "schema:value": "Si"
         }
       ],
-      "schema:startDate": "2001-08-10T11:10:00"
+      "schema:startTime": "2001-08-10T11:10:00"
     }
   ],
-  "schema:temporalCoverage": "2001-08-10T11:10:00",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/feo_rt1/iv/absorptioncoefficient",

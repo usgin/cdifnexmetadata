@@ -406,10 +406,10 @@
           }
         ]
       },
-      "schema:startDate": "2014-04-02T09:49:46"
+      "schema:startTime": "2014-04-02T09:49:46",
+      "schema:endTime": "2014-04-02T09:58:34"
     }
   ],
-  "schema:temporalCoverage": "2014-04-02T09:49:46/2014-04-02T09:58:34",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_pyrite2_rt_01/iv/fluorescenceintensity",

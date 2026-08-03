@@ -426,10 +426,10 @@
           }
         ]
       },
-      "schema:startDate": "2005-07-23T16:45:48"
+      "schema:startTime": "2005-07-23T16:45:48",
+      "schema:endTime": "2005-07-23T17:02:30"
     }
   ],
-  "schema:temporalCoverage": "2005-07-23T16:45:48/2005-07-23T17:02:30",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_V_foil/iv/incidentintensity",

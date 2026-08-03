@@ -283,6 +283,21 @@ and `mm` from a real file both appear as `schema:unitText`.
 **An `NXsubentry` declaring a different definition from its parent** is
 not handled; it is rare and was tabled.
 
+**Per-entry acquisition times, in a multi-entry file.** When a
+measurement happened is a fact about the measuring, so it goes on the
+`prov:wasGeneratedBy` activity as `schema:startTime`/`schema:endTime` —
+not on the dataset as `schema:temporalCoverage`, which says what period
+the data is *about*, and a spectrum is not about a period. An absorption
+edge is a property of a material.
+
+There is one activity per document, so a file holding many entries gets
+one span covering all of them. `FeXAS.nxs` has 26 entries measured over
+three days; the document now says 2020-08-10T09:18:48 to
+2020-08-12T22:12:09 and no longer says which entry was which. Giving
+each part its own `prov:wasGeneratedBy` would keep the per-entry times,
+at the cost of 26 activity nodes repeating one instrument set. Not
+decided.
+
 **Processed-data profiles** — `NXxasproc` and the EXAFS analysis chain —
 are out of scope. Nothing in the NeXus ecosystem has moved on EXAFS
 since 2008, and processed data warrants its own profile rather than

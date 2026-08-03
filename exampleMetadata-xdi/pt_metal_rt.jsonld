@@ -464,10 +464,9 @@
           "schema:value": "10cm  N2"
         }
       ],
-      "schema:startDate": "2001-06-27T04:10:45"
+      "schema:startTime": "2001-06-27T04:10:45"
     }
   ],
-  "schema:temporalCoverage": "2001-06-27T04:10:45",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/pt_metal_rt/iv/incidentintensity",

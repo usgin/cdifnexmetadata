@@ -408,10 +408,9 @@
           "schema:value": "N2 15cm"
         }
       ],
-      "schema:startDate": "2002-03-16T19:08:35"
+      "schema:startTime": "2002-03-16T19:08:35"
     }
   ],
-  "schema:temporalCoverage": "2002-03-16T19:08:35",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_Fe3O4_rt_01/iv/incidentintensity",

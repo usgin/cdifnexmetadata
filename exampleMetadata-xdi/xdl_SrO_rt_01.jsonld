@@ -472,10 +472,9 @@
           "schema:value": "N2+Ar 30cm"
         }
       ],
-      "schema:startDate": "1995-06-14T19:09:21"
+      "schema:startTime": "1995-06-14T19:09:21"
     }
   ],
-  "schema:temporalCoverage": "1995-06-14T19:09:21",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_SrO_rt_01/iv/absorptioncoefficient",

@@ -464,10 +464,9 @@
           "schema:value": "10cm  N2 (?)"
         }
       ],
-      "schema:startDate": "2008-04-10T21:58:50"
+      "schema:startTime": "2008-04-10T21:58:50"
     }
   ],
-  "schema:temporalCoverage": "2008-04-10T21:58:50",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/se_na2so4_rt/iv/incidentintensity",

@@ -440,10 +440,9 @@
           "schema:value": "Kr 15cm"
         }
       ],
-      "schema:startDate": "1995-06-16T15:35:58"
+      "schema:startTime": "1995-06-16T15:35:58"
     }
   ],
-  "schema:temporalCoverage": "1995-06-16T15:35:58",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_CdS_10K_03/iv/incidentintensity",

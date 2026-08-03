@@ -278,10 +278,9 @@
           "schema:description": "read from a non-standard file layout (nexus-manual-sketch)"
         }
       ],
-      "schema:startDate": "2026-07-28T00:00:00Z"
+      "schema:startTime": "2026-07-28T00:00:00Z"
     }
   ],
-  "schema:temporalCoverage": "2026-07-28T00:00:00Z",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/NXxas-manual-sketch/iv/incidentintensity",
