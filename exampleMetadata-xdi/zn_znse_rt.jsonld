@@ -463,9 +463,11 @@
           "schema:name": "transmittedintensity",
           "schema:value": "10cm  N2 (?)"
         }
-      ]
+      ],
+      "schema:startDate": "2008-04-10T17:00:26"
     }
   ],
+  "schema:temporalCoverage": "2008-04-10T17:00:26",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/zn_znse_rt/iv/incidentintensity",

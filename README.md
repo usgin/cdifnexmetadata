@@ -116,14 +116,15 @@ from several places, each saying which.
 | `nxdl/repository.py` | 241 | fetches NXDL definitions, pinned to a commit SHA, cached |
 | `nxdl/definition.py` | 366 | parses NXDL, resolves `extends` inheritance |
 | `map/crosswalk.py` | 462 | SSSOM loading, NXDL path matching, crosswalk selection |
-| `map/concepts.py` | 494 | the concept-keyed record; NeXus binding |
-| `map/xdi.py` | 305 | XDI binding — dictionary lookup, not tree walking |
+| `map/concepts.py` | 508 | the concept-keyed record; NeXus binding |
+| `map/xdi.py` | 338 | XDI binding — dictionary lookup, not tree walking |
+| `map/normalise.py` | 147 | free-text header values a producer wrote outside the dictionary |
 | `map/legacy.py` | 114 | where non-standard writers actually put things |
-| `emit.py` | 992 | concept records to CDIF JSON-LD |
+| `emit.py` | 1173 | concept records to CDIF JSON-LD |
 | `validate.py` | 462 | framing, JSON Schema, SHACL |
 | `cli.py` | 234 | dispatch, batch, reporting, exit codes |
 
-189 tests, 2 skipped. They run offline — fixtures are synthesised and
+204 tests, 2 skipped. They run offline — fixtures are synthesised and
 crosswalks written inline, so a failure means this code changed rather
 than that upstream revised a mapping row.
 
@@ -365,6 +366,38 @@ should not be given a unit. Four are `absorptioncoefficient`, which
 cannot be given one until the glossary settles whether that concept is
 mu (inverse length, as its definition says) or mu*t (dimensionless, as
 every file stores).
+
+### Normalising what producers actually wrote
+
+XDI headers are free text, and files say things the dictionary does not
+allow. Four values are read rather than passed through — see
+`map/normalise.py`:
+
+| header | written as | emitted as |
+|---|---|---|
+| `Sample.temperature` | `room temperature`, `RT`, `ambient` | `295.0 K`, plus a conversion note |
+| `Sample.temperature` | `10K` | `10 K` |
+| `Scan.edge_energy` | `7112.` | `7112. units not reported` |
+| `Scan.start_time`, `Scan.end_time` | `2016/07/05 18:29:20` | `2016-07-05T18:29:20` |
+
+Each leaves the value alone when it does not recognise it. `10 K
+(nominal)` stays whole rather than being truncated to the part that
+parsed, and a date nothing can read stays as written for validation to
+report — a conversion that invented a plausible value would hide the
+defect it was meant to surface.
+
+The qualitative temperatures are the only case that asserts something
+the file does not say, so they are the only case that leaves a note.
+It goes on `schema:description`:
+
+> … Conversion notes: temperature reported as "room temperature".
+
+Nobody measured 295 K. Without the note the record claims an instrument
+reading it never made, and a consumer comparing temperatures across a
+corpus cannot tell the stand-ins from the measurements.
+
+These were ported from the RML pipeline, where they were worked out
+against the same 55-file corpus.
 
 ### Where concepts actually sit in real files
 

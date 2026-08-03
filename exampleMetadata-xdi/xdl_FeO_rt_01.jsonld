@@ -156,7 +156,7 @@
   "schema:license": [
     "http://www.opengis.net/def/nil/OGC/0/missing"
   ],
-  "schema:description": "X-ray absorption spectroscopy measurement, FeO powder  Room Temperature, read from a XDI file.",
+  "schema:description": "X-ray absorption spectroscopy measurement, FeO powder  Room Temperature, read from a XDI file. Conversion notes: temperature reported as \"Room Temperature\".",
   "schema:creator": {
     "@type": [
       "schema:Person"
@@ -378,7 +378,7 @@
               }
             ],
             "schema:name": "sample temperature",
-            "schema:value": "Room Temperature"
+            "schema:value": "295.0 K"
           }
         ]
       },
@@ -407,9 +407,11 @@
           "schema:name": "transmittedintensity",
           "schema:value": "N2 15cm"
         }
-      ]
+      ],
+      "schema:startDate": "2001-08-10T11:10:00"
     }
   ],
+  "schema:temporalCoverage": "2001-08-10T11:10:00",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_FeO_rt_01/iv/incidentintensity",

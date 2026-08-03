@@ -156,7 +156,7 @@
   "schema:license": [
     "http://www.opengis.net/def/nil/OGC/0/missing"
   ],
-  "schema:description": "X-ray absorption spectroscopy measurement, WO2, read from a XDI file.",
+  "schema:description": "X-ray absorption spectroscopy measurement, WO2, read from a XDI file. Conversion notes: temperature reported as \"room temperature\".",
   "schema:creator": {
     "@type": [
       "schema:Person"
@@ -402,12 +402,14 @@
               }
             ],
             "schema:name": "sample temperature",
-            "schema:value": "room temperature"
+            "schema:value": "295.0 K"
           }
         ]
-      }
+      },
+      "schema:startDate": "2008-04-12T03:48:03"
     }
   ],
+  "schema:temporalCoverage": "2008-04-12T03:48:03/2008-04-12T04:02:26",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_WO2_rt_01/iv/incidentintensity",

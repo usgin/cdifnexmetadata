@@ -437,7 +437,7 @@
             }
           ],
           "schema:name": "edge energy",
-          "schema:value": "12658.0"
+          "schema:value": "12658.0 units not reported"
         },
         {
           "@type": [
@@ -463,9 +463,11 @@
           "schema:name": "transmittedintensity",
           "schema:value": "10cm  N2 (?)"
         }
-      ]
+      ],
+      "schema:startDate": "2008-04-10T21:58:50"
     }
   ],
+  "schema:temporalCoverage": "2008-04-10T21:58:50",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/se_na2so4_rt/iv/incidentintensity",

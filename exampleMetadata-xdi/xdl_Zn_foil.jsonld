@@ -457,9 +457,11 @@
             "schema:value": "metal foil"
           }
         ]
-      }
+      },
+      "schema:startDate": "2016-03-21T11:36:21"
     }
   ],
+  "schema:temporalCoverage": "2016-03-21T11:36:21/2016-03-21T11:46:36",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_Zn_foil/iv/incidentintensity",

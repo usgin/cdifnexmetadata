@@ -443,9 +443,11 @@
           "schema:name": "transmittedintensity",
           "schema:value": "10cm  N2"
         }
-      ]
+      ],
+      "schema:startDate": "2001-06-26T22:27:31"
     }
   ],
+  "schema:temporalCoverage": "2001-06-26T22:27:31",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/nonxafs_1d/iv/absorptioncoefficient",

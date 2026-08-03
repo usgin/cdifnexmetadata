@@ -431,9 +431,11 @@
           "schema:name": "transmittedintensity",
           "schema:value": "10cm  N2"
         }
-      ]
+      ],
+      "schema:startDate": "2001-06-26T21:46:07"
     }
   ],
+  "schema:temporalCoverage": "2001-06-26T21:46:07",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/ni_metal_rt/iv/absorptioncoefficient",

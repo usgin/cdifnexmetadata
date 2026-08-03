@@ -172,6 +172,40 @@ def test_the_crosswalk_direction_is_read_not_assumed():
 # through the shared emitter
 # ---------------------------------------------------------------------------
 
+def _sample_property(doc, concept):
+    """The PropertyValue for a concept on the sample."""
+    got = _property_anywhere(doc, concept)
+    assert got is not None, f"{concept} is not in the document"
+    return got
+
+
+def _property_anywhere(doc, concept):
+    """The first PropertyValue carrying a propertyID, wherever it sits.
+
+    Header concepts land on the sample, an instrument or the activity
+    depending on the crosswalk row, and these tests are about the value
+    rather than its placement.
+    """
+    def walk(node):
+        if isinstance(node, dict):
+            ids = node.get("schema:propertyID") or []
+            if any(i.get("@id") == concept for i in ids
+                   if isinstance(i, dict)) and "schema:value" in node:
+                return node
+            for v in node.values():
+                got = walk(v)
+                if got is not None:
+                    return got
+        elif isinstance(node, list):
+            for v in node:
+                got = walk(v)
+                if got is not None:
+                    return got
+        return None
+
+    return walk(doc)
+
+
 def _emit(tmp_path, text=SPACED):
     insp, x = inspect_xdi(_write(tmp_path, text))
     return emit_document(
@@ -435,3 +469,106 @@ def test_the_catalog_record_says_how_it_was_made(tmp_path):
 def test_the_creator_belongs_to_the_dataset(tmp_path):
     doc = _emit(tmp_path).document
     assert doc["schema:creator"]["schema:name"] == "Missing"
+
+
+# ---------------------------------------------------------------------------
+# normalising free-text header values
+#
+# Ported from the RML pipeline, where they were worked out against the
+# same corpus. Each one exists because a producer wrote something the
+# dictionary does not allow, and passing it through emits metadata that
+# says something other than what it means.
+# ---------------------------------------------------------------------------
+
+def test_a_qualitative_temperature_becomes_a_number_and_says_so(tmp_path):
+    """`room temperature` is not a temperature a machine can compare, so
+    it becomes 295.0 K. But nobody measured 295.0 K, so the record has
+    to say where the number came from -- otherwise the file appears to
+    report an instrument reading it never made."""
+    doc = _emit(tmp_path).document
+    prop = _sample_property(doc, "xas:temperature")
+    assert prop["schema:value"] == "295.0 K"
+    assert 'temperature reported as "room temperature"' in (
+        doc["schema:description"])
+
+
+def test_a_temperature_and_its_unit_are_separated(tmp_path):
+    """`10K` is unambiguous but unparseable. Spacing it changes nothing
+    about what the file claims, so it carries no note."""
+    doc = _emit(tmp_path, SPACED.replace(
+        "# Sample.temperature: room temperature",
+        "# Sample.temperature: 10K")).document
+    assert _sample_property(doc, "xas:temperature")["schema:value"] == "10 K"
+    assert "Conversion notes" not in doc["schema:description"]
+
+
+def test_an_unrecognised_temperature_is_left_alone(tmp_path):
+    """The pattern is anchored, so a value with trailing text falls
+    through whole rather than being truncated to the part that parsed.
+    A validator reporting `10 K (nominal)` is a better outcome than this
+    silently discarding the qualification."""
+    doc = _emit(tmp_path, SPACED.replace(
+        "# Sample.temperature: room temperature",
+        "# Sample.temperature: 10 K (nominal)")).document
+    assert _sample_property(doc, "xas:temperature")["schema:value"] == (
+        "10 K (nominal)")
+
+
+def test_an_energy_without_a_unit_says_the_unit_is_missing(tmp_path):
+    """Rather than assuming eV. Which unit a bare number is in is
+    precisely what the file failed to record, and an absorption edge
+    energy in the wrong unit is not a near miss."""
+    doc = _emit(tmp_path, SPACED.replace(
+        "# Element.edge: K",
+        "# Element.edge: K\n# Scan.edge_energy: 7112.")).document
+    prop = _property_anywhere(doc, "xas:edgeenergy")
+    assert prop is not None, "the edge energy was not emitted at all"
+    assert prop["schema:value"] == "7112. units not reported"
+
+
+def test_an_energy_that_carries_its_unit_is_untouched(tmp_path):
+    doc = _emit(tmp_path, SPACED.replace(
+        "# Element.edge: K",
+        "# Element.edge: K\n# Scan.edge_energy: 7112 eV")).document
+    assert _property_anywhere(
+        doc, "xas:edgeenergy")["schema:value"] == "7112 eV"
+
+
+@pytest.mark.parametrize("raw", [
+    "2016/07/05 18:29:20",
+    "2016-07-05T18:29:20",
+    "20160705T182920",
+])
+def test_datetimes_are_normalised_to_iso_8601(tmp_path, raw):
+    """XDI says ISO 8601 and files say whatever the acquisition software
+    wrote. A harvester sorting by date cannot compare these."""
+    from cdifnexmetadata.map.normalise import normalize_datetime
+
+    assert normalize_datetime(raw) == "2016-07-05T18:29:20"
+
+
+def test_an_unparseable_datetime_is_not_guessed_at(tmp_path):
+    """None, so the caller keeps the original and validation reports it.
+    A conversion that invented a date would hide the defect."""
+    from cdifnexmetadata.map.normalise import normalize_datetime
+
+    assert normalize_datetime("sometime last Tuesday") is None
+
+
+def test_an_unparseable_datetime_survives_into_the_document(tmp_path):
+    """It is still what the file said. Dropping it would lose the only
+    evidence that the producer recorded a time at all."""
+    doc = _emit(tmp_path, SPACED.replace(
+        "# Element.edge: K",
+        "# Element.edge: K\n# Scan.start_time: sometime last Tuesday")).document
+    assert doc["schema:temporalCoverage"] == "sometime last Tuesday"
+
+
+def test_a_scan_datetime_reaches_the_document_as_iso_8601(tmp_path):
+    """The scan time travels through the entry rather than the crosswalk,
+    so this is the check that the normaliser is wired into that path and
+    not only into the header loop."""
+    doc = _emit(tmp_path, SPACED.replace(
+        "# Element.edge: K",
+        "# Element.edge: K\n# Scan.start_time: 2016/07/05 18:29:20")).document
+    assert doc["schema:temporalCoverage"] == "2016-07-05T18:29:20"

@@ -156,7 +156,7 @@
   "schema:license": [
     "http://www.opengis.net/def/nil/OGC/0/missing"
   ],
-  "schema:description": "X-ray absorption spectroscopy measurement, EuSe, read from a XDI file.",
+  "schema:description": "X-ray absorption spectroscopy measurement, EuSe, read from a XDI file. Conversion notes: temperature reported as \"room temperature\".",
   "schema:creator": {
     "@type": [
       "schema:Person"
@@ -402,12 +402,14 @@
               }
             ],
             "schema:name": "sample temperature",
-            "schema:value": "room temperature"
+            "schema:value": "295.0 K"
           }
         ]
-      }
+      },
+      "schema:startDate": "2009-07-06T11:05:39"
     }
   ],
+  "schema:temporalCoverage": "2009-07-06T11:05:39/2009-07-06T11:23:38",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_EuSe_eu_l3_001/iv/incidentintensity",

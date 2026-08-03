@@ -410,12 +410,14 @@
               }
             ],
             "schema:name": "sample temperature",
-            "schema:value": "15K"
+            "schema:value": "15 K"
           }
         ]
-      }
+      },
+      "schema:startDate": "1997-03-18T12:50:19"
     }
   ],
+  "schema:temporalCoverage": "1997-03-18T12:50:19",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_Sr_slawsonite_15K_01/iv/absorptioncoefficient",

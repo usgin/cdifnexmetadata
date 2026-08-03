@@ -367,9 +367,11 @@
           "schema:name": "transmittedintensity",
           "schema:value": "N2 15cm"
         }
-      ]
+      ],
+      "schema:startDate": "2001-08-10T11:10:00"
     }
   ],
+  "schema:temporalCoverage": "2001-08-10T11:10:00",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/feo_rt1/iv/absorptioncoefficient",

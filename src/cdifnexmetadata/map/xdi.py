@@ -36,6 +36,7 @@ from cdifnexmetadata.map.concepts import (
     ConceptValue,
     MappingResult,
 )
+from cdifnexmetadata.map.normalise import normalize, normalize_datetime
 from cdifnexmetadata.emit import OGC_NIL_MISSING
 from cdifnexmetadata.map.crosswalk import Crosswalk, DATA_DIR, load_crosswalk
 
@@ -214,6 +215,17 @@ def map_xdi(
 
     lookup = _index(cw)
     entry = xdi.entries[0] if xdi.entries else None
+    # The scan's start and end reach the document through the entry
+    # rather than the crosswalk, so they are normalised here rather than
+    # in the header loop below. XDI says ISO 8601; files say whatever the
+    # acquisition software wrote, and a harvester sorting by date cannot
+    # compare `2016/07/05 18:29:20` with `2016-07-05T18:29:20`. An
+    # unparseable value is left as it was for validation to report.
+    if entry is not None:
+        for attr in ("start_time", "end_time"):
+            iso = normalize_datetime(getattr(entry, attr) or "")
+            if iso is not None:
+                setattr(entry, attr, iso)
     record = ConceptRecord(
         entry_name=entry.name if entry else "spectrum",
         entry_path="/",
@@ -231,6 +243,13 @@ def map_xdi(
             unmapped.append(key)
             continue
         concept, predicate, confidence, comment = hit
+        # Free-text headers, normalised before they become values. A
+        # producer may write a temperature as `room temperature`, a value
+        # and unit run together as `10K`, a datetime in any of a dozen
+        # shapes, or an edge energy with no unit. See map/normalise.py.
+        value, conversion = normalize(key, value)
+        if conversion and conversion not in record.conversion_notes:
+            record.conversion_notes.append(conversion)
         record.add(ConceptValue(
             concept=concept,
             value=value,
@@ -238,7 +257,10 @@ def map_xdi(
             source_path=f"#{key}",
             predicate=predicate,
             confidence=confidence,
-            note=comment,
+            # The conversion note travels with the value it changed, so a
+            # consumer sees what the file said as well as what we made
+            # of it.
+            note=f"{comment} {conversion}".strip() if conversion else comment,
         ))
 
     # -- columns: what was actually measured ---------------------------

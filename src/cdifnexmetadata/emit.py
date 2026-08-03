@@ -370,6 +370,28 @@ def _property_value(
 # per-entry emission
 # ---------------------------------------------------------------------------
 
+def _coverage(entry: Any) -> str | None:
+    """When an entry was measured, as a date or an ISO 8601 interval.
+
+    `.start_time` and `.end_time` are properties on both NXEntry and
+    XDIEntry. Going through them rather than a NeXus-only field lookup is
+    what lets one function serve either binding.
+
+    Separate from `_emit_entry` because the document needs this even when
+    it emits no parts: a file with one entry states its own coverage, and
+    reading the times back off the parts would silently lose them.
+    """
+    start = entry.start_time
+    if not start:
+        return None
+    # `_scalar_text`, not `_text`: h5py hands back a one-element array for
+    # a scalar string field, and `str()` on that writes the brackets into
+    # the document.
+    end = entry.end_time
+    return (f"{_scalar_text(start)}/{_scalar_text(end)}" if end
+            else _scalar_text(start))
+
+
 def _emit_entry(
     entry: NXEntry,
     record: ConceptRecord,
@@ -441,15 +463,9 @@ def _emit_entry(
         pairs.append(("edge", edge))
     if pairs:
         part["schema:keywords"] = _keywords(pairs)
-    # `.title`, `.start_time` and `.end_time` are properties on both
-    # NXEntry and XDIEntry. Going through them rather than a NeXus-only
-    # field lookup is what lets this function serve either binding.
-    start = entry.start_time
-    end = entry.end_time
-    if start:
-        part["schema:temporalCoverage"] = (
-            f"{_text(start)}/{_text(end)}" if end else _text(start)
-        )
+    coverage = _coverage(entry)
+    if coverage:
+        part["schema:temporalCoverage"] = coverage
     if record.definition:
         part["dcterms:conformsTo"] = [
             {"@id": f"nxs:applications/{record.definition}.html"}
@@ -999,6 +1015,19 @@ def emit_document(
             f"read from a {source_label} file."
         )
 
+    # Any header value this reader replaced rather than read, said in the
+    # record itself and not only in the provenance report. What a
+    # consumer needs to know -- that 295.0 K stands in for the words
+    # "room temperature" and is not a reading off an instrument -- is
+    # invisible in the value, so it has to be stated beside it.
+    conversions = list(dict.fromkeys(
+        note for r in records for note in r.conversion_notes
+    ))
+    if conversions:
+        doc["schema:description"] += (
+            " Conversion notes: " + "; ".join(conversions) + "."
+        )
+
     # The creator belongs to the dataset, not to the record about it. It
     # is a sentinel here because neither format carries one; a deployment
     # with real depositor information overlays it.
@@ -1050,10 +1079,11 @@ def emit_document(
         }]
 
     # -- acquisition --------------------------------------------------------
-    times = [
-        p["schema:temporalCoverage"] for p in parts
-        if "schema:temporalCoverage" in p
-    ]
+    # Read off the entries, not the parts. A file with one entry emits no
+    # parts, and taking the times from them dropped the acquisition date
+    # from every single-entry file -- which is most XDI files, and every
+    # one of them records a scan time.
+    times = [c for c in (_coverage(e) for e in nexus.entries) if c]
     event: dict[str, Any] = {
         "@id": f"{base}/acquisition",
         "@type": ["schema:Action", "prov:Activity"],

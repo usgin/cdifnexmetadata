@@ -141,9 +141,11 @@
             ]
           }
         }
-      ]
+      ],
+      "schema:startDate": "2019-02-14T14:25:57"
     }
   ],
+  "schema:temporalCoverage": "2019-02-14T14:25:57/2019-02-14T14:26:24",
   "schema:subjectOf": {
     "@id": "https://w3id.org/cdif/testing/NXmx-Therm_6_2/metadata",
     "@type": [

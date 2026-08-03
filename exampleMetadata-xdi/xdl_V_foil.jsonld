@@ -425,9 +425,11 @@
             "schema:value": "metal foil, Joe Wong box set"
           }
         ]
-      }
+      },
+      "schema:startDate": "2005-07-23T16:45:48"
     }
   ],
+  "schema:temporalCoverage": "2005-07-23T16:45:48/2005-07-23T17:02:30",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_V_foil/iv/incidentintensity",

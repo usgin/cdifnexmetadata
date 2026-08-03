@@ -107,6 +107,12 @@ class ConceptRecord:
     definition: str | None = None
     values: dict[str, list[ConceptValue]] = field(default_factory=dict)
     warnings: list[str] = field(default_factory=list)
+    #: Header values this reader replaced rather than read -- see
+    #: map/normalise.py. Kept apart from `warnings` because a warning
+    #: says something may be wrong, whereas these say the emitted value
+    #: is deliberately not the one in the file, which a consumer needs
+    #: even when nothing is wrong at all.
+    conversion_notes: list[str] = field(default_factory=list)
 
     def add(self, cv: ConceptValue) -> None:
         self.values.setdefault(cv.concept, []).append(cv)
@@ -148,6 +154,7 @@ class ConceptRecord:
                 for concept, vals in sorted(self.values.items())
             },
             "warnings": self.warnings,
+            "conversion_notes": self.conversion_notes,
         }
 
 

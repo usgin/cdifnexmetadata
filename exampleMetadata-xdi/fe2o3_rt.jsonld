@@ -431,9 +431,11 @@
           "schema:name": "transmittedintensity",
           "schema:value": "15cm  N2"
         }
-      ]
+      ],
+      "schema:startDate": "2002-03-16T14:48:54"
     }
   ],
+  "schema:temporalCoverage": "2002-03-16T14:48:54",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/fe2o3_rt/iv/absorptioncoefficient",

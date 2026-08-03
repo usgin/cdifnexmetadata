@@ -220,7 +220,7 @@
   "schema:license": [
     "http://www.opengis.net/def/nil/OGC/0/missing"
   ],
-  "schema:description": "X-ray absorption spectroscopy measurement, strontium oxide, read from a XDI file.",
+  "schema:description": "X-ray absorption spectroscopy measurement, strontium oxide, read from a XDI file. Conversion notes: temperature reported as \"room temperature\".",
   "schema:creator": {
     "@type": [
       "schema:Person"
@@ -442,7 +442,7 @@
               }
             ],
             "schema:name": "sample temperature",
-            "schema:value": "room temperature"
+            "schema:value": "295.0 K"
           }
         ]
       },
@@ -471,9 +471,11 @@
           "schema:name": "transmittedintensity",
           "schema:value": "N2+Ar 30cm"
         }
-      ]
+      ],
+      "schema:startDate": "1995-06-14T19:09:21"
     }
   ],
+  "schema:temporalCoverage": "1995-06-14T19:09:21",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_SrO_rt_01/iv/absorptioncoefficient",

@@ -156,7 +156,7 @@
   "schema:license": [
     "http://www.opengis.net/def/nil/OGC/0/missing"
   ],
-  "schema:description": "X-ray absorption spectroscopy measurement, Pb (xdl_Pb_Foil_L2_rt_2016Foils), read from a XDI file.",
+  "schema:description": "X-ray absorption spectroscopy measurement, Pb (xdl_Pb_Foil_L2_rt_2016Foils), read from a XDI file. Conversion notes: temperature reported as \"room temperature\".",
   "schema:creator": {
     "@type": [
       "schema:Person"
@@ -402,12 +402,14 @@
               }
             ],
             "schema:name": "sample temperature",
-            "schema:value": "room temperature"
+            "schema:value": "295.0 K"
           }
         ]
-      }
+      },
+      "schema:startDate": "2016-07-05T17:40:57"
     }
   ],
+  "schema:temporalCoverage": "2016-07-05T17:40:57/2016-07-05T17:47:22",
   "schema:variableMeasured": [
     {
       "@id": "ex:DV/xdl_Pb_Foil_L2_rt_2016Foils/iv/incidentintensity",
