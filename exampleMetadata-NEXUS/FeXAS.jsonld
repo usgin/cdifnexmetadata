@@ -278,6 +278,34 @@
             {
               "@id": "nxs:applications/NXxas.html"
             }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/FeFoil.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of FeFoil.001",
+              "schema:startTime": "2020-08-10T09:18:48",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-10T09:22:32"
+            }
           ]
         },
         {
@@ -455,6 +483,34 @@
             {
               "@id": "nxs:applications/NXxas.html"
             }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_a2n.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_a2n.001",
+              "schema:startTime": "2020-08-10T21:14:18",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-10T21:29:09"
+            }
           ]
         },
         {
@@ -504,6 +560,34 @@
           "dcterms:conformsTo": [
             {
               "@id": "nxs:applications/NXxas.html"
+            }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_a2n.002/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_a2n.002",
+              "schema:startTime": "2020-08-10T22:15:06",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-10T22:29:57"
             }
           ]
         },
@@ -555,6 +639,34 @@
             {
               "@id": "nxs:applications/NXxas.html"
             }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_a41.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_a41.001",
+              "schema:startTime": "2020-08-12T02:17:59",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-12T02:32:50"
+            }
           ]
         },
         {
@@ -604,6 +716,34 @@
           "dcterms:conformsTo": [
             {
               "@id": "nxs:applications/NXxas.html"
+            }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_a41.001_01/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_a41.001_01",
+              "schema:startTime": "2020-08-12T02:17:59",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-12T02:32:50"
             }
           ]
         },
@@ -655,6 +795,34 @@
             {
               "@id": "nxs:applications/NXxas.html"
             }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_b88.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_b88.001",
+              "schema:startTime": "2020-08-10T17:26:19",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-10T17:41:10"
+            }
           ]
         },
         {
@@ -704,6 +872,34 @@
           "dcterms:conformsTo": [
             {
               "@id": "nxs:applications/NXxas.html"
+            }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_b88.001_01/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_b88.001_01",
+              "schema:startTime": "2020-08-10T17:26:19",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-10T17:41:10"
             }
           ]
         },
@@ -755,6 +951,34 @@
             {
               "@id": "nxs:applications/NXxas.html"
             }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_c3d.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_c3d.001",
+              "schema:startTime": "2020-08-12T04:34:49",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-12T04:49:40"
+            }
           ]
         },
         {
@@ -804,6 +1028,34 @@
           "dcterms:conformsTo": [
             {
               "@id": "nxs:applications/NXxas.html"
+            }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_c3d.002/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_c3d.002",
+              "schema:startTime": "2020-08-12T03:34:00",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-12T03:48:52"
             }
           ]
         },
@@ -855,6 +1107,34 @@
             {
               "@id": "nxs:applications/NXxas.html"
             }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_c75.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_c75.001",
+              "schema:startTime": "2020-08-11T03:14:31",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-11T03:29:23"
+            }
           ]
         },
         {
@@ -904,6 +1184,34 @@
           "dcterms:conformsTo": [
             {
               "@id": "nxs:applications/NXxas.html"
+            }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_d22.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_d22.001",
+              "schema:startTime": "2020-08-11T17:41:11",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-11T17:56:02"
             }
           ]
         },
@@ -955,6 +1263,34 @@
             {
               "@id": "nxs:applications/NXxas.html"
             }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_g1a.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_g1a.001",
+              "schema:startTime": "2020-08-10T14:52:00",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-10T15:06:51"
+            }
           ]
         },
         {
@@ -1004,6 +1340,34 @@
           "dcterms:conformsTo": [
             {
               "@id": "nxs:applications/NXxas.html"
+            }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_g4x.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_g4x.001",
+              "schema:startTime": "2020-08-10T11:19:21",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-10T11:34:12"
             }
           ]
         },
@@ -1055,6 +1419,34 @@
             {
               "@id": "nxs:applications/NXxas.html"
             }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_h02.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_h02.001",
+              "schema:startTime": "2020-08-12T14:34:55",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-12T14:49:46"
+            }
           ]
         },
         {
@@ -1104,6 +1496,34 @@
           "dcterms:conformsTo": [
             {
               "@id": "nxs:applications/NXxas.html"
+            }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_j72.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_j72.001",
+              "schema:startTime": "2020-08-11T06:16:55",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-11T06:31:46"
             }
           ]
         },
@@ -1155,6 +1575,34 @@
             {
               "@id": "nxs:applications/NXxas.html"
             }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_ju8.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_ju8.001",
+              "schema:startTime": "2020-08-10T12:50:32",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-10T13:05:23"
+            }
           ]
         },
         {
@@ -1204,6 +1652,34 @@
           "dcterms:conformsTo": [
             {
               "@id": "nxs:applications/NXxas.html"
+            }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_k66.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_k66.001",
+              "schema:startTime": "2020-08-11T20:13:10",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-11T20:28:02"
             }
           ]
         },
@@ -1255,6 +1731,34 @@
             {
               "@id": "nxs:applications/NXxas.html"
             }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_n19.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_n19.001",
+              "schema:startTime": "2020-08-12T16:21:30",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-12T16:36:21"
+            }
           ]
         },
         {
@@ -1304,6 +1808,34 @@
           "dcterms:conformsTo": [
             {
               "@id": "nxs:applications/NXxas.html"
+            }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_r93.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_r93.001",
+              "schema:startTime": "2020-08-11T18:57:10",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-11T19:12:01"
             }
           ]
         },
@@ -1355,6 +1887,34 @@
             {
               "@id": "nxs:applications/NXxas.html"
             }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_s33.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_s33.001",
+              "schema:startTime": "2020-08-12T14:04:30",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-12T14:19:21"
+            }
           ]
         },
         {
@@ -1404,6 +1964,34 @@
           "dcterms:conformsTo": [
             {
               "@id": "nxs:applications/NXxas.html"
+            }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_s38.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_s38.001",
+              "schema:startTime": "2020-08-12T00:01:11",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-12T00:16:03"
             }
           ]
         },
@@ -1455,6 +2043,34 @@
             {
               "@id": "nxs:applications/NXxas.html"
             }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_u71.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_u71.001",
+              "schema:startTime": "2020-08-12T11:17:05",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-12T11:31:56"
+            }
           ]
         },
         {
@@ -1504,6 +2120,34 @@
           "dcterms:conformsTo": [
             {
               "@id": "nxs:applications/NXxas.html"
+            }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_v47.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_v47.001",
+              "schema:startTime": "2020-08-11T22:29:59",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-11T22:44:50"
             }
           ]
         },
@@ -1555,6 +2199,34 @@
             {
               "@id": "nxs:applications/NXxas.html"
             }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_w23.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_w23.001",
+              "schema:startTime": "2020-08-10T20:13:30",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-10T20:28:21"
+            }
           ]
         },
         {
@@ -1605,6 +2277,34 @@
             {
               "@id": "nxs:applications/NXxas.html"
             }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_w37.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_w37.001",
+              "schema:startTime": "2020-08-11T05:00:54",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-11T05:15:45"
+            }
           ]
         },
         {
@@ -1654,6 +2354,34 @@
           "dcterms:conformsTo": [
             {
               "@id": "nxs:applications/NXxas.html"
+            }
+          ],
+          "prov:wasGeneratedBy": [
+            {
+              "@id": "https://w3id.org/cdif/testing/FeXAS/Fe_x56.001/acquisition",
+              "@type": [
+                "schema:Action",
+                "prov:Activity"
+              ],
+              "schema:additionalType": [
+                {
+                  "@id": "xas:analysisevent"
+                }
+              ],
+              "schema:name": "acquisition of Fe_x56.001",
+              "schema:startTime": "2020-08-12T21:57:17",
+              "prov:used": [
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/beamline"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/source"
+                },
+                {
+                  "@id": "https://w3id.org/cdif/testing/FeXAS/used/xraymonochromator"
+                }
+              ],
+              "schema:endTime": "2020-08-12T22:12:09"
             }
           ]
         }
@@ -1909,8 +2637,8 @@
           "schema:value": "Si"
         }
       ],
-      "schema:startTime": "2020-08-10 09:18:48",
-      "schema:endTime": "2020-08-12 22:12:09"
+      "schema:startTime": "2020-08-10T09:18:48",
+      "schema:endTime": "2020-08-12T22:12:09"
     }
   ],
   "schema:variableMeasured": [

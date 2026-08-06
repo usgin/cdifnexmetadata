@@ -192,6 +192,87 @@ def test_a_structurally_different_entry_gets_its_own_structure(tmp_path):
     assert len(doc["schema:distribution"][0]["schema:hasPart"]) == 3
 
 
+def test_each_part_records_when_its_own_entry_was_measured(tmp_path):
+    """A scan series measured over three days has one acquisition per
+    entry. The file-level event spans them all, which answers "when did
+    this batch run" -- not "when was this spectrum taken"."""
+    pth = tmp_path / "f.nxs"
+    with h5py.File(pth, "w") as f:
+        for i, (s, e) in enumerate((
+            ("2020-08-10T09:18:48", "2020-08-10T09:22:32"),
+            ("2020-08-11T21:14:18", "2020-08-11T21:29:09"),
+            ("2020-08-12T21:57:17", "2020-08-12T22:12:09"),
+        )):
+            entry = _scan(f, f"scan{i}", start=s)
+            entry["end_time"] = e
+
+    doc = _emit(pth, _xas_crosswalk(tmp_path)).document
+    parts = doc["schema:distribution"][0]["schema:hasPart"]
+    starts = [p_["prov:wasGeneratedBy"][0]["schema:startTime"] for p_ in parts]
+    assert starts == ["2020-08-10T09:18:48", "2020-08-11T21:14:18",
+                      "2020-08-12T21:57:17"]
+    ends = [p_["prov:wasGeneratedBy"][0]["schema:endTime"] for p_ in parts]
+    assert ends[0] == "2020-08-10T09:22:32"
+
+    # The file-level event still spans the whole series.
+    event = doc["prov:wasGeneratedBy"][0]
+    assert event["schema:startTime"] == "2020-08-10T09:18:48"
+    assert event["schema:endTime"] == "2020-08-12T22:12:09"
+
+    # Distinct activities, one per part -- not one node reused.
+    ids = [p_["prov:wasGeneratedBy"][0]["@id"] for p_ in parts]
+    assert len(set(ids)) == 3
+
+
+def test_a_part_activity_references_the_instruments_it_does_not_repeat(tmp_path):
+    """The same beamline measured every entry. Repeating its description
+    per part would assert one beamline per scan; a reference denotes the
+    one node the file-level event describes in full.
+
+    It also satisfies cdifProvActivity, which requires prov:used on any
+    activity reached through prov:wasGeneratedBy -- which a part's is."""
+    pth = tmp_path / "f.nxs"
+    with h5py.File(pth, "w") as f:
+        _scan(f, "a", start="2020-08-10T09:18:48")
+        _scan(f, "b", start="2020-08-11T09:18:48")
+
+    doc = _emit(pth, _xas_crosswalk(tmp_path)).document
+    parts = doc["schema:distribution"][0]["schema:hasPart"]
+    used = parts[0]["prov:wasGeneratedBy"][0]["prov:used"]
+    assert used, "a part activity must carry at least one prov:used"
+    # References only: an @id and nothing else.
+    assert all(set(u) == {"@id"} for u in used)
+    # And they denote the nodes the file-level event describes.
+    described = {u["@id"] for u in doc["prov:wasGeneratedBy"][0]["prov:used"]}
+    assert {u["@id"] for u in used} <= described
+
+
+def test_a_nexus_timestamp_is_normalised_to_iso_8601(tmp_path):
+    """NeXus files write `2020-08-10 09:18:48` -- a space, not a T.
+    Nothing rejects it: the schema and the SHACL both say "ISO8601
+    date-time" in prose and require only a string, so it validates
+    cleanly and still throws in a consumer that parses it as one."""
+    pth = tmp_path / "f.nxs"
+    with h5py.File(pth, "w") as f:
+        _scan(f, "only", start="2020-08-10 09:18:48")
+
+    doc = _emit(pth, _xas_crosswalk(tmp_path)).document
+    assert doc["prov:wasGeneratedBy"][0]["schema:startTime"] == (
+        "2020-08-10T09:18:48")
+
+
+def test_an_entry_with_no_time_gets_no_acquisition(tmp_path):
+    """Rather than an activity asserting an empty startTime."""
+    pth = tmp_path / "f.nxs"
+    with h5py.File(pth, "w") as f:
+        _scan(f, "a")
+        _scan(f, "b")
+
+    doc = _emit(pth, _xas_crosswalk(tmp_path)).document
+    for part in doc["schema:distribution"][0]["schema:hasPart"]:
+        assert "prov:wasGeneratedBy" not in part
+
+
 def test_a_single_entry_file_has_no_parts(tmp_path):
     """With one entry the dataset IS the entry, so a part would repeat
     the dataset's own name, identifier, url, description and keywords

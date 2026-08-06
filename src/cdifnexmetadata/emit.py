@@ -57,6 +57,7 @@ from cdifnexmetadata.inspect.hdf5 import InspectionResult
 from cdifnexmetadata.inspect.nexus import NeXusResult, NXEntry
 from cdifnexmetadata.map.concepts import ConceptRecord, ConceptValue, MappingResult
 from cdifnexmetadata.map.crosswalk import load_concept_units
+from cdifnexmetadata.map.normalise import normalize_datetime
 
 CONTEXT = {
     "schema": "http://schema.org/",
@@ -220,6 +221,7 @@ CONCEPT_SLOTS: dict[str, Slot] = {
 BEAMLINE_TYPE = "xas:beamline"
 SOURCE_TYPE = "xas:source"
 MONOCHROMATOR_TYPE = "xas:xraymonochromator"
+ANALYSIS_EVENT = "xas:analysisevent"
 
 #: Element symbol -> name, for the keyword DefinedTerm. Only the ones a
 #: XAS beamline actually runs; an unknown symbol still emits a term with
@@ -387,9 +389,18 @@ def _coverage(entry: Any) -> str | None:
     # `_scalar_text`, not `_text`: h5py hands back a one-element array for
     # a scalar string field, and `str()` on that writes the brackets into
     # the document.
+    #
+    # Normalised here rather than only in the XDI binding, because NeXus
+    # files write `2020-08-10 09:18:48` -- a space, not a `T`. Nothing
+    # rejects it: the schema and the SHACL both say "ISO8601 date-time"
+    # in prose and require only a string. So it validates cleanly and
+    # still throws in any consumer that parses it as one.
+    def iso(value: Any) -> str:
+        text = _scalar_text(value)
+        return normalize_datetime(text) or text
+
     end = entry.end_time
-    return (f"{_scalar_text(start)}/{_scalar_text(end)}" if end
-            else _scalar_text(start))
+    return f"{iso(start)}/{iso(end)}" if end else iso(start)
 
 
 def _emit_entry(
@@ -866,6 +877,7 @@ def emit_document(
     # and referenced by each. That is what the structural signature
     # computed back in `map` is for.
     parts: list[dict[str, Any]] = []
+    part_entries: list[tuple[dict[str, Any], Any]] = []
     structures: list[dict[str, Any]] = []
     variables: list[dict[str, Any]] = []
     seen_variables: set[str] = set()
@@ -918,10 +930,14 @@ def emit_document(
             # Inline on the first part that has this structure, an @id
             # reference on the rest. The reference denotes the same node,
             # so a consumer resolving it finds the components.
-            parts.append(_emit_entry(
+            part = _emit_entry(
                 entry, rec, base,
                 structure if i == 0 else {"@id": struct_id},
-                inherited=part_defaults))
+                inherited=part_defaults)
+            parts.append(part)
+            # Keep the entry beside its part: the per-part acquisition is
+            # attached below, once the instruments it references exist.
+            part_entries.append((part, entry))
 
     # -- distribution -------------------------------------------------------
     distribution: dict[str, Any] = {
@@ -1089,7 +1105,7 @@ def emit_document(
     event: dict[str, Any] = {
         "@id": f"{base}/acquisition",
         "@type": ["schema:Action", "prov:Activity"],
-        "schema:additionalType": [{"@id": "xas:analysisevent"}],
+        "schema:additionalType": [{"@id": ANALYSIS_EVENT}],
         "schema:name": f"acquisition of {stem}",
     }
     if buckets["facility"]:
@@ -1140,6 +1156,37 @@ def emit_document(
         if ends[-1] != starts[0]:
             event["schema:endTime"] = ends[-1]
     doc["prov:wasGeneratedBy"] = [event]
+
+    # One acquisition per part, so a file holding many entries says when
+    # each was measured rather than only when the batch as a whole ran.
+    # The file-level event above spans them all, which for a scan series
+    # measured over three days answers a different question from "when
+    # was this spectrum taken".
+    #
+    # `prov:used` here is @id references to the instrument wrappers the
+    # file-level event describes in full. The same beamline measured
+    # every entry, so repeating its description 26 times would assert 26
+    # beamlines; a reference denotes the one node. It also satisfies the
+    # cdifProvActivity shape, which requires at least one prov:used on
+    # any activity reached through prov:wasGeneratedBy -- and a part's
+    # activity is reached exactly that way.
+    used_refs = [{"@id": u["@id"]} for u in instruments if "@id" in u]
+    for part, entry in part_entries:
+        coverage = _coverage(entry)
+        if not coverage or not used_refs:
+            continue
+        start, _, end = coverage.partition("/")
+        acquisition: dict[str, Any] = {
+            "@id": f"{part['@id']}/acquisition",
+            "@type": ["schema:Action", "prov:Activity"],
+            "schema:additionalType": [{"@id": ANALYSIS_EVENT}],
+            "schema:name": f"acquisition of {entry.name}",
+            "schema:startTime": start,
+            "prov:used": used_refs,
+        }
+        if end and end != start:
+            acquisition["schema:endTime"] = end
+        part["prov:wasGeneratedBy"] = [acquisition]
 
     if variables:
         doc["schema:variableMeasured"] = variables

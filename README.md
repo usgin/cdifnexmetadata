@@ -264,6 +264,26 @@ varies per entry is stated on the part. Structural identity is decided
 by comparing shapes and dtypes, and entries with matching signatures
 share one structure object.
 
+**When each entry was measured varies, so each part carries its own
+`prov:wasGeneratedBy`.** The file-level activity spans the whole file,
+which answers "when did this batch run" — a different question from
+"when was this spectrum taken". `FeXAS.nxs` was acquired over three days;
+its file-level span is 2020-08-10T09:18:48 to 2020-08-12T22:12:09 and
+each of the 26 parts states its own few minutes within that.
+
+The per-part activity names its instruments by `@id` rather than
+repeating them. The same beamline measured every entry, so 26 inline
+copies would assert 26 beamlines; a reference denotes the one node the
+file-level activity describes in full. It also satisfies the
+`cdifProvActivity` shape, which requires `prov:used` on *any* activity
+reached through `prov:wasGeneratedBy` — which a part's is.
+
+Times are normalised to ISO 8601 on the way out. NeXus files write
+`2020-08-10 09:18:48`, with a space, and nothing rejects it: the schema
+and the SHACL both say "ISO8601 date-time" in prose and require only a
+string. So it validates cleanly and still throws in any consumer that
+parses it as one.
+
 ### Hazards deliberately not inherited
 
 Two prior codebases were surveyed before starting. The patterns worth
@@ -282,21 +302,6 @@ and `mm` from a real file both appear as `schema:unitText`.
 
 **An `NXsubentry` declaring a different definition from its parent** is
 not handled; it is rare and was tabled.
-
-**Per-entry acquisition times, in a multi-entry file.** When a
-measurement happened is a fact about the measuring, so it goes on the
-`prov:wasGeneratedBy` activity as `schema:startTime`/`schema:endTime` —
-not on the dataset as `schema:temporalCoverage`, which says what period
-the data is *about*, and a spectrum is not about a period. An absorption
-edge is a property of a material.
-
-There is one activity per document, so a file holding many entries gets
-one span covering all of them. `FeXAS.nxs` has 26 entries measured over
-three days; the document now says 2020-08-10T09:18:48 to
-2020-08-12T22:12:09 and no longer says which entry was which. Giving
-each part its own `prov:wasGeneratedBy` would keep the per-entry times,
-at the cost of 26 activity nodes repeating one instrument set. Not
-decided.
 
 **Processed-data profiles** — `NXxasproc` and the EXAFS analysis chain —
 are out of scope. Nothing in the NeXus ecosystem has moved on EXAFS

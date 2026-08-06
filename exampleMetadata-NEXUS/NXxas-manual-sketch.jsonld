@@ -278,7 +278,7 @@
           "schema:description": "read from a non-standard file layout (nexus-manual-sketch)"
         }
       ],
-      "schema:startTime": "2026-07-28T00:00:00Z"
+      "schema:startTime": "2026-07-28T00:00:00+00:00"
     }
   ],
   "schema:variableMeasured": [
