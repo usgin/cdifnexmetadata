@@ -256,21 +256,6 @@ def map_xdi(
         head, _, _tag = key.partition(".")
         if head.lower() == "column":
             continue                    # handled with the arrays below
-        if head.lower() == "publication" and key.lower() != "publication.doi":
-            # Everything in the Publication namespace except the DOI is
-            # kept as text. XDI does not say whether these describe the
-            # dataset itself or a paper about it -- `Publication.authors`
-            # could be either, and the two license different statements
-            # (a schema:creator versus the author of a cited work). Until
-            # that is settled, prose asserts nothing and loses nothing.
-            #
-            # Matched on the namespace rather than on crosswalk rows so
-            # that a field nobody has mapped -- Publication.journal,
-            # Publication.year -- is carried too, instead of being
-            # reported as unmapped and dropped.
-            if value.strip():
-                record.publication_fields[key] = value.strip()
-            continue
         hit = lookup.get(key.lower())
         if hit is None:
             # Not a concept, but possibly a schema.org property: the
@@ -278,8 +263,24 @@ def map_xdi(
             # schema.org rather than with an XAS concept. Checked second
             # so a header that is genuinely a concept can never be
             # diverted here.
+            #
+            # The crosswalk is consulted before the Publication namespace
+            # rule below, so a row in xdi-to-cdif.sssom.tsv decides which
+            # header is the author and which the affiliation. Move that
+            # row upstream -- to `Publication.author`, say -- and this
+            # follows without a code change. What the emitter then does
+            # with the value is a separate question, answered in emit.py.
             biblio = biblio_lookup.get(key.lower())
             if biblio is None:
+                if head.lower() == "publication":
+                    # A Publication field no crosswalk row covers --
+                    # Publication.journal, Publication.year. Carried as
+                    # text rather than reported as unmapped and dropped;
+                    # the namespace is enough to know it is bibliographic
+                    # even when nothing has mapped it.
+                    if value.strip():
+                        record.publication_fields[key] = value.strip()
+                    continue
                 unmapped.append(key)
                 continue
             prop, predicate, confidence, comment = biblio

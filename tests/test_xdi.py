@@ -288,6 +288,31 @@ def test_other_publication_fields_are_concatenated_into_the_description(
     assert result.document["schema:creator"]["schema:name"] == MISSING_TEXT
 
 
+def test_the_crosswalk_decides_which_header_is_author_and_affiliation(
+    tmp_path,
+):
+    """Authoritative means the row does the identifying, not a rule in
+    the code. These two land in `bibliographic`, keyed by the schema.org
+    property the crosswalk names, so moving the row upstream moves what
+    is read. Rendering them as prose is a separate decision, taken in
+    emit.py because XDI does not say whose authorship is recorded."""
+    from cdifnexmetadata.inspect.xdi import inspect_xdi
+    from cdifnexmetadata.map.xdi import map_xdi
+
+    _insp, x = inspect_xdi(_write(tmp_path, BIBLIO))
+    record = map_xdi(x).records[0]
+    assert record.bibliographic["schema:author"].source_path == (
+        "#Publication.authors")
+    assert record.bibliographic["schema:affiliation"].source_path == (
+        "#Publication.affiliation")
+    # The namespace fallback did not claim them.
+    assert "Publication.authors" not in record.publication_fields
+    assert "Publication.affiliation" not in record.publication_fields
+    # And the crosswalk predicate survives: affiliation is a closeMatch
+    # at 0.8, which a consumer can act on.
+    assert record.bibliographic["schema:affiliation"].confidence == 0.8
+
+
 def test_an_unmapped_publication_field_is_carried_not_dropped(tmp_path):
     """Publication.journal has no crosswalk row. Matching on the
     namespace rather than on rows is what keeps it out of the unmapped

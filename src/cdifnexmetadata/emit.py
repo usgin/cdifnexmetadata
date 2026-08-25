@@ -826,22 +826,43 @@ def _related_publication(
     }
 
 
+#: schema.org properties the crosswalk resolves that are rendered as
+#: prose rather than as properties of their own.
+#:
+#: The crosswalk stays authoritative about *which header is which*: it
+#: decides that `Publication.authors` is the author and
+#: `Publication.affiliation` the affiliation, and moving those rows
+#: upstream moves what this reads. What it cannot decide is whose
+#: authorship the file is recording -- XDI does not say whether the
+#: Publication namespace describes this dataset or a paper derived from
+#: it -- and emitting `schema:author` would answer that question by
+#: implication. So the mapping is honoured and the rendering is prose.
+PROSE_PROPERTIES = ("schema:author", "schema:affiliation")
+
+
 def _publication_prose(records: list[ConceptRecord]) -> str:
     """The `Publication.*` fields as one sentence, or "".
 
-    Concatenated rather than mapped. XDI leaves it ambiguous whether
-    these describe the dataset or a publication about it, so emitting
-    them as prose keeps the information without asserting which. Field
-    names are kept so nothing about them is lost in the flattening.
+    Two sources, in this order of authority: values the crosswalk
+    resolved to a PROSE_PROPERTIES target, then any remaining
+    `Publication.*` header no row covers. Field names are kept so nothing
+    about them is lost in the flattening.
     """
     fields: dict[str, str] = {}
     for record in records:
+        for prop in PROSE_PROPERTIES:
+            cv = record.bibliographic.get(prop)
+            if cv is not None and cv.value:
+                # The header the crosswalk matched, so the label a reader
+                # sees is the one their file actually used.
+                label = cv.source_path.lstrip("#") or prop
+                fields.setdefault(label, _text(cv.value))
         for key, value in record.publication_fields.items():
             fields.setdefault(key, value)
     if not fields:
         return ""
-    parts = [f"{key.split('.', 1)[-1]}: {value}"
-             for key, value in fields.items()]
+    parts = [f"{key.split('.', 1)[-1]}: {fields[key]}"
+             for key in sorted(fields)]
     return (
         "Publication fields stated in the file, which does not say "
         "whether they describe this dataset or a related publication: "
@@ -1165,7 +1186,7 @@ def emit_document(
     # so is the whole point: a header that maps cleanly and then falls
     # out of the document is worse than one that never mapped, because
     # the crosswalk reports success and the document simply lacks it.
-    emitted = {"schema:license", "schema:identifier"}
+    emitted = {"schema:license", "schema:identifier", *PROSE_PROPERTIES}
     orphaned = sorted(set(biblio) - emitted)
     if orphaned:
         result.warnings.append(

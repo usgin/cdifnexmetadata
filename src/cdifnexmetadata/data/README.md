@@ -66,12 +66,19 @@ second. Emitting either would resolve an ambiguity the format leaves
 open. Prose loses nothing and asserts nothing, and the relationship on
 the link is the bare word `"publication"` for the same reason.
 
-The routing matches on the `Publication.` namespace rather than on
-crosswalk rows, so a field nobody has mapped -- `Publication.journal`,
-`Publication.year` -- is carried too instead of being reported as
-unmapped and dropped. That makes the `schema:author` and
-`schema:affiliation` rows in this set documentation of a mapping that
-exists rather than instructions the emitter follows.
+**This set stays authoritative about which header is which.** The
+crosswalk is consulted first, so its rows decide that
+`Publication.authors` is the author and `Publication.affiliation` the
+affiliation; move a row upstream and the code follows without an edit,
+and the row's predicate and confidence -- affiliation is a `closeMatch`
+at 0.8 -- travel with the value. What the crosswalk cannot decide is
+whose authorship the file records, so the mapping is honoured and the
+rendering is prose.
+
+The `Publication.` namespace is a fallback consulted only after the
+crosswalk, catching a field nobody has mapped -- `Publication.journal`,
+`Publication.year` -- so it is carried rather than reported as unmapped
+and dropped.
 
 None of these headers occurs in the 55-file example corpus.
 
