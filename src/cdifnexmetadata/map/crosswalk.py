@@ -44,7 +44,7 @@ DEFAULT_CROSSWALK = DATA_DIR / "cdifxas-to-nexus.sssom.tsv"
 #: repository, so a refresh only sees what has been pushed there.
 UPSTREAM_BASE = (
     "https://raw.githubusercontent.com/smrgeoinfo/XAS-CDIF/"
-    "cdifxasRelease/crosswalk/"
+    "cdifxasRelease1.1/crosswalk/"
 )
 UPSTREAM_FILES = ("cdifxas-to-nexus.sssom.tsv", "xdi-to-cdifxas.sssom.tsv",
                   "cdifxas-units.tsv")

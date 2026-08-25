@@ -62,7 +62,7 @@ lookup table *is* the SSSOM alignment.
 | | Effort A | Effort B | Effort C |
 |---|---|---|---|
 | **Goal** | NeXus HDF5 → CDIF | Align CDIF XAS vocabulary with NeXus | XDI → CDIF (Dataverse workflow) |
-| **Repo** | `usgin/cdifnexmetadata` (`main`) | `smrgeoinfo/XAS-CDIF` (**`cdifxasRelease`**) | `smrgeoinfo/cdif-xas` (`main`) |
+| **Repo** | `usgin/cdifnexmetadata` (`main`) | `smrgeoinfo/XAS-CDIF` (**`cdifxasRelease1.1`**) | `smrgeoinfo/cdif-xas` (`main`) |
 | **State** | Design phase, no code | Analysis + enumeration import done | **Working — 37/37 valid** |
 | **Head** | `0c02ebe` | `2fe64e1` | `b915c51` |
 | **Layer** | 4 (NeXus binding) | 1–2 (concepts + alignment) | 3–4 (serialization + XDI binding) |
@@ -191,9 +191,10 @@ these, as did an earlier pass in this one:
   Use manual URLs now ([§3](#3-nxs-prefix-concatenation-does-not-resolve))
   and treat any future ontology IRI as a later `skos:exactMatch` row,
   which is exactly what SSSOM is for.
-- **The XAS glossary changed on 2026-07-27** (`XAS_Glossary_SKOS.json`,
+- **The XAS glossary changed on 2026-07-27** (`XAS_Glossary_SKOS_v2.json`,
   named `XAS_Glossary_SKOS.json` at the time) — 89 → 90
-  concepts (added `emissionline`), and `edgeanalyzed` /
+  concepts (added `emissionline`; it has since grown to **106**, and the
+  released filename is now `XAS_Glossary_SKOS_v2.json`), and `edgeanalyzed` /
   `xasmeasurementmode` gained `dc:references` to three new value-list
   schemes. Anchor SSSOM on the current file, and use the imported
   enumerations (39 edges, 432 emission lines, 7 detection modes) as
@@ -498,7 +499,7 @@ it says so.
 
 ## Effort B — CDIF XAS vocabulary
 
-In `smrgeoinfo/XAS-CDIF`, branch **`cdifxasRelease`** (not `main`).
+In `smrgeoinfo/XAS-CDIF`, branch **`cdifxasRelease1.1`** (not `main`).
 
 ### Done
 
@@ -516,7 +517,7 @@ Enumeration import (recommendation item 1), via the re-runnable
 | `XAS_edges_SKOS.json` | 39 | `NXabsorption_edge/name` |
 | `XAS_emissionlines_SKOS.json` | 432 | `NXemission_line/name` |
 | `XAS_detectionmodes_SKOS.json` | 7 | union of upstream + fork |
-| `XAS_Glossary_SKOS.json` | 90 | +1 (`emissionline`) |
+| `XAS_Glossary_SKOS_v2.json` | 106 | 90 as of 2026-07-27; 106 as of 2026-08-25 |
 
 Kept as **separate schemes** rather than folded into the glossary: 478
 concepts against 89 would be a 6× inflation, and the publishing pipeline
@@ -574,12 +575,12 @@ are still in flux** than after they stabilise.
 | This file | `usgin/cdifnexmetadata` → `STATUS.md` (`main`) |
 | Extractor design | `usgin/cdifnexmetadata` → `docs/DESIGN-2026-07-27.md` (`main`) |
 | Extractor conventions | `usgin/cdifnexmetadata` → `AGENTS.md` (`main`) |
-| XAS gap analysis | `smrgeoinfo/XAS-CDIF` → `XAS_Glossary_vs_NeXus_analysis.md` (**`cdifxasRelease`**) |
-| Enumeration importer | `smrgeoinfo/XAS-CDIF` → `tools/import_nexus_enumerations.py` (**`cdifxasRelease`**) |
+| XAS gap analysis | `smrgeoinfo/XAS-CDIF` → `XAS_Glossary_vs_NeXus_analysis.md` (**`cdifxasRelease1.1`**) |
+| Enumeration importer | `smrgeoinfo/XAS-CDIF` → `tools/import_nexus_enumerations.py` (**`cdifxasRelease1.1`**) |
 | XDI→CDIF pipeline | `smrgeoinfo/cdif-xas` (`main`) |
 | CDIF profile schemas + SHACL | `Cross-Domain-Interoperability-Framework/metadataBuildingBlocks` → `_sources/profiles/` |
 | NeXus definitions (use this) | `XraySpectroscopy/nexus_definitions` (`main`) |
 | Test file | `FeXAS.nxs`, 2.7 MB, 26 `NXentry`, `definition = NXxas` |
 | Golden reference | `Cross-Domain-Interoperability-Framework/profile-datastructure` → `examples/FeXAS/NEXUS-withDataStructureComponent.json` |
 
-Note the XAS-CDIF items are on `cdifxasRelease`, **not** `main`.
+Note the XAS-CDIF items are on `cdifxasRelease1.1`, **not** `main`.

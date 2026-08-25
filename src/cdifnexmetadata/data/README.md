@@ -14,7 +14,7 @@ Two kinds of file live here, maintained differently.
 
 **These files are copies. Do not edit them here.**
 
-Upstream: <https://github.com/smrgeoinfo/XAS-CDIF/tree/cdifxasRelease/crosswalk>
+Upstream: <https://github.com/smrgeoinfo/XAS-CDIF/tree/cdifxasRelease1.1/crosswalk>
 Curated and validated by `crosswalk/build_crosswalk.py` in that repo,
 which checks every subject against the CDIF XAS glossary, every NeXus
 path against the live NXDL, and every XDI key against the concept keys
@@ -27,7 +27,7 @@ three with:
 
     python -m cdifnexmetadata.map.crosswalk --refresh
 
-That downloads from the `cdifxasRelease` branch on GitHub, so it sees
+That downloads from the `cdifxasRelease1.1` branch on GitHub, so it sees
 only what has been pushed there. **Neither file is edited by hand at
 either end** — both are output from `crosswalk/build_crosswalk.py`
 upstream, which curates the rows as Python tables and validates them
