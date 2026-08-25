@@ -15,9 +15,12 @@
 #   scattering -- there is no CDIF SAS glossary yet, so these follow the
 #   w3id mint-now-redirect-later pattern the XAS concepts used.
 #
-#   cdifxas: appears for four concepts that are NOT XAS concepts at all:
-#   the facility, the beamline, the radiation probe and the source type.
-#   They are properties of any synchrotron or reactor measurement, and
+#   cdifxas: appears for five concepts that are NOT XAS concepts at all:
+#   the facility, the beamline, the radiation probe, the source type and
+#   the sample temperature. None of them is specific to a technique --
+#   the first four describe any synchrotron or reactor measurement and
+#   the fifth describes any measurement whatever -- and all five are
+#   base-class rows, so they resolve against any application definition.
 #   SSSOM identifies concepts rather than namespaces, so re-minting them
 #   under cdifsas: would assert that a SAS facility and a XAS facility
 #   are different things. They are not. That they currently sit in an
