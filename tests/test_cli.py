@@ -28,6 +28,37 @@ def test_a_document_goes_to_stdout_by_default(tmp_path, capsys):
     assert doc["schema:distribution"]
 
 
+def test_dump_concepts_writes_the_intermediate_not_the_document(
+    tmp_path, capsys,
+):
+    """The intermediate is what a new parser has to produce, so it has to
+    be reachable without importing the library."""
+    assert main([str(_file(tmp_path)), "--dump-concepts", "-q"]) == 0
+    dump = json.loads(capsys.readouterr().out)
+    # Not the CDIF document.
+    assert "@type" not in dump and "schema:distribution" not in dump
+    # The shape a parser has to fill.
+    assert dump["record_count"] == len(dump["records"])
+    record = dump["records"][0]
+    assert set(record) >= {"entry_name", "entry_path", "definition", "values"}
+    # Keyed on concept URIs, with the source field beside each value.
+    concept, values = next(iter(record["values"].items()))
+    assert ":" in concept
+    assert {"value", "source_path", "predicate", "confidence"} <= set(
+        values[0])
+
+
+def test_dumped_concepts_get_their_own_extension(tmp_path):
+    """A .jsonld holding an intermediate would be mistaken for a CDIF
+    document by anything that globs a directory."""
+    out = tmp_path / "out"
+    out.mkdir()
+    assert main([str(_file(tmp_path)), "--dump-concepts",
+                 "-o", str(out), "-q"]) == 0
+    assert (out / "scan.concepts.json").is_file()
+    assert not (out / "scan.jsonld").exists()
+
+
 def test_output_to_a_named_file(tmp_path, capsys):
     out = tmp_path / "result.jsonld"
     assert main([str(_file(tmp_path)), "-o", str(out), "-q"]) == 0

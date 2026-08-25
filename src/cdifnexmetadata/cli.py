@@ -47,6 +47,7 @@ def build_parser() -> argparse.ArgumentParser:
   cdifnexmetadata scan.nxs -o scan.jsonld
   cdifnexmetadata *.nxs -o out/ --validate --profile-dir ../XAS-CDIF/release
   cdifnexmetadata scan.nxs --report        # what was found, and what was not
+  cdifnexmetadata scan.nxs --dump-concepts # the intermediate, not the document
 """)
     p.add_argument("files", nargs="+", type=Path,
                    help="HDF5/NeXus files to describe")
@@ -77,6 +78,14 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--report", action="store_true",
                    help="print what was extracted and what was not, to "
                         "stderr, instead of only the document")
+    p.add_argument("--dump-concepts", action="store_true",
+                   help="write the concept-keyed intermediate instead of "
+                        "the CDIF document: what the crosswalk resolved, "
+                        "before anything CDIF-specific is decided. Use it "
+                        "to see what a new parser has to produce, or to "
+                        "compare against another implementation's "
+                        "intermediate. Written as <stem>.concepts.json "
+                        "when --output is a directory.")
     p.add_argument("--indent", type=int, default=2,
                    help="JSON indent (default: 2)")
     p.add_argument("-q", "--quiet", action="store_true",
@@ -164,7 +173,13 @@ def _process(path: Path, args, profile: Profile, err) -> tuple[dict, int]:
 
 
 def _finish(path, args, profile, err, mapping, result) -> tuple[dict, int]:
-    """Report and validate, whichever binding produced the document."""
+    """Report and validate, whichever binding produced the document.
+
+    Returns whichever payload was asked for. `--dump-concepts` swaps the
+    CDIF document for the intermediate it was built from; validation
+    still runs against the document, since the intermediate is not the
+    thing the profile describes.
+    """
     if args.report:
         _report(path, mapping, err)
     if not args.quiet:
@@ -184,7 +199,8 @@ def _finish(path, args, profile, err, mapping, result) -> tuple[dict, int]:
                     print(f"  {issue}", file=err)
         if validation.failures:
             status = 1
-    return result.document, status
+    return (mapping.to_dict() if args.dump_concepts else result.document,
+            status)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -221,7 +237,8 @@ def main(argv: list[str] | None = None) -> int:
         if args.output is None:
             print(text)
         else:
-            target = (args.output / f"{path.stem}.jsonld") if many or \
+            suffix = ".concepts.json" if args.dump_concepts else ".jsonld"
+            target = (args.output / f"{path.stem}{suffix}") if many or \
                 args.output.is_dir() else args.output
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text(text + "\n", encoding="utf-8")
