@@ -547,6 +547,31 @@ def test_the_bundled_legacy_table_names_only_real_concepts():
     assert all(p.path.startswith("/") for p in legacy.paths)
 
 
+def test_every_upstream_crosswalk_is_actually_bundled():
+    """UPSTREAM_FILES is the refresh list, and a name on it with no file
+    beside it means --refresh silently stopped covering something. The
+    reverse -- a copied file nobody refreshes -- is the drift this
+    package has already been bitten by."""
+    from cdifnexmetadata.map.crosswalk import DATA_DIR, UPSTREAM_FILES
+
+    missing = [n for n in UPSTREAM_FILES if not (DATA_DIR / n).is_file()]
+    assert not missing, f"named in UPSTREAM_FILES but not bundled: {missing}"
+
+
+def test_the_schema_org_set_is_not_offered_as_a_technique_crosswalk():
+    """xdi-to-cdif maps headers onto schema.org, not onto concepts, so it
+    must never be a candidate in select_crosswalk. It is bundled for
+    reference; being picked would yield a document mapped against the
+    wrong vocabulary."""
+    from cdifnexmetadata.map.crosswalk import DATA_DIR, bundled_crosswalks
+
+    assert (DATA_DIR / "xdi-to-cdif.sssom.tsv").is_file()
+    names = {p.name for p in bundled_crosswalks()}
+    assert "xdi-to-cdif.sssom.tsv" not in names
+    assert names == {"cdifxas-to-nexus.sssom.tsv",
+                     "cdifsas-to-nexus.sssom.tsv"}
+
+
 def test_discriminating_classes_come_from_the_crosswalk_not_a_hardcoded_list(
     tmp_path,
 ):

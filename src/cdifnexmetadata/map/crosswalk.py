@@ -47,7 +47,7 @@ UPSTREAM_BASE = (
     "cdifxasRelease1.1/crosswalk/"
 )
 UPSTREAM_FILES = ("cdifxas-to-nexus.sssom.tsv", "xdi-to-cdifxas.sssom.tsv",
-                  "cdifxas-units.tsv")
+                  "xdi-to-cdif.sssom.tsv", "cdifxas-units.tsv")
 
 #: Predicates we treat as "this concept is this field". closeMatch is
 #: included because a close match still identifies the right field; the
@@ -476,11 +476,17 @@ def load_concept_units(path: Path | None = None) -> dict[str, str]:
 def _refresh(data_dir: Path = DATA_DIR) -> int:
     """Re-download every upstream-generated crosswalk.
 
-    Both files are refreshed, not just the one the mapper loads by
-    default: they are generated together and a half-updated pair is a
-    worse state than a stale one. Files authored in this repository
-    (`cdifsas-to-nexus`, `legacy-paths`) have no upstream and are left
-    alone.
+    All four are refreshed, not just the one the mapper loads by
+    default: they are generated together by a single upstream script and
+    a half-updated set is a worse state than a stale one. Files authored
+    in this repository (`cdifsas-to-nexus`, `legacy-paths`) have no
+    upstream and are left alone.
+
+    `xdi-to-cdif.sssom.tsv` is refreshed alongside the others although
+    no code reads it yet -- see the note on it in `../data/README.md`.
+    Carrying a crosswalk that silently drifts is the failure this
+    function exists to prevent, and that applies to a set held for
+    reference exactly as it does to one the mapper loads.
     """
     import urllib.request
 

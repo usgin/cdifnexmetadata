@@ -6,6 +6,7 @@ Two kinds of file live here, maintained differently.
 |------|------|
 | `cdifxas-to-nexus.sssom.tsv` | copy of an upstream file — **do not edit here** |
 | `xdi-to-cdifxas.sssom.tsv` | copy of an upstream file — **do not edit here** |
+| `xdi-to-cdif.sssom.tsv` | copy of an upstream file — **do not edit here** |
 | `cdifsas-to-nexus.sssom.tsv` | authored in this repo — edit here |
 | `legacy-paths.tsv` | authored in this repo — edit here |
 | `cdifxas-units.tsv` | copy of an upstream file — **do not edit here** |
@@ -23,13 +24,13 @@ the production RML mapping actually reads.
 They are copied in rather than fetched, so this package works offline
 and so a given release is pinned to a known crosswalk revision. The cost
 is that these copies fall behind when the originals change. Refresh all
-three with:
+four with:
 
     python -m cdifnexmetadata.map.crosswalk --refresh
 
 That downloads from the `cdifxasRelease1.1` branch on GitHub, so it sees
-only what has been pushed there. **Neither file is edited by hand at
-either end** — both are output from `crosswalk/build_crosswalk.py`
+only what has been pushed there. **None of them is edited by hand at
+either end** — all are output from `crosswalk/build_crosswalk.py`
 upstream, which curates the rows as Python tables and validates them
 against the glossary, the live NXDL, and the concept keys the RML
 converter reads. Changing a mapping means editing that script and
@@ -41,6 +42,30 @@ yet, copy them across directly rather than refreshing.
 | `cdifxas-units.tsv` | CDIF XAS concept -> QUDT unit. Not a mapping between vocabularies but a fact the glossary asserts about a concept, so not SSSOM. Read where a file records no unit. |
 | `cdifxas-to-nexus.sssom.tsv` | CDIF XAS concept -> NeXus path. Used by the mapper. |
 | `xdi-to-cdifxas.sssom.tsv` | XDI token -> CDIF XAS concept. The other binding; here for reference. |
+| `xdi-to-cdif.sssom.tsv` | XDI extension header -> **schema.org** property. Bibliographic and rights headers that CDIF models with schema.org rather than with an XAS concept. Here for reference; see below. |
+
+### `xdi-to-cdif.sssom.tsv` is bundled but not yet read
+
+Upstream splits the XDI mappings into two sets because SSSOM requires a
+set to declare one `object_source`, and these four rows point at
+`http://schema.org/` while the other thirty-one point at the CDIF XAS
+glossary. Folding them together would falsify the declaration that
+consumers rely on.
+
+Nothing in this package reads it yet. `map/xdi.py` resolves a header to
+a *concept*, and a schema.org property is not one -- `Publication.authors`
+becomes `schema:author` on a citation, which is a shape the concept
+record has no slot for. Wiring it up means teaching the emitter those
+four targets, not adding a lookup.
+
+Until then the four headers are reported as unmapped and dropped. None
+of them occurs in the 55-file example corpus, so this costs nothing
+today; it is a gap that opens the first time someone converts a file
+that carries publication metadata.
+
+It is refreshed with the rest so that the copy cannot drift from
+upstream while sitting unused, which is the state that produces a
+surprise later.
 
 The XAS crosswalk is domain-specific. The mapper takes any SSSOM set, so
 other techniques need a crosswalk, not a code change.
