@@ -263,23 +263,43 @@ def test_a_publication_doi_becomes_a_resolvable_related_link(tmp_path):
     doc = _emit(tmp_path, BIBLIO).document
     assert "schema:citation" not in doc
     target = [ln for ln in doc["schema:relatedLink"]
-              if ln["schema:linkRelationship"] == "isDocumentedBy"]
+              if ln["schema:linkRelationship"] == "publication"]
     assert len(target) == 1
     # The file states a bare DOI; a target is typed as a URI.
     assert target[0]["schema:target"]["schema:url"] == (
         "https://doi.org/10.1021/acs.est.0c01234")
 
 
-def test_publication_authorship_is_reported_rather_than_dropped(tmp_path):
-    """The profile has no slot for the authors of a related publication.
-    Mapping them and then losing them is worse than never mapping them:
-    the crosswalk reports success and the document simply lacks them."""
+def test_other_publication_fields_are_concatenated_into_the_description(
+    tmp_path,
+):
+    """XDI does not say whether these describe the dataset or a paper
+    about it, so they are carried as prose. That loses no information
+    and asserts nothing about whose authorship is recorded."""
     result = _emit(tmp_path, BIBLIO)
-    warning = " ".join(result.warnings)
-    assert "schema:author" in warning and "schema:affiliation" in warning
-    assert "no slot" in warning
-    # And they are not smuggled in as the dataset's own creator.
+    description = result.document["schema:description"]
+    assert "Smith, J. and Jones, A." in description
+    assert "Dept of Chemistry, Example University" in description
+    # The field names survive the flattening.
+    assert "authors:" in description and "affiliation:" in description
+    # The DOI is a link, not prose repeated in two places.
+    assert "10.1021/acs.est.0c01234" not in description
+    # And none of it is smuggled in as the dataset's own creator.
     assert result.document["schema:creator"]["schema:name"] == MISSING_TEXT
+
+
+def test_an_unmapped_publication_field_is_carried_not_dropped(tmp_path):
+    """Publication.journal has no crosswalk row. Matching on the
+    namespace rather than on rows is what keeps it out of the unmapped
+    list and in the document."""
+    text = BIBLIO.replace(
+        "# Column.1: energy eV",
+        "# Publication.journal: J. Example Chem." + chr(10)
+        + "# Column.1: energy eV",
+    )
+    result = _emit(tmp_path, text)
+    assert "J. Example Chem." in result.document["schema:description"]
+    assert not any("Publication.journal" in w for w in result.warnings)
 
 
 def test_a_file_with_no_bibliographic_headers_gains_nothing(tmp_path):
@@ -289,7 +309,7 @@ def test_a_file_with_no_bibliographic_headers_gains_nothing(tmp_path):
     assert result.document["schema:license"] == [OGC_NIL_MISSING]
     assert not [
         ln for ln in result.document.get("schema:relatedLink", [])
-        if ln.get("schema:linkRelationship") == "isDocumentedBy"
+        if ln.get("schema:linkRelationship") == "publication"
     ]
     assert not any("no slot" in w for w in result.warnings)
 

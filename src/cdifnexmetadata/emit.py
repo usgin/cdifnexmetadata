@@ -797,11 +797,10 @@ def _related_publication(
     the value as a URI. The bare `10.xxxx/yyyy` a file states is an
     identifier, not a location.
 
-    What this slot cannot carry is authorship: a LinkRole points at an
-    EntryPoint, which has a url, a name and an encoding format and
-    nowhere to put a person. `Publication.authors` and
-    `Publication.affiliation` are therefore not emitted here -- see
-    `map/xdi.py`, which reports them rather than dropping them silently.
+    Only the DOI is placed. Every other `Publication.*` field goes into
+    the description as text -- see `_publication_prose` -- because a
+    LinkRole points at an EntryPoint, which has nowhere to put a person,
+    and because XDI does not say whose authorship those fields record.
     """
     doi = biblio.get("schema:identifier")
     if not (doi and doi.value):
@@ -813,15 +812,41 @@ def _related_publication(
     return {
         "@type": ["schema:LinkRole"],
         # A string is one of the three forms the profile accepts here.
-        # The relationship is stated from the dataset's side: the paper
-        # documents this measurement.
-        "schema:linkRelationship": "isDocumentedBy",
+        # Deliberately just "publication": XDI does not say whether the
+        # DOI identifies this dataset or a paper derived from it, and a
+        # more specific relationship would pick one.
+        "schema:linkRelationship": "publication",
         "schema:target": {
             "@type": ["schema:EntryPoint"],
             "schema:url": url,
-            "schema:name": "Publication reporting this measurement",
+            # Not "the paper reporting this measurement": that is the
+            # claim the ambiguous linkRelationship above declines to make.
+            "schema:name": "Publication",
         },
     }
+
+
+def _publication_prose(records: list[ConceptRecord]) -> str:
+    """The `Publication.*` fields as one sentence, or "".
+
+    Concatenated rather than mapped. XDI leaves it ambiguous whether
+    these describe the dataset or a publication about it, so emitting
+    them as prose keeps the information without asserting which. Field
+    names are kept so nothing about them is lost in the flattening.
+    """
+    fields: dict[str, str] = {}
+    for record in records:
+        for key, value in record.publication_fields.items():
+            fields.setdefault(key, value)
+    if not fields:
+        return ""
+    parts = [f"{key.split('.', 1)[-1]}: {value}"
+             for key, value in fields.items()]
+    return (
+        "Publication fields stated in the file, which does not say "
+        "whether they describe this dataset or a related publication: "
+        + "; ".join(parts) + "."
+    )
 
 
 def _sample_name(records) -> str | None:
@@ -1114,6 +1139,13 @@ def emit_document(
             " Conversion notes: " + "; ".join(conversions) + "."
         )
 
+    # Publication fields, where the file states any. In the description
+    # rather than in a property because XDI does not say what they are
+    # about; see _publication_prose.
+    prose = _publication_prose(records)
+    if prose:
+        doc["schema:description"] += " " + prose
+
     # The creator belongs to the dataset, not to the record about it. It
     # is a sentinel here because neither format carries one; a deployment
     # with real depositor information overlays it.
@@ -1137,12 +1169,11 @@ def emit_document(
     orphaned = sorted(set(biblio) - emitted)
     if orphaned:
         result.warnings.append(
-            f"{', '.join(orphaned)} mapped from XDI headers but not "
-            f"emitted: the CDIF profile has no slot for the authorship "
-            f"of a related publication. The values are in the concept "
-            f"dump; emitting them would mean either inventing a property "
-            f"outside the profile or claiming the paper's authors are "
-            f"the dataset's creators."
+            f"{', '.join(orphaned)} was mapped from an XDI header and "
+            f"then not emitted: nothing in this document places it. A "
+            f"crosswalk row whose target the emitter does not know is a "
+            f"value the crosswalk reports as mapped and the document "
+            f"does not contain."
         )
 
     # Whether this is XAS is decided by what the file declares, not by

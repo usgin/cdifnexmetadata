@@ -116,6 +116,14 @@ class ConceptRecord:
     #: Populated only by the XDI binding, from `xdi-to-cdif.sssom.tsv`.
     #: A NeXus file carries no bibliographic headers.
     bibliographic: dict[str, ConceptValue] = field(default_factory=dict)
+    #: Raw `Publication.*` headers other than the DOI, in file order.
+    #:
+    #: Held as text rather than mapped because XDI does not say what they
+    #: are about: `Publication.authors` may name the authors of the
+    #: dataset or the authors of a paper derived from it, and the two
+    #: license different statements. Until that is settled they are
+    #: carried as prose, which asserts nothing.
+    publication_fields: dict[str, str] = field(default_factory=dict)
     warnings: list[str] = field(default_factory=list)
     #: Header values this reader replaced rather than read -- see
     #: map/normalise.py. Kept apart from `warnings` because a warning
@@ -163,6 +171,8 @@ class ConceptRecord:
                 ]
                 for concept, vals in sorted(self.values.items())
             },
+            **({"publication_fields": dict(self.publication_fields)}
+               if self.publication_fields else {}),
             **({"bibliographic": {
                 prop: {
                     "value": cv.value,

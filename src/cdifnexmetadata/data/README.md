@@ -44,44 +44,36 @@ yet, copy them across directly rather than refreshing.
 | `xdi-to-cdifxas.sssom.tsv` | XDI token -> CDIF XAS concept. The other binding; here for reference. |
 | `xdi-to-cdif.sssom.tsv` | XDI extension header -> **schema.org** property. Bibliographic and rights headers that CDIF models with schema.org rather than with an XAS concept. Here for reference; see below. |
 
-### `xdi-to-cdif.sssom.tsv` and the two headers it cannot place
-
-Upstream splits the XDI mappings into two sets because SSSOM requires a
-set to declare one `object_source`, and these four rows point at
-`http://schema.org/` while the other thirty-one point at the CDIF XAS
-glossary. Folding them together would falsify the declaration that
-consumers rely on.
+### `xdi-to-cdif.sssom.tsv`, and why most of it becomes prose
 
 `map/xdi.py` reads it into `ConceptRecord.bibliographic`, kept apart
 from `values` because a schema.org property is a serialization target
-and not a concept. Two of the four reach the document:
+and not a concept. Two things reach the document as properties:
 
 - `Spectrum.license` -> `schema:license`, replacing the "looked, absent"
   sentinel with what the file states.
-- `Publication.DOI` -> a `schema:relatedLink` whose target is
+- `Publication.DOI` -> a `schema:relatedLink` with
+  `schema:linkRelationship` `"publication"` and target
   `https://doi.org/{doi}`, since the profile types a target as a URI and
   a bare DOI is an identifier rather than a location.
 
-**`Publication.authors` and `Publication.affiliation` are mapped and
-then deliberately not emitted.** The CDIF profile has no slot for the
-authorship of a *related publication*: `schema:relatedLink` is a
-LinkRole pointing at an EntryPoint, which holds a url, a name and an
-encoding format and nothing else. The schema.org answer would be
-`schema:citation`, which is not in the CDIF schema and is not
-recommended by CDIF -- a document using it would carry a node no CDIF
-consumer looks for. The other way out, folding the paper's authors into
-`schema:creator`, asserts that they created the dataset, which the file
-does not say.
+**Every other `Publication.*` field goes into `schema:description` as
+text.** Not a shortcut -- XDI does not say what those fields are about.
+`Publication.authors` may name the authors of the dataset or the authors
+of a paper derived from it, and those license different statements: a
+`schema:creator` in the first reading, the author of a cited work in the
+second. Emitting either would resolve an ambiguity the format leaves
+open. Prose loses nothing and asserts nothing, and the relationship on
+the link is the bare word `"publication"` for the same reason.
 
-So the emitter reports them instead. They are visible in the concept
-dump and named in a warning. Mapping a header and then losing it without
-saying so is worse than never mapping it, because the crosswalk reports
-success and the document simply lacks the value.
+The routing matches on the `Publication.` namespace rather than on
+crosswalk rows, so a field nobody has mapped -- `Publication.journal`,
+`Publication.year` -- is carried too instead of being reported as
+unmapped and dropped. That makes the `schema:author` and
+`schema:affiliation` rows in this set documentation of a mapping that
+exists rather than instructions the emitter follows.
 
-None of the four occurs in the 55-file example corpus.
-
-The XAS crosswalk is domain-specific. The mapper takes any SSSOM set, so
-other techniques need a crosswalk, not a code change.
+None of these headers occurs in the 55-file example corpus.
 
 ## `legacy-paths.tsv`
 

@@ -256,6 +256,21 @@ def map_xdi(
         head, _, _tag = key.partition(".")
         if head.lower() == "column":
             continue                    # handled with the arrays below
+        if head.lower() == "publication" and key.lower() != "publication.doi":
+            # Everything in the Publication namespace except the DOI is
+            # kept as text. XDI does not say whether these describe the
+            # dataset itself or a paper about it -- `Publication.authors`
+            # could be either, and the two license different statements
+            # (a schema:creator versus the author of a cited work). Until
+            # that is settled, prose asserts nothing and loses nothing.
+            #
+            # Matched on the namespace rather than on crosswalk rows so
+            # that a field nobody has mapped -- Publication.journal,
+            # Publication.year -- is carried too, instead of being
+            # reported as unmapped and dropped.
+            if value.strip():
+                record.publication_fields[key] = value.strip()
+            continue
         hit = lookup.get(key.lower())
         if hit is None:
             # Not a concept, but possibly a schema.org property: the
