@@ -163,6 +163,19 @@ class ConceptRecord:
                         "is_array": cv.is_array,
                         "shape": list(cv.shape),
                         "dtype": cv.dtype,
+                        # Present only when set, so a dump stays
+                        # readable. All four are read by the emitter, so
+                        # a dump that hid them would misdescribe what a
+                        # new parser has to produce: `index` and `width`
+                        # locate a value in a tabular source, `label`
+                        # and `long_name` name the variable built from
+                        # it.
+                        **({"label": cv.label} if cv.label else {}),
+                        **({"long_name": cv.long_name}
+                           if cv.long_name else {}),
+                        **({"index": cv.index}
+                           if cv.index is not None else {}),
+                        **({"width": list(cv.width)} if cv.width else {}),
                         **({"note": cv.note} if cv.note else {}),
                         **({"convention": cv.convention}
                            if cv.convention else {}),
