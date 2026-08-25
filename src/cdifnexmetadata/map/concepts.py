@@ -106,6 +106,16 @@ class ConceptRecord:
     entry_path: str
     definition: str | None = None
     values: dict[str, list[ConceptValue]] = field(default_factory=dict)
+    #: Values bound to a **schema.org property** rather than to a concept,
+    #: keyed by the property CURIE. Held apart from `values` on purpose:
+    #: this record is keyed on concepts, and `schema:author` is not one --
+    #: it is a serialization target. Folding them together would put a
+    #: property URI everywhere the code means "a CDIF XAS concept", which
+    #: is the fusion of concept with binding this module exists to avoid.
+    #:
+    #: Populated only by the XDI binding, from `xdi-to-cdif.sssom.tsv`.
+    #: A NeXus file carries no bibliographic headers.
+    bibliographic: dict[str, ConceptValue] = field(default_factory=dict)
     warnings: list[str] = field(default_factory=list)
     #: Header values this reader replaced rather than read -- see
     #: map/normalise.py. Kept apart from `warnings` because a warning
@@ -153,6 +163,16 @@ class ConceptRecord:
                 ]
                 for concept, vals in sorted(self.values.items())
             },
+            **({"bibliographic": {
+                prop: {
+                    "value": cv.value,
+                    "source_path": cv.source_path,
+                    "predicate": cv.predicate,
+                    "confidence": cv.confidence,
+                    **({"note": cv.note} if cv.note else {}),
+                }
+                for prop, cv in sorted(self.bibliographic.items())
+            }} if self.bibliographic else {}),
             "warnings": self.warnings,
             "conversion_notes": self.conversion_notes,
         }

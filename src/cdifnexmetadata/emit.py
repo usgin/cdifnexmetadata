@@ -765,6 +765,65 @@ def _with_sentinels(kind: str, props: list, is_xas: bool = False) -> list:
     return out
 
 
+def _bibliographic(records: list[ConceptRecord]) -> dict[str, ConceptValue]:
+    """Merge the schema.org-bound header values across entries.
+
+    First non-empty wins. These describe the spectrum as a whole -- the
+    paper reporting it, the licence it is released under -- so where two
+    entries disagree the file is malformed rather than the values being
+    per-entry, and picking one beats emitting both.
+    """
+    out: dict[str, ConceptValue] = {}
+    for record in records:
+        for prop, cv in record.bibliographic.items():
+            if prop not in out and cv.value:
+                out[prop] = cv
+    return out
+
+
+def _related_publication(
+    biblio: dict[str, ConceptValue],
+) -> dict[str, Any] | None:
+    """The paper reporting the measurement, as a schema:relatedLink.
+
+    `schema:relatedLink` is the profile's own slot for pointing at a
+    related resource, so this stays inside the described vocabulary. The
+    obvious schema.org answer, `schema:citation`, is not in the CDIF
+    schema and is not recommended by CDIF -- emitting it would produce a
+    node no CDIF consumer has any reason to read, and it also raised a
+    SHACL violation the profile does not otherwise report.
+
+    A DOI is rendered as a resolvable URL because `schema:target` types
+    the value as a URI. The bare `10.xxxx/yyyy` a file states is an
+    identifier, not a location.
+
+    What this slot cannot carry is authorship: a LinkRole points at an
+    EntryPoint, which has a url, a name and an encoding format and
+    nowhere to put a person. `Publication.authors` and
+    `Publication.affiliation` are therefore not emitted here -- see
+    `map/xdi.py`, which reports them rather than dropping them silently.
+    """
+    doi = biblio.get("schema:identifier")
+    if not (doi and doi.value):
+        return None
+
+    value = _text(doi.value).strip()
+    url = value if value.lower().startswith(("http://", "https://")) else         f"https://doi.org/{value.lstrip('doi:').lstrip('/')}"
+
+    return {
+        "@type": ["schema:LinkRole"],
+        # A string is one of the three forms the profile accepts here.
+        # The relationship is stated from the dataset's side: the paper
+        # documents this measurement.
+        "schema:linkRelationship": "isDocumentedBy",
+        "schema:target": {
+            "@type": ["schema:EntryPoint"],
+            "schema:url": url,
+            "schema:name": "Publication reporting this measurement",
+        },
+    }
+
+
 def _sample_name(records) -> str | None:
     """A name for the sample, where a binding supplied one."""
     for record in records:
@@ -876,6 +935,13 @@ def emit_document(
     # Entries with the same layout share one DataStructure, emitted once
     # and referenced by each. That is what the structural signature
     # computed back in `map` is for.
+    # Bibliographic headers, where the binding found any. Resolved here
+    # because the licence is needed by both the parts below and the
+    # document itself, and the two must not disagree.
+    biblio = _bibliographic(records)
+    licence = ([_text(biblio["schema:license"].value)]
+               if "schema:license" in biblio else [OGC_NIL_MISSING])
+
     parts: list[dict[str, Any]] = []
     part_entries: list[tuple[dict[str, Any], Any]] = []
     structures: list[dict[str, Any]] = []
@@ -886,7 +952,7 @@ def emit_document(
     # sources as the document's own values below, so the two cannot drift.
     part_defaults: dict[str, Any] = {
         "schema:dateModified": _modified(inspection),
-        "schema:license": [OGC_NIL_MISSING],
+        "schema:license": licence,
         # Neither format records a depositor. The sentinel says "looked,
         # absent" for a part exactly as it does for the file; a deployment
         # with real depositor information overlays both.
@@ -1015,9 +1081,11 @@ def emit_document(
         # The file's own mtime, not the run time: this states when the
         # data last changed, which is what a harvester wants to compare.
         "schema:dateModified": _modified(inspection),
-        # A NeXus file carries no licence field. The OGC nil URI says
-        # "looked, absent" rather than implying an unrestricted licence.
-        "schema:license": [OGC_NIL_MISSING],
+        # A NeXus file carries no licence field, and most XDI files
+        # carry none either. The OGC nil URI says "looked, absent"
+        # rather than implying an unrestricted licence; an XDI
+        # Spectrum.license header replaces it with what the file states.
+        "schema:license": licence,
     }
     # Always a description. CDIF core wants one, and a record with no
     # prose is hard to place even when every field is populated.
@@ -1053,6 +1121,29 @@ def emit_document(
         "@type": ["schema:Person"],
         "schema:name": MISSING_TEXT,
     }
+
+    # The paper reporting the measurement, where the file names one.
+    # Not the dataset's own creator: a spectrum and the article about it
+    # are different works, so the sentinel above stays as it is.
+    related = _related_publication(biblio)
+    if related is not None:
+        doc.setdefault("schema:relatedLink", []).append(related)
+
+    # Anything the crosswalk resolved that nothing above emitted. Saying
+    # so is the whole point: a header that maps cleanly and then falls
+    # out of the document is worse than one that never mapped, because
+    # the crosswalk reports success and the document simply lacks it.
+    emitted = {"schema:license", "schema:identifier"}
+    orphaned = sorted(set(biblio) - emitted)
+    if orphaned:
+        result.warnings.append(
+            f"{', '.join(orphaned)} mapped from XDI headers but not "
+            f"emitted: the CDIF profile has no slot for the authorship "
+            f"of a related publication. The values are in the concept "
+            f"dump; emitting them would mean either inventing a property "
+            f"outside the profile or claiming the paper's authors are "
+            f"the dataset's creators."
+        )
 
     # Whether this is XAS is decided by what the file declares, not by
     # the namespace its concepts happen to sit in. Four genuinely

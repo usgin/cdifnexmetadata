@@ -10,6 +10,8 @@ from __future__ import annotations
 import pytest
 
 from cdifnexmetadata.emit import (  # noqa: E402
+    MISSING_TEXT,
+    OGC_NIL_MISSING,
     XDI_MEDIA_TYPE,
     XDI_SPECIFICATION,
     emit_document,
@@ -213,6 +215,83 @@ def _emit(tmp_path, text=SPACED):
         encoding_format=XDI_MEDIA_TYPE,
         format_specification=XDI_SPECIFICATION,
     )
+
+
+#: The same file with the four bibliographic headers XDI files may
+#: carry. None of the 55 examples in the corpus has them, so this is
+#: the only place their handling is exercised.
+BIBLIO = """# XDI/1.0 test/1.0
+# Element.symbol: Fe
+# Element.edge: K
+# Facility.name: APS
+# Beamline.name: 13-ID-E
+# Mono.name: Si(111)
+# Publication.DOI: 10.1021/acs.est.0c01234
+# Publication.authors: Smith, J. and Jones, A.
+# Publication.affiliation: Dept of Chemistry, Example University
+# Spectrum.license: https://creativecommons.org/licenses/by/4.0/
+# Column.1: energy eV
+# Column.2: i0
+# Column.3: itrans
+# ---
+7100.0  1000.0  900.0
+7110.0  1001.0  880.0
+"""
+
+
+def test_a_stated_licence_replaces_the_missing_sentinel(tmp_path):
+    """Without the header the document says "looked, absent". With it the
+    document must say what the file says, or the sentinel is a lie."""
+    assert _emit(tmp_path).document["schema:license"] == [OGC_NIL_MISSING]
+    doc = _emit(tmp_path, BIBLIO).document
+    assert doc["schema:license"] == [
+        "https://creativecommons.org/licenses/by/4.0/"]
+
+
+def test_the_licence_reaches_the_parts_as_well_as_the_document(tmp_path):
+    """A part inheriting the sentinel while the document carries a real
+    licence is the drift `part_defaults` exists to prevent."""
+    doc = _emit(tmp_path, BIBLIO).document
+    for part in doc.get("schema:hasPart", []):
+        assert part.get("schema:license") == doc["schema:license"]
+
+
+def test_a_publication_doi_becomes_a_resolvable_related_link(tmp_path):
+    """schema:relatedLink is the profile's own slot for this.
+    schema:citation is not in the CDIF schema, so a document using it
+    would carry a node no CDIF consumer looks for."""
+    doc = _emit(tmp_path, BIBLIO).document
+    assert "schema:citation" not in doc
+    target = [ln for ln in doc["schema:relatedLink"]
+              if ln["schema:linkRelationship"] == "isDocumentedBy"]
+    assert len(target) == 1
+    # The file states a bare DOI; a target is typed as a URI.
+    assert target[0]["schema:target"]["schema:url"] == (
+        "https://doi.org/10.1021/acs.est.0c01234")
+
+
+def test_publication_authorship_is_reported_rather_than_dropped(tmp_path):
+    """The profile has no slot for the authors of a related publication.
+    Mapping them and then losing them is worse than never mapping them:
+    the crosswalk reports success and the document simply lacks them."""
+    result = _emit(tmp_path, BIBLIO)
+    warning = " ".join(result.warnings)
+    assert "schema:author" in warning and "schema:affiliation" in warning
+    assert "no slot" in warning
+    # And they are not smuggled in as the dataset's own creator.
+    assert result.document["schema:creator"]["schema:name"] == MISSING_TEXT
+
+
+def test_a_file_with_no_bibliographic_headers_gains_nothing(tmp_path):
+    """The four headers are absent from all 55 example files, so their
+    handling must be invisible when they are not there."""
+    result = _emit(tmp_path)
+    assert result.document["schema:license"] == [OGC_NIL_MISSING]
+    assert not [
+        ln for ln in result.document.get("schema:relatedLink", [])
+        if ln.get("schema:linkRelationship") == "isDocumentedBy"
+    ]
+    assert not any("no slot" in w for w in result.warnings)
 
 
 def test_an_xdi_document_declares_the_xdi_specification(tmp_path):

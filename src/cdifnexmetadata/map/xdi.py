@@ -42,6 +42,16 @@ from cdifnexmetadata.map.crosswalk import Crosswalk, DATA_DIR, load_crosswalk
 
 DEFAULT_XDI_CROSSWALK = DATA_DIR / "xdi-to-cdifxas.sssom.tsv"
 
+#: The other half of the XDI mappings: headers CDIF models with
+#: schema.org rather than with an XAS concept.
+#:
+#: Upstream publishes these as a separate set because SSSOM requires one
+#: `object_source` per set, and these four point at http://schema.org/
+#: while the other thirty-one point at the CDIF XAS glossary. The split
+#: is a property of the standard, not a filing decision, so it is
+#: preserved here rather than merged on load.
+DEFAULT_XDI_CDIF_CROSSWALK = DATA_DIR / "xdi-to-cdif.sssom.tsv"
+
 #: Two concepts the XAS profile requires that no XDI header carries.
 #:
 #: Neither appears as a field in any of the 272 files in the XAS Data
@@ -105,6 +115,11 @@ _LABEL_ALIASES = {
 def load_xdi_crosswalk(path: str | Path | None = None) -> Crosswalk:
     """Load the XDI crosswalk, which is published subject-XDI."""
     return load_crosswalk(path or DEFAULT_XDI_CROSSWALK)
+
+
+def load_xdi_cdif_crosswalk(path: str | Path | None = None) -> Crosswalk:
+    """Load the XDI-to-schema.org set."""
+    return load_crosswalk(path or DEFAULT_XDI_CDIF_CROSSWALK)
 
 
 def _index(crosswalk: Crosswalk) -> dict[str, tuple[str, str, float, str]]:
@@ -214,6 +229,9 @@ def map_xdi(
         return out
 
     lookup = _index(cw)
+    # _index reads the direction off each row, so the schema.org set --
+    # xdi: subjects, schema: objects -- needs no special handling here.
+    biblio_lookup = _index(load_xdi_cdif_crosswalk())
     entry = xdi.entries[0] if xdi.entries else None
     # The scan's start and end reach the document through the entry
     # rather than the crosswalk, so they are normalised here rather than
@@ -240,7 +258,24 @@ def map_xdi(
             continue                    # handled with the arrays below
         hit = lookup.get(key.lower())
         if hit is None:
-            unmapped.append(key)
+            # Not a concept, but possibly a schema.org property: the
+            # publication and licence headers are modelled by CDIF with
+            # schema.org rather than with an XAS concept. Checked second
+            # so a header that is genuinely a concept can never be
+            # diverted here.
+            biblio = biblio_lookup.get(key.lower())
+            if biblio is None:
+                unmapped.append(key)
+                continue
+            prop, predicate, confidence, comment = biblio
+            record.bibliographic[prop] = ConceptValue(
+                concept=prop,
+                value=value.strip(),
+                source_path=f"#{key}",
+                predicate=predicate,
+                confidence=confidence,
+                note=comment,
+            )
             continue
         concept, predicate, confidence, comment = hit
         # Free-text headers, normalised before they become values. A
