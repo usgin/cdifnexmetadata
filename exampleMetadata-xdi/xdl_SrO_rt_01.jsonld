@@ -465,6 +465,30 @@
           ],
           "schema:propertyID": [
             {
+              "@id": "xas:referencesample"
+            }
+          ],
+          "schema:name": "referencesample",
+          "schema:value": "SrCO3"
+        },
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
+              "@id": "xas:samplechemicalcomposition"
+            }
+          ],
+          "schema:name": "samplechemicalcomposition",
+          "schema:value": "SrO"
+        },
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
               "@id": "xas:transmittedintensity"
             }
           ],

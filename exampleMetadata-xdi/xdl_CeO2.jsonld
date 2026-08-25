@@ -425,6 +425,18 @@
           ],
           "schema:propertyID": [
             {
+              "@id": "xas:samplechemicalcomposition"
+            }
+          ],
+          "schema:name": "samplechemicalcomposition",
+          "schema:value": "CeO2"
+        },
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
               "@id": "xas:transmittedintensity"
             }
           ],

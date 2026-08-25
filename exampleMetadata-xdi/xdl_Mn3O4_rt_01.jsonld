@@ -433,6 +433,30 @@
           ],
           "schema:propertyID": [
             {
+              "@id": "xas:referencesample"
+            }
+          ],
+          "schema:name": "referencesample",
+          "schema:value": "Mn filter"
+        },
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
+              "@id": "xas:samplechemicalcomposition"
+            }
+          ],
+          "schema:name": "samplechemicalcomposition",
+          "schema:value": "Mn3O4"
+        },
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
               "@id": "xas:transmittedintensity"
             }
           ],

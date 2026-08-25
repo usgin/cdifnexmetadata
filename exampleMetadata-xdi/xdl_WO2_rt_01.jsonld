@@ -406,6 +406,20 @@
           }
         ]
       },
+      "schema:additionalProperty": [
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
+              "@id": "xas:samplechemicalcomposition"
+            }
+          ],
+          "schema:name": "samplechemicalcomposition",
+          "schema:value": "WO2"
+        }
+      ],
       "schema:startTime": "2008-04-12T03:48:03",
       "schema:endTime": "2008-04-12T04:02:26"
     }

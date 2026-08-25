@@ -433,6 +433,30 @@
           ],
           "schema:propertyID": [
             {
+              "@id": "xas:referencesample"
+            }
+          ],
+          "schema:name": "referencesample",
+          "schema:value": "Cr foil"
+        },
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
+              "@id": "xas:samplechemicalcomposition"
+            }
+          ],
+          "schema:name": "samplechemicalcomposition",
+          "schema:value": "K2CrO4"
+        },
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
               "@id": "xas:transmittedintensity"
             }
           ],

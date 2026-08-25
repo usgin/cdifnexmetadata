@@ -406,6 +406,20 @@
           }
         ]
       },
+      "schema:additionalProperty": [
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
+              "@id": "xas:samplechemicalcomposition"
+            }
+          ],
+          "schema:name": "samplechemicalcomposition",
+          "schema:value": "Au"
+        }
+      ],
       "schema:startTime": "2016-07-05T18:29:20",
       "schema:endTime": "2016-07-05T18:36:26"
     }

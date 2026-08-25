@@ -458,6 +458,20 @@
           }
         ]
       },
+      "schema:additionalProperty": [
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
+              "@id": "xas:samplechemicalcomposition"
+            }
+          ],
+          "schema:name": "samplechemicalcomposition",
+          "schema:value": "Zn"
+        }
+      ],
       "schema:startTime": "2016-03-21T11:36:21",
       "schema:endTime": "2016-03-21T11:46:36"
     }

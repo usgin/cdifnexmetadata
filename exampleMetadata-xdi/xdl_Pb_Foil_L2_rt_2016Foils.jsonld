@@ -406,6 +406,20 @@
           }
         ]
       },
+      "schema:additionalProperty": [
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
+              "@id": "xas:samplechemicalcomposition"
+            }
+          ],
+          "schema:name": "samplechemicalcomposition",
+          "schema:value": "Pb"
+        }
+      ],
       "schema:startTime": "2016-07-05T17:40:57",
       "schema:endTime": "2016-07-05T17:47:22"
     }

@@ -433,6 +433,30 @@
           ],
           "schema:propertyID": [
             {
+              "@id": "xas:referencesample"
+            }
+          ],
+          "schema:name": "referencesample",
+          "schema:value": "Cd foil"
+        },
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
+              "@id": "xas:samplechemicalcomposition"
+            }
+          ],
+          "schema:name": "samplechemicalcomposition",
+          "schema:value": "CdS"
+        },
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
               "@id": "xas:transmittedintensity"
             }
           ],

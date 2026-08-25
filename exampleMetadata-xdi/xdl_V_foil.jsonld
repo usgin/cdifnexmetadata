@@ -426,6 +426,20 @@
           }
         ]
       },
+      "schema:additionalProperty": [
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
+              "@id": "xas:samplechemicalcomposition"
+            }
+          ],
+          "schema:name": "samplechemicalcomposition",
+          "schema:value": "V"
+        }
+      ],
       "schema:startTime": "2005-07-23T16:45:48",
       "schema:endTime": "2005-07-23T17:02:30"
     }

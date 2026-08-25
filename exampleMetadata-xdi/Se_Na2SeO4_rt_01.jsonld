@@ -406,6 +406,20 @@
           }
         ]
       },
+      "schema:additionalProperty": [
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
+              "@id": "xas:samplechemicalcomposition"
+            }
+          ],
+          "schema:name": "samplechemicalcomposition",
+          "schema:value": "Na2SeO4"
+        }
+      ],
       "schema:startTime": "2008-04-10T21:58:50",
       "schema:endTime": "2008-04-10T22:16:32"
     }

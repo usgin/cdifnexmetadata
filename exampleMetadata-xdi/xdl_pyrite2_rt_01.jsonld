@@ -406,6 +406,20 @@
           }
         ]
       },
+      "schema:additionalProperty": [
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
+              "@id": "xas:samplechemicalcomposition"
+            }
+          ],
+          "schema:name": "samplechemicalcomposition",
+          "schema:value": "FeS2"
+        }
+      ],
       "schema:startTime": "2014-04-02T09:49:46",
       "schema:endTime": "2014-04-02T09:58:34"
     }

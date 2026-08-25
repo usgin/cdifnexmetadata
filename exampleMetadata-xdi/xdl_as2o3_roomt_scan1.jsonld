@@ -433,6 +433,30 @@
           ],
           "schema:propertyID": [
             {
+              "@id": "xas:referencesample"
+            }
+          ],
+          "schema:name": "referencesample",
+          "schema:value": "GaAs powder"
+        },
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
+              "@id": "xas:samplechemicalcomposition"
+            }
+          ],
+          "schema:name": "samplechemicalcomposition",
+          "schema:value": "As2O3"
+        },
+        {
+          "@type": [
+            "schema:PropertyValue"
+          ],
+          "schema:propertyID": [
+            {
               "@id": "xas:transmittedintensity"
             }
           ],
