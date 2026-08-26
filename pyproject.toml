@@ -41,6 +41,9 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/cdifnexmetadata"]
 
-# Bundled SSSOM crosswalks -- see src/cdifnexmetadata/data/README.md
-[tool.hatch.build.targets.wheel.force-include]
-"src/cdifnexmetadata/data" = "cdifnexmetadata/data"
+# The bundled SSSOM crosswalks under src/cdifnexmetadata/data/ ship because
+# they sit inside the package directory named above -- hatchling includes
+# non-Python files there by default. A force-include table pointing at the
+# same directory added every file a second time and broke the wheel build
+# outright ("A second file is being added to the wheel archive at the same
+# path"), so the package could be run from a checkout but never installed.
