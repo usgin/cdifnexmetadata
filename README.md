@@ -311,14 +311,25 @@ being folded into a raw-data one.
 ## Installation
 
 ```bash
-pip install -e .
+pip install cdifnexmetadata
 ```
 
-Python 3.11+ and `h5py`. To validate as well as produce:
+Python 3.11+. Runtime dependencies are `h5py` and `numpy`; there is no
+JVM, no service to stand up, and nothing is fetched at runtime. To
+validate as well as produce:
 
 ```bash
-pip install -e ".[validate]"
+pip install "cdifnexmetadata[validate]"
 ```
+
+To pin a workflow to an exact revision rather than a release, install
+from a commit -- a SHA cannot move, where a tag can:
+
+```bash
+pip install "git+https://github.com/usgin/cdifnexmetadata@v0.1.0"
+```
+
+For development, clone and `uv sync --all-extras` as in the Quickstart.
 
 ## Usage
 
@@ -338,6 +349,26 @@ report goes to stderr, so stdout stays pipeable:
 cdifnexmetadata scan.nxs --report
 ```
 
+Fail instead of emitting when a file yields no concepts at all. Off by
+default, because a folder of mixed content should still process and
+describing what can be described beats refusing. On for a workflow step,
+where a file that mapped nothing is a routing mistake rather than a thin
+result -- and where the exit code is the only channel the runner reads:
+
+```bash
+cdifnexmetadata scan.nxs --strict
+```
+
+Write the concept-keyed intermediate instead of the CDIF document: what
+the crosswalk resolved, before anything CDIF-specific is decided. Use it
+to see what a new parser has to produce, or to compare against another
+implementation. With `-o` pointing at a directory, each input is written
+as `<stem>.concepts.json`:
+
+```bash
+cdifnexmetadata scan.nxs --dump-concepts
+```
+
 ### Validating
 
 The profile's schema, frame and SHACL shapes are **not bundled** — they
@@ -352,8 +383,8 @@ itself **skipped** rather than passing: a run that checked nothing must
 not read like a run that found nothing wrong. A missing optional
 dependency is likewise a skip, never a pass.
 
-Exit codes suit a pipeline: `0` succeeded, `1` failed validation, `2`
-unreadable file.
+Exit codes suit a pipeline: `0` succeeded, `1` failed validation or was
+refused by `--strict`, `2` unreadable file.
 
 ### Non-standard file layouts
 

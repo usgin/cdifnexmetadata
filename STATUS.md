@@ -63,7 +63,7 @@ lookup table *is* the SSSOM alignment.
 |---|---|---|---|
 | **Goal** | NeXus HDF5 → CDIF | Align CDIF XAS vocabulary with NeXus | XDI → CDIF (Dataverse workflow) |
 | **Repo** | `usgin/cdifnexmetadata` (`main`) | `smrgeoinfo/XAS-CDIF` (**`cdifxasRelease1.1`**) | `smrgeoinfo/cdif-xas` (`main`) |
-| **State** | Design phase, no code | Analysis + enumeration import done | **Working — 37/37 valid** |
+| **State** | **Working** — published as `cdifnexmetadata` 0.1.0; reads NeXus and XDI | Analysis + enumeration import done | **Working — 37/37 valid** |
 | **Head** | `0c02ebe` | `2fe64e1` | `b915c51` |
 | **Layer** | 4 (NeXus binding) | 1–2 (concepts + alignment) | 3–4 (serialization + XDI binding) |
 
