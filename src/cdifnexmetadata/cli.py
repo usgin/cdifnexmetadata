@@ -78,6 +78,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--report", action="store_true",
                    help="print what was extracted and what was not, to "
                         "stderr, instead of only the document")
+    p.add_argument("--strict", action="store_true",
+                   help="fail (exit 1) when a file yields no mapped "
+                        "concepts. Off by default so a folder of mixed "
+                        "content still processes; on for a workflow step, "
+                        "where a file that mapped nothing is a routing "
+                        "mistake rather than a thin result.")
     p.add_argument("--dump-concepts", action="store_true",
                    help="write the concept-keyed intermediate instead of "
                         "the CDIF document: what the crosswalk resolved, "
@@ -172,6 +178,16 @@ def _process(path: Path, args, profile: Profile, err) -> tuple[dict, int]:
     return _finish(path, args, profile, err, mapping, result)
 
 
+def _mapped_anything(mapping: MappingResult) -> bool:
+    """Whether any record carried a single concept value.
+
+    Emptiness is the condition worth reporting, not the record count: a
+    file can yield one record with nothing in it, which is what an
+    unrecognised input produces.
+    """
+    return any(record.values for record in mapping.records)
+
+
 def _finish(path, args, profile, err, mapping, result) -> tuple[dict, int]:
     """Report and validate, whichever binding produced the document.
 
@@ -188,6 +204,17 @@ def _finish(path, args, profile, err, mapping, result) -> tuple[dict, int]:
         print(f"{path.name}: claims {', '.join(result.profiles)}", file=err)
 
     status = 0
+    # A file that maps no concepts still emits a document -- file-level
+    # core, describing the bytes and nothing in them. That is the right
+    # default for a folder of mixed content, and the wrong one for a
+    # workflow step: a mis-routed input produces a near-empty record,
+    # exit 0, and a downstream step that consumes it. --strict says so
+    # in the exit code, which is the only channel a runner reads.
+    if args.strict and not _mapped_anything(mapping):
+        print(f"{path.name}: no concepts mapped; refusing under --strict",
+              file=err)
+        status = 1
+
     if args.validate:
         validation = validate_document(result.document, profile)
         print(f"{path.name}: validation {validation.summary()}", file=err)

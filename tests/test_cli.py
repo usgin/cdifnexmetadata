@@ -28,6 +28,23 @@ def test_a_document_goes_to_stdout_by_default(tmp_path, capsys):
     assert doc["schema:distribution"]
 
 
+def test_strict_fails_a_file_that_maps_nothing(tmp_path, capsys):
+    """A workflow runner reads the exit code, not stderr. Without this a
+    mis-routed input produces a near-empty document, exit 0, and a
+    downstream step that consumes it."""
+    junk = tmp_path / "notdata.txt"
+    junk.write_text("this is not a data file", encoding="utf-8")
+
+    assert main([str(junk), "-q"]) == 0                 # default: emit anyway
+    assert main([str(junk), "-q", "--strict"]) == 1     # strict: refuse
+
+
+def test_strict_passes_a_file_that_maps_something(tmp_path, capsys):
+    """--strict must not fire on a thin-but-real file, or a workflow
+    turns it on once and then turns it off again."""
+    assert main([str(_file(tmp_path)), "-q", "--strict"]) == 0
+
+
 def test_dump_concepts_writes_the_intermediate_not_the_document(
     tmp_path, capsys,
 ):
